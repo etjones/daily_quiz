@@ -13,6 +13,8 @@ scheduler (Leitner boxes) decides what appears each day. No model is needed for 
 Data lives in `~/.dq` (override with `--home` or `DQ_HOME`): `dq.db` (SQLite) and `out/<student>/<date>/*.pdf`.
 Back up that folder; it is the child's whole history.
 
+The first `dq init` records the default student (`~/.dq/default_student`); every command that takes a NAME can omit it. Change it with `dq default NAME`.
+
 ## The daily loop
 Morning, once at the start: `dq init Ben` then `dq placement Ben` (10 minutes, you ask, he answers; finds where he already is).
 

@@ -13,31 +13,34 @@ watch:
 validate:
     uv run dq validate
 
-status:
-    uv run dq status
+status name="":
+    uv run dq status {{name}}
 
 skills *args:
     uv run dq skills {{args}}
 
+student *args:
+    uv run dq default {{args}}
+
 init name:
     uv run dq init {{name}}
 
-placement name:
+placement name="":
     uv run dq placement {{name}}
 
-oral name:
+oral name="":
     uv run dq oral {{name}}
 
-grade name photo:
-    uv run dq grade {{name}} {{photo}}
+grade *args:
+    uv run dq grade {{args}}
 
-mood name level *args:
-    uv run dq mood {{name}} {{level}} {{args}}
+mood *args:
+    uv run dq mood {{args}}
 
-next name:
+next name="":
     uv run dq next {{name}}
 
-report name:
+report name="":
     uv run dq report {{name}} --pdf
 
 lint:
