@@ -349,3 +349,38 @@ def test_pages_set_same_origin_referrer_policy(web, db):
 
 def test_footer_shows_data_directory(web, home):
     assert str(home.resolve()) in text(get(web, "/students"))
+
+
+# --------------------------------------------------------------------------- grading sheet
+
+
+def test_grader_sheet_shows_script_and_saves_directly(web, home):
+    built(web)
+    q, m = open_manifest(home)
+    r = get(web, f"/quiz/{q['id']}/grade")
+    assert r.status_code == 200
+    for it in m["items"]:
+        assert f'name="right_{it["id"]}" checked' in text(r)
+        assert it["expected"] in text(r)
+    first = m["items"][0]
+    form = {f"right_{it['id']}": "on" for it in m["items"][2:]}
+    form[f"got_{first['id']}"] = first["expected"] + "x"
+    r = post(web, f"/quiz/{q['id']}/grade", form)
+    assert "Saved:" in text(r)
+    rows = DB(home / "dq.db").results_for_quiz(q["id"])
+    assert [r["correct"] for r in rows] == [0, 0] + [1] * (len(rows) - 2)
+    assert rows[0]["got"] == first["expected"] + "x"
+    assert rows[1]["got"] == "?" and rows[1]["mode"] == "manual"
+    assert (
+        get(web, f"/quiz/{q['id']}/grade").redirect_chain[-1][0] == f"/quiz/{q['id']}"
+    )
+
+
+def test_grader_ticked_box_wins_over_typed_text(web, home):
+    built(web)
+    q, m = open_manifest(home)
+    form = {f"right_{it['id']}": "on" for it in m["items"]}
+    form[f"got_{m['items'][0]['id']}"] = "nonsense"
+    post(web, f"/quiz/{q['id']}/grade", form)
+    rows = DB(home / "dq.db").results_for_quiz(q["id"])
+    assert all(r["correct"] for r in rows)

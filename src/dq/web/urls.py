@@ -21,6 +21,7 @@ urlpatterns = [
     path("files/<path:rel>", views.student_file),
     path("quiz", views.open_quiz),
     path("quiz/<int:quiz_id>", views.quiz_page),
+    path("quiz/<int:quiz_id>/grade", views.grader),
     path("quiz/<int:quiz_id>/review", views.review_entry),
     path("quiz/<int:quiz_id>/photo", views.grade_photo),
     path("quiz/<int:quiz_id>/save", views.save_quiz),

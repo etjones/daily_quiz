@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% block main %}
+<p>For a quick tick-off while you give the quiz, use the <a href="/quiz/{{ quiz.id }}/grade">grading sheet</a>.</p>
 <p class="lede">Read each item aloud. Leave “right” selected when the answer was right. Otherwise type what {{ student.name }} wrote or said, or pick blank or wrong.</p>
 
 <form method="post" action="/quiz/{{ quiz.id }}/review">

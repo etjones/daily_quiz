@@ -1,0 +1,66 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">The quiz script with live checkboxes. Read each item, untick anything {{ student.name }} got wrong, and save. Saving records the quiz straight away.</p>
+<p><small>{{ label }}. Items marked “check” are on something not taught yet; missing them costs nothing.</small></p>
+
+<form method="post" action="/quiz/{{ quiz.id }}/grade">
+  {{ csrf_input }}
+  {% if spelling %}
+  <h2>Words (dictate)</h2>
+  <table>
+    <thead><tr><th class="num">#</th><th>Say</th><th>Sentence</th><th>Right?</th><th>If wrong, what they wrote</th></tr></thead>
+    <tbody>
+    {% for w in spelling %}
+    <tr>
+      <td class="num">{{ w.n }}</td>
+      <td><strong>{{ w.word }}</strong>{% if w.probe %} <small>(check)</small>{% endif %}</td>
+      <td>{{ w.sentence }}</td>
+      <td><label><input type="checkbox" name="right_{{ w.id }}" checked> right</label></td>
+      <td><input type="text" name="got_{{ w.id }}" aria-label="what they wrote for {{ w.n }}" autocomplete="off"></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  {% if math %}
+  <h2>Math (child reads and writes)</h2>
+  <table>
+    <thead><tr><th class="num">#</th><th>Problem</th><th>Answer</th><th>Right?</th><th>If wrong, what they wrote</th></tr></thead>
+    <tbody>
+    {% for m in math %}
+    <tr>
+      <td class="num">{{ m.n }}</td>
+      <td>{{ m.speech }}{% if m.probe %} <small>(check)</small>{% endif %}</td>
+      <td><strong>{{ m.answer }}</strong></td>
+      <td><label><input type="checkbox" name="right_{{ m.id }}" checked> right</label></td>
+      <td><input type="text" name="got_{{ m.id }}" aria-label="what they wrote for {{ m.n }}" autocomplete="off"></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
+  <p><output id="tally" aria-live="polite"></output></p>
+  <p><button type="submit">Save results</button></p>
+</form>
+<p>Afterwards, show the correct spelling of any missed word and have {{ student.name }} fix it in a different colour.</p>
+{% endblock %}
+{% block scripts %}
+<script>
+  (function () {
+    const boxes = document.querySelectorAll('input[type="checkbox"][name^="right_"]');
+    const tally = document.getElementById("tally");
+    function update() {
+      const right = [...boxes].filter(b => b.checked).length;
+      tally.textContent = right + " of " + boxes.length + " right";
+    }
+    boxes.forEach(b => b.addEventListener("change", update));
+    document.querySelectorAll('input[name^="got_"]').forEach(t => t.addEventListener("input", () => {
+      const box = document.querySelector('input[name="right_' + t.name.slice(4) + '"]');
+      if (t.value.trim() && box.checked) { box.checked = false; update(); }
+    }));
+    update();
+  })();
+</script>
+{% endblock %}

@@ -10,7 +10,7 @@
 <h2>1. Grade the quiz</h2>
 {% if open_quiz %}
 <p>The quiz for <strong>{{ open_quiz.for_date }}</strong> is waiting to be graded.</p>
-<p><a class="button" href="/quiz/{{ open_quiz.id }}">Grade it</a></p>
+<p><a class="button" href="/quiz/{{ open_quiz.id }}/grade">Grade it</a> <a href="/quiz/{{ open_quiz.id }}">Type answers or grade a photo</a></p>
 {% else %}
 <p>No open quiz.</p>
 {% endif %}

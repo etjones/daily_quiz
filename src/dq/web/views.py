@@ -387,6 +387,58 @@ def _review(
     )
 
 
+def grader_rows(manifest: dict, sheet: dict) -> dict[str, list[dict]]:
+    """The parent-script rows (what to say, the answer) with each item's form id attached."""
+    ids = {it["n"]: it["id"] for it in manifest["items"]}
+    return {
+        "spelling": [{**w, "id": ids[w["n"]]} for w in sheet["spelling"]],
+        "math": [{**m, "id": ids[m["n"]]} for m in sheet["math"]],
+    }
+
+
+def graded_rows(manifest: dict, form: QueryDict) -> list[grade.Scored]:
+    """Checked = right. Unchecked = wrong, judged on what was typed (or '?' if nothing)."""
+    got = {}
+    for it in manifest["items"]:
+        right = form.get(f"right_{it['id']}") == "on"
+        typed = (form.get(f"got_{it['id']}") or "").strip()
+        got[it["id"]] = it["expected"] if right else (typed or "?")
+    rows = grade.score(manifest, got)
+    for r in rows:
+        want = form.get(f"right_{r.item_id}") == "on"
+        if r.correct != want:
+            grade.apply_override(r, correct=want)
+    return rows
+
+
+@require_http_methods(["GET", "POST"])
+def grader(request: HttpRequest, quiz_id: int) -> HttpResponse:
+    student = require_student(request)
+    q = _quiz_for(request.db, student, quiz_id)
+    if q["status"] == "graded":
+        return go(f"/quiz/{quiz_id}")
+    manifest = json.loads(q["manifest"])
+    if request.method == "POST":
+        rows = graded_rows(manifest, request.POST)
+        summary = session.record_quiz(
+            request.db, cur(), student, q, rows, "manual", date.today()
+        )
+        ok, n = summary["taught_correct"], summary["taught_items"]
+        return go(f"/quiz/{quiz_id}", f"Saved: {ok} of {n} right on taught material.")
+    sheet = build.parent_data(
+        request.db, cur(), student, manifest, _iso_date(q["for_date"])
+    )
+    return page(
+        request,
+        "grader.html",
+        student=student,
+        title=f"Grade the quiz for {q['for_date']}",
+        quiz=q,
+        label=sheet["quiz_label"],
+        **grader_rows(manifest, sheet),
+    )
+
+
 @require_POST
 def review_entry(request: HttpRequest, quiz_id: int) -> HttpResponse:
     student = require_student(request)

@@ -287,7 +287,7 @@ def _build_content(
     return worksheet, manifest
 
 
-def _parent_data(
+def parent_data(
     db: DB, cur: Curriculum, student, manifest: dict, quiz_date: date
 ) -> dict:
     spelling, math = [], []
@@ -383,7 +383,7 @@ def build_day(
     pr = render.render_pdf(
         home,
         "parent",
-        _parent_data(db, cur, student, manifest, quiz_date),
+        parent_data(db, cur, student, manifest, quiz_date),
         out_dir / f"parent-script-{quiz_date.isoformat()}.pdf",
     )
     return Built(sel, created, ws, qz, pr, quiz_id, quiz_date.isoformat())
