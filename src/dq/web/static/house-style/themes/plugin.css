@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400&display=swap');
+
+/* plugin.css — Archigram, Plug-In City and the Instant City model, 1964–69.
+   Chrome scaffolding, inflatable orange, hot magenta, acid green: the group
+   took its palette from advertising and the space race rather than from
+   architecture, and drew buildings as comics. Everything that holds content
+   here is a clip-on unit with rounded ends, bolted to a structural rule. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #16181c;
+  --bg-raised:   #202429;
+  --ink:         #e4e7ea;
+  --ink-muted:   #a6acb3;
+  --ink-faint:   #787f87;
+  --rule:        #333a42;
+  --accent:      #f0821f;
+  --accent-ink:  #16181c;
+  --link:        #e2358f;
+  --mark:        #4a3a12;
+
+  --font-body:    'Work Sans', system-ui, sans-serif;
+  --font-display: 'Anton', 'Work Sans', sans-serif;
+  --font-label:   'Work Sans', system-ui, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.35rem;
+  --fs-xl:   clamp(1.7rem, 1.2rem + 2vw, 2.4rem);
+  --fs-xxl:  clamp(2.6rem, 1.5rem + 4.6vw, 4.4rem);
+  --fs-mono: 0.84rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 400;
+  --lh-body:        1.6;
+  --lh-display:     0.98;
+  --tracking-display: 0.005em;
+  --tracking-label:   0.16em;
+  --case-label:       uppercase;
+
+  --measure:    33rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.3rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      10px;
+  --rule-hair:   1px;
+  --rule-thick:  3px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #eef0f2;
+  --bg-raised:  #e0e3e7;
+  --ink:        #1a1d21;
+  --ink-muted:  #4d535a;
+  --ink-faint:  #7b828a;
+  --rule:       #c3c8ce;
+  --accent:     #c9600a;
+  --accent-ink: #fdf6ee;
+  --link:       #b81a6c;
+  --mark:       #f3dfa8;
+}
+
+/* --- structural overrides --- */
+
+/* Clip-on units: rounded ends, hard edge where they dock. */
+.callout {
+  border-start-end-radius: 999px;
+  border-end-end-radius: 999px;
+  padding-inline-end: calc(var(--space-flow) * 2);
+}
+button, .button { border-radius: 999px; }
+
+h1, h2, h3 { text-transform: uppercase; }
+
+/* The service rail the capsules hang from. */
+hr {
+  block-size: 6px;
+  background:
+    linear-gradient(var(--rule) 0 0) 0 50% / 100% 2px no-repeat,
+    repeating-linear-gradient(90deg, var(--accent) 0 10px, transparent 10px 26px);
+}

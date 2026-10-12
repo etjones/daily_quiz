@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* swiss.css — International Typographic Style.
+   Grid discipline, one grotesque at many weights, flush-left ragged-right,
+   rules that mark structure rather than decorate it. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #14161a;
+  --bg-raised:   #1c1f25;
+  --ink:         #e9e9e6;
+  --ink-muted:   #a7a9ad;
+  --ink-faint:   #74777d;
+  --rule:        #31353d;
+  --accent:      #e8442a;
+  --accent-ink:  #14161a;
+  --link:        #f0705a;
+  --mark:        #3a3016;
+
+  --font-body:    'Archivo', system-ui, sans-serif;
+  --font-display: 'Archivo', system-ui, sans-serif;
+  --font-label:   'Archivo', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.375rem;
+  --fs-xl:   clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem);
+  --fs-xxl:  clamp(2.4rem, 1.4rem + 4vw, 4rem);
+  --fs-mono: 0.875rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 700;
+  --lh-body:        1.62;
+  --lh-display:     1.04;
+  --tracking-display: -0.022em;
+  --tracking-label:   0.11em;
+  --case-label:       uppercase;
+  --stretch-display:  92%;
+
+  --measure:    34rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.25rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  2px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f7f6f2;
+  --bg-raised:  #efeee8;
+  --ink:        #16181c;
+  --ink-muted:  #4e5158;
+  --ink-faint:  #80838a;
+  --rule:       #cfcdc4;
+  --accent:     #cf2d13;
+  --accent-ink: #f7f6f2;
+  --link:       #b52a11;
+  --mark:       #f2e3a8;
+}
+
+/* --- structure: the rule above a section is the section marker --- */
+main > h2 {
+  padding-block-start: var(--space-flow);
+  border-block-start: var(--rule-thick) solid var(--ink);
+  grid-column: main-start / margin-end;
+}
+main > h3 { color: var(--ink-muted); }
+.masthead h1 { grid-column: main-start / margin-end; }
+.callout { border-inline-start-width: var(--rule-thick); }

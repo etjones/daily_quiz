@@ -25,6 +25,52 @@ SPREAD_DAYS = 45
 Ask = Callable[[dict], bool]
 
 
+class NeedAnswer(Exception):
+    """Raised by a replay `ask` when the recorded answers run out; carries the next item."""
+
+    def __init__(self, item: dict):
+        super().__init__(item["skill_id"])
+        self.item = item
+
+
+def replay_ask(answers: list[bool]) -> Ask:
+    """An `ask` that returns recorded answers in order, then raises NeedAnswer."""
+    it = iter(answers)
+
+    def ask(item: dict) -> bool:
+        try:
+            return next(it)
+        except StopIteration:
+            raise NeedAnswer(item) from None
+
+    return ask
+
+
+def placement_rng(student, on: date) -> random.Random:
+    return random.Random(
+        scheduler.stable_seed(student["name"], on.isoformat(), "placement")
+    )
+
+
+def next_question(
+    cur: Curriculum,
+    student,
+    on: date,
+    answers: list[bool],
+    tracks: tuple[str, ...] = TRACKS,
+) -> dict | None:
+    """Replay `answers` through the same search run_placement does, without writing anything.
+    Returns the next item to ask, or None when the answers are enough to finish."""
+    rng = placement_rng(student, on)
+    ask = replay_ask(answers)
+    try:
+        for track in tracks:
+            find_frontier(cur, track_skills(cur, track), rng, ask)
+    except NeedAnswer as e:
+        return e.item
+    return None
+
+
 def track_skills(cur: Curriculum, track: str) -> list[Skill]:
     if track == "math":
         return cur.subject("math")
@@ -95,9 +141,7 @@ def run_placement(
     tracks: tuple[str, ...] = TRACKS,
 ) -> dict:
     sid = student["id"]
-    rng = random.Random(
-        scheduler.stable_seed(student["name"], on.isoformat(), "placement")
-    )
+    rng = placement_rng(student, on)
     report: dict[str, dict] = {}
     offset = 0
     for track in tracks:

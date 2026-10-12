@@ -1,0 +1,41 @@
+{#
+  house_style.html — the base layout. Every page extends this and fills in
+  {% block content %} with a fragment in the house vocabulary.
+
+  Copied here by `hs.py export`. Two things differ from a built static page,
+  and only two: the CSS is linked rather than inlined, so the browser caches it
+  across requests; and the theme is chosen per request by the server, so it is
+  already correct in the first byte of HTML.
+
+  Do not add a <style> block to this file or to a page that extends it. If a
+  page needs a value the themes do not have, the token vocabulary is missing
+  something — add it to base.css, not here.
+#}<!doctype html>
+<html lang="{{ hs_lang|default('en') }}"
+      data-mode="{{ hs_mode }}"
+      data-mode-pref="{{ hs_mode_pref }}"
+      data-theme="{{ hs_theme }}"
+      data-picker-key="{{ hs_key|default('hs') }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ title|default('Untitled') }}{% endblock %}</title>
+<link rel="stylesheet" href="{{ hs_static }}/base.css">
+<link rel="stylesheet" id="hs-theme-css"
+      href="{{ hs_static }}/themes/{{ hs_theme }}.css"
+      data-href-pattern="{{ hs_static }}/themes/{id}.css">
+{%- if hs_picker %}
+<link rel="stylesheet" href="{{ hs_static }}/picker.css">
+<script src="{{ hs_static }}/themes.js"></script>
+<script src="{{ hs_static }}/boot.js"></script>
+{%- endif %}
+{% block head %}{% endblock %}
+</head>
+<body>
+{% block content %}{% endblock %}
+{%- if hs_picker %}
+<script src="{{ hs_static }}/picker.js"></script>
+{%- endif %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

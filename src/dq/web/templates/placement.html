@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% block main %}
+{% if item is none and result is none %}
+<p class="lede">You ask each item aloud; {{ student.name }} answers. Don't help. Stop whenever they are tired and start again later.</p>
+<p>Placement only ever marks skills as known. To redo a track that was placed wrongly, clear it first.</p>
+<form method="post" action="/placement">
+  <fieldset>
+    <legend>Tracks</legend>
+    {% for t in tracks %}<label><input type="checkbox" name="tracks" value="{{ t }}" checked> {{ t }}</label><br>{% endfor %}
+  </fieldset>
+  <p><button type="submit">Start</button></p>
+</form>
+{% else %}
+{% include "_placement_step.html" %}
+{% endif %}
+{% endblock %}

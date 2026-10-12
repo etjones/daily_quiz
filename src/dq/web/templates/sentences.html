@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">Dictation sentences help with words that sound alike or are hard to say alone. {{ words|length }} word{{ '' if words|length == 1 else 's' }} still need one{% if not include_phonics %} (sight words and flagged words; <a href="/sentences?include_phonics=true">include phonics words</a>){% endif %}.</p>
+
+{% if words %}
+<form method="post" action="/sentences/fill">
+  <input type="hidden" name="include_phonics" value="{{ 'true' if include_phonics else 'false' }}">
+  <p><button type="submit">Write them with the model ({{ backend }})</button></p>
+</form>
+
+<h2>Or write one yourself</h2>
+<form method="post" action="/sentences/set">
+  <p>
+    <label class="field" for="word">Word</label>
+    <select id="word" name="word">{% for w in words %}<option>{{ w }}</option>{% endfor %}</select>
+  </p>
+  <p>
+    <label class="field" for="sentence">Sentence (must contain the word)</label>
+    <input type="text" id="sentence" name="sentence" required>
+  </p>
+  <p><button class="ghost" type="submit">Save sentence</button></p>
+</form>
+
+<h2>Words without a sentence</h2>
+<p>{{ words|join(', ') }}</p>
+{% endif %}
+{% endblock %}

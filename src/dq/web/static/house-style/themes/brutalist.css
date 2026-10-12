@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Spectral:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap');
+
+/* brutalist.css — weight as structure.
+   Heavy display face against a real serif body (not another sans), hard
+   offset shadows instead of blur, borders thick enough to read as walls,
+   zero radius anywhere. The contrast between the two faces is the design;
+   everything else stays plain. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #121211;
+  --bg-raised:   #1c1c1a;
+  --ink:         #f0eee7;
+  --ink-muted:   #aaa79d;
+  --ink-faint:   #78766e;
+  --rule:        #3b3a36;
+  --accent:      #ff5c1a;
+  --accent-ink:  #121211;
+  --link:        #ff7a44;
+  --mark:        #4a3410;
+  --shadow-ink:  #000;
+
+  --font-body:    'Spectral', Georgia, serif;
+  --font-display: 'Archivo Black', system-ui, sans-serif;
+  --font-label:   'Courier Prime', ui-monospace, monospace;
+  --font-mono:    'Courier Prime', ui-monospace, monospace;
+
+  --fs-base: 1.125rem;
+  --fs-xs:   0.8125rem;
+  --fs-sm:   0.9375rem;
+  --fs-md:   1.1875rem;
+  --fs-lg:   1.4375rem;
+  --fs-xl:   clamp(1.75rem, 1.2rem + 2.4vw, 2.6rem);
+  --fs-xxl:  clamp(2.8rem, 1.4rem + 6vw, 5.5rem);
+  --fs-mono: 0.9375rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 400;   /* Archivo Black has one weight */
+  --lh-body:        1.66;
+  --lh-display:     0.96;
+  --tracking-display: -0.03em;
+  --tracking-label:   0.04em;
+  --case-label:       uppercase;
+  --body-features:  "onum" 1;
+  --quote-style:    italic;
+
+  --measure:    33rem;
+  --margin-col: 12rem;
+  --gutter:     clamp(1.25rem, 4vw, 3.5rem);
+  --space-flow:    1.3rem;
+  --space-section: 4rem;
+  --space-page:    clamp(2rem, 5vw, 4rem);
+  --radius:      0px;
+  --rule-hair:   2px;
+  --rule-thick:  4px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #edeae1;
+  --bg-raised:  #e2ded2;
+  --ink:        #141310;
+  --ink-muted:  #4b4942;
+  --ink-faint:  #7b786e;
+  --rule:       #141310;
+  --accent:     #d63f00;
+  --accent-ink: #edeae1;
+  --link:       #b53500;
+  --mark:       #f6d98f;
+  --shadow-ink: #141310;
+}
+
+/* --- hard shadows, no blur --- */
+main > h1, main > h2 { text-transform: uppercase; }
+.callout, pre, .figure-frame {
+  border: var(--rule-hair) solid var(--ink);
+  box-shadow: 6px 6px 0 var(--shadow-ink);
+}
+button, .button { box-shadow: 4px 4px 0 var(--shadow-ink); border-color: var(--ink); }
+button:active, .button:active { transform: translate(4px, 4px); box-shadow: none; }
+thead th { border-block-end-width: var(--rule-thick); border-block-end-color: var(--ink); }
+.metric { letter-spacing: -0.04em; }

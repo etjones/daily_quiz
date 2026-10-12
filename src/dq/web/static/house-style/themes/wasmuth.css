@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Lora:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400&display=swap');
+
+/* wasmuth.css — Frank Lloyd Wright, Ausgeführte Bauten und Entwürfe,
+   Ernst Wasmuth, Berlin, 1911.
+   The plates are the reason: a bordered rectangle floating on a wide cream
+   sheet, with the caption set in tracked caps running *up the left margin*
+   rather than under the image. That is exactly what this system's reserved
+   annotation gutter is for. Prairie horizontals, ochre and Cherokee red. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #1a1611;
+  --bg-raised:   #241f18;
+  --ink:         #e3dac6;
+  --ink-muted:   #b0a48d;
+  --ink-faint:   #857a67;
+  --rule:        #3a3226;
+  --accent:      #b4482c;
+  --accent-ink:  #f0e8d6;
+  --link:        #97a36b;
+  --mark:        #4a3c1a;
+
+  --font-body:    'Lora', Georgia, serif;
+  --font-display: 'Marcellus', 'Lora', serif;
+  --font-label:   'Marcellus', Georgia, serif;
+  --font-mono:    'Courier Prime', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.78rem;
+  --fs-sm:   0.9rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.3125rem;
+  --fs-xl:   clamp(1.5rem, 1.15rem + 1.5vw, 2.05rem);
+  --fs-xxl:  clamp(2.1rem, 1.3rem + 3.2vw, 3.2rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 400;
+  --lh-body:        1.72;
+  --lh-display:     1.2;
+  --tracking-display: 0.08em;
+  --tracking-label:   0.26em;
+  --case-label:       uppercase;
+
+  --measure:    35rem;
+  --margin-col: 15rem;
+  --gutter:     clamp(1.5rem, 6vw, 5rem);
+  --space-flow:    1.25rem;
+  --space-section: 4rem;
+  --space-page:    clamp(2.5rem, 7vw, 6rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  3px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f0e9d8;
+  --bg-raised:  #e5dcc6;
+  --ink:        #241d13;
+  --ink-muted:  #574c38;
+  --ink-faint:  #877b64;
+  --rule:       #c9bda2;
+  --accent:     #9a3a20;
+  --accent-ink: #f4efe2;
+  --link:       #5a6338;
+  --mark:       #ddcb9c;
+}
+
+/* --- structural overrides --- */
+
+/* The Wasmuth plate: a double border, generous inside margin, nothing else. */
+.figure-frame {
+  border: var(--rule-hair) solid var(--ink-faint);
+  outline: var(--rule-hair) solid var(--ink-faint);
+  outline-offset: 5px;
+  padding: calc(var(--space-flow) * 1.5);
+  background: none;
+}
+
+/* Prairie horizontals: the section rule runs past the column into the
+   margin track, the way Wright's eaves run past the wall. */
+main > h2 { position: relative; }
+hr { grid-column: main-start / margin-end; block-size: var(--rule-hair);
+     background: var(--accent); }
+
+h1, h2 { text-transform: uppercase; }

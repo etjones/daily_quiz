@@ -90,6 +90,20 @@ def dictation_sentence(cur: Curriculum, db: DB, word: str) -> str:
     )
 
 
+def words_missing_sentences(
+    cur: Curriculum, db: DB, include_phonics: bool = False
+) -> list[str]:
+    """Spelling words that need a dictation sentence and have none, sorted."""
+    want = set()
+    for s in cur.subject("spelling"):
+        if not (include_phonics or s.track == "sight" or s.needs_sentence):
+            continue
+        for w in s.words:
+            if w.lower() not in cur.sentences and not db.sentence(w.lower()):
+                want.add(w)
+    return sorted(want)
+
+
 def _build_content(
     db: DB,
     cur: Curriculum,

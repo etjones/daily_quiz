@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Barlow:wght@400;500;700&family=Barlow+Condensed:wght@400;500&family=Space+Mono:wght@400;700&display=swap');
+
+/* proun.css — El Lissitzky, Proun 5A and Proun 93, 1923.
+   Not the poster palette everyone borrows. The Prouns are painted on a
+   putty-grey ground with oxblood, one scarlet, and slate — the red is scarce,
+   which is what gives it force. Condensed display type stands in for the
+   stencilled Cyrillic; the page keeps the paintings' one diagonal accent
+   nowhere, because a tilted web page is a gimmick and Lissitzky was not. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #1a1a1d;
+  --bg-raised:   #232327;
+  --ink:         #dedbd3;
+  --ink-muted:   #a3a19b;
+  --ink-faint:   #74736f;
+  --rule:        #3a3a3f;
+  --accent:      #cc2131;
+  --accent-ink:  #f2efe8;
+  --link:        #9aa4b0;
+  --mark:        #5e1622;
+
+  --font-body:    'Barlow', system-ui, sans-serif;
+  --font-display: 'Oswald', 'Barlow Condensed', sans-serif;
+  --font-label:   'Barlow Condensed', system-ui, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.8rem;
+  --fs-sm:   0.9rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.35rem;
+  --fs-xl:   clamp(1.6rem, 1.2rem + 1.7vw, 2.25rem);
+  --fs-xxl:  clamp(2.4rem, 1.4rem + 4.2vw, 4rem);
+  --fs-mono: 0.84rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 500;
+  --lh-body:        1.6;
+  --lh-display:     1.04;
+  --tracking-display: 0.01em;
+  --tracking-label:   0.14em;
+  --case-label:       uppercase;
+
+  --measure:    33rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.1rem;
+  --space-section: 3.4rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  4px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #e6e3db;
+  --bg-raised:  #d9d5cc;
+  --ink:        #1f1f22;
+  --ink-muted:  #4f4f53;
+  --ink-faint:  #7c7c80;
+  --rule:       #bab5aa;
+  --accent:     #b21b29;
+  --accent-ink: #f2efe8;
+  --link:       #4a5563;
+  --mark:       #ddc3c6;
+}
+
+/* --- structural overrides --- */
+
+/* In the Prouns a solid block hangs beside the mass it belongs to. Each
+   section gets one, and it is the only scarlet on the page until a link. */
+main > h2::before {
+  content: "";
+  display: inline-block;
+  inline-size: .5em;
+  block-size: .5em;
+  background: var(--accent);
+  margin-inline-end: .45em;
+  vertical-align: .08em;
+}
+
+h1, h2, h3 { text-transform: uppercase; }
+hr { block-size: var(--rule-thick); background: var(--accent); inline-size: 4rem; }

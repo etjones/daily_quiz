@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap');
+
+/* memphis.css — Sottsass, Carlton bookcase, Memphis Milano, 1981.
+   The Carlton is photographed against near-black, which is lucky: its cream,
+   chrome yellow and orange were always meant to sit on something. Sottsass
+   used laminate because it is flat and cheap and refuses to look expensive,
+   so nothing here has a gradient or a shadow that pretends to be light. The
+   Bacterio speckle — his 1978 laminate, squiggles abstracted from a temple
+   in Madurai — is the only pattern, and it stays on surfaces, not text. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #1b1a18;
+  --bg-raised:   #262420;
+  --ink:         #f2e6c8;
+  --ink-muted:   #b9ae97;
+  --ink-faint:   #8a8171;
+  --rule:        #3b3830;
+  --accent:      #ef6a1f;
+  --accent-ink:  #1b1a18;
+  --link:        #57a94a;
+  --mark:        #6b5a10;
+
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-label:   'Space Grotesk', system-ui, sans-serif;
+  --font-mono:    'Space Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.375rem;
+  --fs-xl:   clamp(1.6rem, 1.2rem + 1.8vw, 2.3rem);
+  --fs-xxl:  clamp(2.4rem, 1.4rem + 4.2vw, 4rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 700;
+  --lh-body:        1.6;
+  --lh-display:     1.02;
+  --tracking-display: -0.025em;
+  --tracking-label:   0.1em;
+  --case-label:       uppercase;
+
+  --measure:    34rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.4rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   2px;
+  --rule-thick:  4px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f3ead3;
+  --bg-raised:  #e9dcbd;
+  --ink:        #1d1b18;
+  --ink-muted:  #565044;
+  --ink-faint:  #877f6f;
+  --rule:       #cbbd9c;
+  --accent:     #d8500c;
+  --accent-ink: #f8f2e2;
+  --link:       #2f7d27;
+  --mark:       #f2d84e;
+}
+
+/* --- structural overrides --- */
+
+/* Bacterio. Flat marks on a flat surface — on a frame, never behind text.
+   It went behind <pre> first and made the code unreadable, which is the
+   difference between a laminate and a background. */
+.figure-frame {
+  background-color: var(--bg-raised);
+  background-image:
+    radial-gradient(var(--ink-faint) 1.1px, transparent 1.2px),
+    radial-gradient(var(--ink-faint) 1.1px, transparent 1.2px);
+  background-size: 13px 13px, 13px 13px;
+  background-position: 0 0, 6px 7px;
+}
+
+/* Laminate has no depth, so the offset is a second flat plane, not a shadow. */
+.callout { box-shadow: 6px 6px 0 var(--link); border-inline-start-color: var(--accent); }
+blockquote { border-inline-start-width: var(--rule-thick); }

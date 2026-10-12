@@ -1,0 +1,29 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">Check each row. Fix what was written, or flip the verdict. Nothing is saved until you press Save.</p>
+<form method="post" action="/quiz/{{ quiz.id }}/save">
+<input type="hidden" name="mode" value="{{ mode }}">
+<table>
+  <thead><tr><th class="num">#</th><th>Expected</th><th>Wrote</th><th>Verdict</th><th>Note</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr>
+    <td class="num">{{ r.n }}</td>
+    <td><strong>{{ r.expected }}</strong>{% if r.probe %} <small>(probe)</small>{% endif %}
+      {% if crops.get(r.item_id) %}<br><img src="{{ crops[r.item_id] }}" alt="photo of answer {{ r.n }}">{% endif %}</td>
+    <td><input type="text" name="got_{{ r.item_id }}" value="{{ r.got }}" aria-label="what they wrote for {{ r.n }}" autocomplete="off"></td>
+    <td>
+      <select name="verdict_{{ r.item_id }}" aria-label="verdict for {{ r.n }}">
+        <option value="right" {% if r.correct %}selected{% endif %}>right</option>
+        <option value="wrong" {% if not r.correct %}selected{% endif %}>wrong</option>
+      </select>
+    </td>
+    <td>{% if r.needs_review %}<mark>{{ r.reason }}</mark>{% elif not r.correct and r.error_cat %}{{ r.error_cat }}{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p>The verdict column is what gets saved. If you change what was written, set the verdict to match.</p>
+<p><button type="submit">Save results</button> <a href="/quiz/{{ quiz.id }}">Start over</a></p>
+</form>
+{% endblock %}

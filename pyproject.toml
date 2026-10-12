@@ -3,10 +3,23 @@ name = "dq"
 version = "0.1.0"
 description = "Adaptive daily quiz and worksheet system for home education"
 requires-python = ">=3.11"
-dependencies = ["typst>=0.11", "opencv-python-headless>=4.8", "numpy", "pillow", "pypdf"]
+dependencies = [
+    "typst>=0.11",
+    "opencv-python-headless>=4.8",
+    "numpy",
+    "pillow",
+    "pypdf",
+    "fastapi>=0.143.0",
+    "uvicorn[standard]>=0.54.0",
+    "jinja2>=3.1.6",
+    "python-multipart>=0.0.32",
+]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest",
+]
 
 [project.scripts]
 dq = "dq.cli:main"
@@ -17,6 +30,9 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"dq.web" = ["templates/*.html", "static/house-style/*", "static/house-style/themes/*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

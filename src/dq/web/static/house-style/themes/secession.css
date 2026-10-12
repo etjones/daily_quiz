@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Josefin+Sans:wght@300;400;600&family=Karla:wght@400;500;700&display=swap');
+
+/* secession.css — Moser's Ver Sacrum poster, XIII Ausstellung, 1902.
+   Three colours and no more: an ochre ground, cobalt, and the paper. The
+   lettering is wide, thin, and drawn rather than set, so the display face is
+   a light geometric roman and the tracking is extravagant. The checkerboard
+   that fills Moser's dead space becomes the rule. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #191410;
+  --bg-raised:   #221a13;
+  --ink:         #ece2d2;
+  --ink-muted:   #b8a68d;
+  --ink-faint:   #8a7860;
+  --rule:        #3b2e21;
+  --accent:      #c2883c;
+  --accent-ink:  #191410;
+  --link:        #7f9ad6;
+  --mark:        #2b3355;
+
+  --font-body:    'Karla', system-ui, sans-serif;
+  --font-display: 'Julius Sans One', 'Josefin Sans', sans-serif;
+  --font-label:   'Josefin Sans', system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.3125rem;
+  --fs-xl:   clamp(1.5rem, 1.1rem + 1.6vw, 2.05rem);
+  --fs-xxl:  clamp(2.2rem, 1.2rem + 4vw, 3.6rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 400;
+  --lh-body:        1.66;
+  --lh-display:     1.22;
+  --tracking-display: 0.07em;
+  --tracking-label:   0.2em;
+  --case-label:       uppercase;
+
+  --measure:    33rem;
+  --margin-col: 14rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.5rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  3px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f2ece0;
+  --bg-raised:  #e8dfcd;
+  --ink:        #241b12;
+  --ink-muted:  #5d4c38;
+  --ink-faint:  #8a7660;
+  --rule:       #cbbda4;
+  --accent:     #9a6420;
+  --accent-ink: #f2ece0;
+  --link:       #2f4a94;
+  --mark:       #cfd6ea;
+}
+
+/* --- structural overrides --- */
+
+/* Moser fills every leftover band with a two-colour chequer. It is the
+   poster's only ornament, so here it is the only one too. */
+hr {
+  block-size: 10px;
+  background:
+    repeating-conic-gradient(var(--accent) 0% 25%, transparent 0% 50%) 0 0 / 10px 10px;
+  opacity: .75;
+}
+
+h1, h2, h3 { text-transform: uppercase; }
+h1 { word-spacing: .15em; }
+
+blockquote { border-inline-start-width: var(--rule-thick); font-style: italic; }
+.figure-frame { border-width: var(--rule-thick); }

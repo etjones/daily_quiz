@@ -1,0 +1,69 @@
+{% extends "_base.html" %}
+{% block main %}
+{% if not has_units %}
+<div class="callout">
+  <p><strong>No placement yet.</strong> Run placement first (about ten minutes, you ask and {{ student.name }} answers), or build a day to start from the beginning.</p>
+  <p><a class="button" href="/placement">Start placement</a></p>
+</div>
+{% endif %}
+
+<h2>1. Grade the quiz</h2>
+{% if open_quiz %}
+<p>The quiz for <strong>{{ open_quiz.for_date }}</strong> is waiting to be graded.</p>
+<p><a class="button" href="/quiz/{{ open_quiz.id }}">Grade it</a></p>
+{% else %}
+<p>No open quiz.</p>
+{% endif %}
+
+<h2>2. How did yesterday's worksheet go?</h2>
+{% if log and log.mood %}
+<p>Logged for {{ yesterday }}: <strong>{{ log.mood }}</strong>{% if log.composition_done is not none %}, story {{ 'done' if log.composition_done else 'skipped' }}{% endif %}{% if log.note %}, “{{ log.note }}”{% endif %}. You can change it below.</p>
+{% endif %}
+<form method="post" action="/mood">
+  <input type="hidden" name="on" value="{{ yesterday }}">
+  <p>
+    <label class="field" for="mood">Mood ({{ yesterday }})</label>
+    <select id="mood" name="mood">
+      {% for m in moods %}<option value="{{ m }}" {% if (log and log.mood == m) or (not (log and log.mood) and m == 'ok') %}selected{% endif %}>{{ m }}</option>{% endfor %}
+    </select>
+  </p>
+  <p>
+    <label class="field" for="story">Story</label>
+    <select id="story" name="story">
+      <option value="">not set</option>
+      <option value="done">done</option>
+      <option value="skipped">skipped</option>
+    </select>
+  </p>
+  <p>
+    <label class="field" for="note">Note</label>
+    <input type="text" id="note" name="note">
+  </p>
+  <p><button type="submit">Log it</button></p>
+</form>
+
+<h2>3. Tonight's worksheet and tomorrow's quiz</h2>
+{% if plan %}
+<p>Day {{ plan.day_no }} is built for {{ today }}.</p>
+<p><a class="button" href="/day/{{ today }}">Show and print</a></p>
+{% else %}
+<p>Grade the open quiz and log the mood first; the plan uses both.</p>
+<form method="post" action="/day">
+  <input type="hidden" name="on" value="{{ today }}">
+  <p><button type="submit">Build day for {{ today }}</button></p>
+</form>
+{% endif %}
+
+<h2>Where things stand</h2>
+<p>
+  <span class="metric">{{ streak }}</span><br>
+  <span class="metric-label">clean-quiz days in a row</span>
+</p>
+{% if last_quiz %}
+<p>
+  <span class="metric">{{ (100 * last_quiz[1])|round|int }}%</span><br>
+  <span class="metric-label">last graded quiz, {{ last_quiz[0] }}, {{ last_quiz[2] }} items</span>
+</p>
+{% endif %}
+<p>Story stage {{ student.composition_stage }}, at most {{ student.pace_cap }} new skills per day.</p>
+{% endblock %}

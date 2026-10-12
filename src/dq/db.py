@@ -113,10 +113,10 @@ class Unit:
 
 
 class DB:
-    def __init__(self, path: str | Path):
+    def __init__(self, path: str | Path, check_same_thread: bool = True):
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.conn = sqlite3.connect(self.path)
+        self.conn = sqlite3.connect(self.path, check_same_thread=check_same_thread)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.executescript(SCHEMA)
@@ -316,6 +316,24 @@ class DB:
             q += " AND probe = 0"
         q += " ORDER BY on_date, id"
         return self.conn.execute(q, (student_id, since)).fetchall()
+
+    def results_for_quiz(self, quiz_id: int) -> list[sqlite3.Row]:
+        return self.conn.execute(
+            "SELECT * FROM result WHERE quiz_id = ? ORDER BY id", (quiz_id,)
+        ).fetchall()
+
+    def graded_quizzes(self, student_id: int) -> list[sqlite3.Row]:
+        """Graded quizzes, newest first, with counts over non-probe items."""
+        return self.conn.execute(
+            "SELECT q.id, q.for_date, q.graded_on,"
+            " SUM(CASE WHEN r.probe = 0 THEN 1 ELSE 0 END) AS n,"
+            " SUM(CASE WHEN r.probe = 0 THEN r.correct ELSE 0 END) AS n_right,"
+            " MAX(r.mode) AS mode"
+            " FROM quiz q LEFT JOIN result r ON r.quiz_id = q.id"
+            " WHERE q.student_id = ? AND q.status = 'graded'"
+            " GROUP BY q.id ORDER BY q.for_date DESC, q.id DESC",
+            (student_id,),
+        ).fetchall()
 
     def quiz_days(self, student_id: int) -> list[tuple[str, float, int]]:
         """(date, accuracy over non-probe items, item count), oldest first."""

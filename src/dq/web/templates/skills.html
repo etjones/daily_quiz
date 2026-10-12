@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+{% block main %}
+<p>
+  <a href="/skills">All</a> · <a href="/skills?subject=spelling">Spelling</a> · <a href="/skills?subject=math">Math</a>
+</p>
+<table>
+  <thead><tr><th>Skill</th><th class="num">Grade</th><th>Id</th>{% if student %}<th>{{ student.name }}</th>{% endif %}</tr></thead>
+  <tbody>
+  {% for s, label in rows %}
+  <tr>
+    <td>{{ s.title }}</td>
+    <td class="num">{{ s.grade }}</td>
+    <td><code>{{ s.id }}</code></td>
+    {% if student %}<td>{{ label }}</td>{% endif %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* capsule.css — Kurokawa's Nakagin Capsule Tower, 1972.
+   A hundred and forty identical cells bolted to two cores, every one with a
+   single round window. Weathered white concrete, black shadow gaps between
+   the units, and rust — the only warm colour on the whole building, so the
+   only warm colour here. Anything that frames content gets the porthole
+   radius; nothing else does. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #17191b;
+  --bg-raised:   #212528;
+  --ink:         #d9dcda;
+  --ink-muted:   #a0a5a5;
+  --ink-faint:   #74797a;
+  --rule:        #32373a;
+  --accent:      #b5613a;
+  --accent-ink:  #17191b;
+  --link:        #86a3ad;
+  --mark:        #3b2a21;
+
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-display: 'Sora', system-ui, sans-serif;
+  --font-label:   'Sora', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.3125rem;
+  --fs-xl:   clamp(1.5rem, 1.15rem + 1.5vw, 2.1rem);
+  --fs-xxl:  clamp(2.2rem, 1.3rem + 3.6vw, 3.5rem);
+  --fs-mono: 0.83rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 600;
+  --lh-body:        1.64;
+  --lh-display:     1.12;
+  --tracking-display: -0.015em;
+  --tracking-label:   0.13em;
+  --case-label:       uppercase;
+
+  --measure:    33rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.4rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      14px;
+  --rule-hair:   1px;
+  --rule-thick:  2px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #ececeb;
+  --bg-raised:  #e0e1e0;
+  --ink:        #1d2022;
+  --ink-muted:  #4f5456;
+  --ink-faint:  #7d8284;
+  --rule:       #c5c8c8;
+  --accent:     #9a4a24;
+  --accent-ink: #f4f4f3;
+  --link:       #3e6470;
+  --mark:       #e0cdc0;
+}
+
+/* --- structural overrides --- */
+
+/* The porthole. Each note reference is a window in the side of a capsule. */
+.sidenote-ref::after {
+  display: inline-block;
+  min-inline-size: 1.35em;
+  text-align: center;
+  border: var(--rule-hair) solid var(--accent);
+  border-radius: 50%;
+  vertical-align: baseline;
+  font-size: .6em;
+  line-height: 1.3;
+}
+
+/* Capsules stack with a black gap between them, never flush. */
+hr { block-size: 3px; background: none; border-block: var(--rule-hair) solid var(--rule); }
+.figure-frame, .callout, pre { border-radius: var(--radius); }

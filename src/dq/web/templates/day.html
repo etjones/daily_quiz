@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">Worksheet for tonight ({{ on }}) and the quiz for {{ quiz_date }}. Open a PDF and print it from the viewer.</p>
+<p>
+{% for label, rel, exists in files %}
+  {% if exists %}<a class="button" href="/files/{{ rel }}" target="_blank" rel="noopener">{{ label }}</a>{% else %}<span>{{ label }}: missing</span>{% endif %}
+{% endfor %}
+</p>
+
+<h2>Spelling</h2>
+<ul>
+{% for w in sel.spelling %}<li>{{ w.word }}{% if w.role == 'new' %} <small>new</small>{% elif w.role != 'review' %} <small>{{ w.role }}</small>{% endif %}</li>{% endfor %}
+</ul>
+{% if sel.spell_probe %}<p>Also checking whether {{ student.name }} already knows: {{ sel.spell_probe.words|join(', ') }}. Wrong answers here do not count.</p>{% endif %}
+
+<h2>Math</h2>
+<ul>
+{% for title, m in math %}<li>{{ title }} × {{ m.n }}{% if m.role == 'new' %} <small>new</small>{% endif %}</li>{% endfor %}
+</ul>
+{% if sel.math_probe %}<p>The quiz includes {{ sel.math_probe.n }} probe questions on a skill not taught yet, to check whether it is already known. Wrong answers do not count against {{ student.name }}.</p>{% endif %}
+
+{% if sel.load_reason %}<div class="callout"><p>{{ sel.load_reason }}</p></div>{% endif %}
+{% if sel.consolidating %}<div class="callout"><p>The last quiz was hard, so no new math today and fewer new words; reviewing instead.</p></div>{% endif %}
+<p>Pace {{ sel.pace }}, clean-quiz streak {{ sel.clean_days }}{% if sel.probing %}, probing for skills already known{% endif %}.</p>
+
+<h2>Rebuild</h2>
+<form method="post" action="/day">
+  <input type="hidden" name="on" value="{{ on }}">
+  <p><button class="ghost" type="submit">Re-render PDFs</button></p>
+</form>
+<form method="post" action="/day" onsubmit="return confirm('Rebuild this day from scratch? The open quiz is replaced.')">
+  <input type="hidden" name="on" value="{{ on }}">
+  <input type="hidden" name="force" value="true">
+  <p><button class="ghost" type="submit">Rebuild plan from scratch</button></p>
+</form>
+{% endblock %}

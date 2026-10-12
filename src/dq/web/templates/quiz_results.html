@@ -1,0 +1,25 @@
+{% extends "_base.html" %}
+{% block main %}
+<p>
+  <span class="metric">{{ right }} / {{ n }}</span><br>
+  <span class="metric-label">right on taught material, graded {{ quiz.graded_on }}</span>
+</p>
+{% if misses %}<p>To practise tonight: {{ misses|join(', ') }}.</p>{% endif %}
+{% for title, passed in probes %}
+<p>{% if passed %}Already knew “{{ title }}”: skipping ahead.{% else %}“{{ title }}” isn't known yet; it will be taught normally.{% endif %}</p>
+{% endfor %}
+<table>
+  <thead><tr><th>Prompt</th><th>Expected</th><th>Wrote</th><th>Result</th></tr></thead>
+  <tbody>
+  {% for r in rows %}
+  <tr>
+    <td>{{ r.prompt }}{% if r.probe %} <small>(probe)</small>{% endif %}</td>
+    <td>{{ r.expected }}</td>
+    <td>{{ r.got if r.got else '(blank)' }}</td>
+    <td>{{ 'right' if r.correct else (r.error_cat or 'wrong') }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p><a class="button" href="/">Back to today</a></p>
+{% endblock %}

@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400;600;800&family=Jost:wght@300;400;500;600&display=swap');
+
+/* setback.css — the Chrysler Building, Van Alen, 1930.
+   The 1916 zoning law made towers step back as they rose, and the ornament
+   followed: chevrons, stacked arcs, a frieze of them running round each
+   setback. The building is grey brick and steel with brass only at the crown,
+   so brass is scarce here too. Display type is tall and narrow because the
+   whole argument of the thing is height. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #14161a;
+  --bg-raised:   #1d2026;
+  --ink:         #dfe2e6;
+  --ink-muted:   #a2a8b0;
+  --ink-faint:   #737a84;
+  --rule:        #2e333b;
+  --accent:      #c39b43;
+  --accent-ink:  #14161a;
+  --link:        #8fb0cc;
+  --mark:        #3a3222;
+
+  --font-body:    'Jost', system-ui, sans-serif;
+  --font-display: 'Big Shoulders Display', 'Jost', sans-serif;
+  --font-label:   'Jost', system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.35rem;
+  --fs-xl:   clamp(1.8rem, 1.2rem + 2.2vw, 2.7rem);
+  --fs-xxl:  clamp(3rem, 1.6rem + 5.6vw, 5.2rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    300;
+  --weight-bold:    600;
+  --weight-display: 800;
+  --lh-body:        1.66;
+  --lh-display:     0.92;
+  --tracking-display: 0.01em;
+  --tracking-label:   0.24em;
+  --case-label:       uppercase;
+
+  --measure:    32rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.6rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  3px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #eeeae2;
+  --bg-raised:  #e2ddd2;
+  --ink:        #1c1f24;
+  --ink-muted:  #4e545c;
+  --ink-faint:  #7d848d;
+  --rule:       #c6c1b6;
+  --accent:     #8a6516;
+  --accent-ink: #f4f1ea;
+  --link:       #2c5478;
+  --mark:       #e0d2a8;
+}
+
+/* --- structural overrides --- */
+
+/* The chevron frieze. One band, at the section break, where the tower
+   would have stepped in. */
+hr {
+  block-size: 12px;
+  background:
+    repeating-linear-gradient(135deg, var(--accent) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(45deg,  var(--accent) 0 2px, transparent 2px 9px);
+  opacity: .8;
+}
+
+h1, h2, h3 { text-transform: uppercase; }
+h1 { letter-spacing: 0.02em; }
+.metric { letter-spacing: -0.01em; }

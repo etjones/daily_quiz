@@ -388,14 +388,7 @@ def cmd_report(args) -> int:
 def cmd_sentences(args) -> int:
     db, _ = open_db(args)
     cur = load_curriculum(args)
-    want = []
-    for s in cur.subject("spelling"):
-        if not (args.all or s.track == "sight" or s.needs_sentence):
-            continue
-        for w in s.words:
-            if w.lower() not in cur.sentences and not db.sentence(w.lower()):
-                want.append(w)
-    want = sorted(set(want))
+    want = build.words_missing_sentences(cur, db, include_phonics=args.all)
     print(f"{len(want)} words without a dictation sentence")
     if not args.fill:
         print("Run with --fill --backend lmstudio to generate and cache them.")

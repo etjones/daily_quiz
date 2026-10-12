@@ -1,0 +1,36 @@
+{% extends "_base.html" %}
+{% block main %}
+<form method="get" action="/report">
+  <p>
+    <label class="field" for="days">Period (days)</label>
+    <select id="days" name="days">
+      {% for d in [7, 14, 30, 90, 365] %}<option value="{{ d }}" {% if d == days %}selected{% endif %}>{{ d }}</option>{% endfor %}
+    </select>
+    <button class="ghost" type="submit">Show</button>
+  </p>
+</form>
+<p class="lede">{{ rep.period_label|capitalize }}.</p>
+{% for h in rep.headline %}
+<p><span class="metric">{{ h.value }}</span><br><span class="metric-label">{{ h.label }}</span></p>
+{% endfor %}
+
+{% for q in rep.questions %}
+<h2>{{ q.question }}</h2>
+{% if q.lines %}<ul>{% for line in q.lines %}<li>{{ line }}</li>{% endfor %}</ul>{% else %}<p>Nothing yet.</p>{% endif %}
+{% endfor %}
+
+{% if rep.skills %}
+<h2>Skills started</h2>
+<table>
+  <thead><tr><th>Skill</th><th>Status</th><th>Progress</th></tr></thead>
+  <tbody>
+  {% for s in rep.skills %}<tr><td>{{ s.title }}</td><td>{{ s.label }}</td><td>{{ s.progress }}</td></tr>{% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<form method="post" action="/report/pdf" target="_blank">
+  <input type="hidden" name="days" value="{{ days }}">
+  <p><button class="ghost" type="submit">Make a printable PDF</button></p>
+</form>
+{% endblock %}

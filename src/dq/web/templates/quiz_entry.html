@@ -1,0 +1,37 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">Read each item aloud. Leave “right” selected when the answer was right. Otherwise type what {{ student.name }} wrote or said, or pick blank or wrong.</p>
+
+<form method="post" action="/quiz/{{ quiz.id }}/review">
+<table>
+  <thead><tr><th class="num">#</th><th>Ask</th><th>Answer</th><th>Result</th><th>What they wrote</th></tr></thead>
+  <tbody>
+  {% for it in items %}
+  <tr>
+    <td class="num">{{ it.n }}</td>
+    <td>{{ it.say }}{% if it.probe %} <small>(probe)</small>{% endif %}
+      {% if it.crop %}<br><img src="{{ it.crop }}" alt="photo of answer {{ it.n }}">{% endif %}</td>
+    <td><strong>{{ it.expected }}</strong></td>
+    <td>
+      <label><input type="radio" name="verdict_{{ it.id }}" value="right" checked> right</label><br>
+      <label><input type="radio" name="verdict_{{ it.id }}" value="wrong"> wrong</label><br>
+      <label><input type="radio" name="verdict_{{ it.id }}" value="blank"> blank</label>
+    </td>
+    <td><input type="text" name="got_{{ it.id }}" aria-label="what they wrote for {{ it.n }}" autocomplete="off"></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+<p><button type="submit">Check answers</button></p>
+</form>
+
+<h2>Or grade a photo</h2>
+<p>Take a flat, well-lit photo of the whole quiz page. A vision model reads each box; you check the result before anything is saved.</p>
+<form method="post" action="/quiz/{{ quiz.id }}/photo" enctype="multipart/form-data">
+  <p>
+    <label class="field" for="photo">Photo</label>
+    <input type="file" id="photo" name="photo" accept="image/*" required>
+  </p>
+  <p><button class="ghost" type="submit">Read the photo</button></p>
+</form>
+{% endblock %}

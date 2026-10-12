@@ -1,0 +1,36 @@
+{% extends "house_style.html" %}
+{% block head %}
+<script src="https://unpkg.com/htmx.org@2.0.4" crossorigin="anonymous"></script>
+{% endblock %}
+{% block content %}
+<header class="masthead">
+  <p class="kicker">dq{% if student %} · {{ student.name }}{% endif %}</p>
+  <h1>{{ title }}</h1>
+  <nav>
+    <p>
+      <a href="/">Today</a> ·
+      <a href="/quiz">Grade quiz</a> ·
+      <a href="/history">History</a> ·
+      <a href="/report">Progress</a> ·
+      <a href="/skills">Skills</a> ·
+      <a href="/sentences">Sentences</a> ·
+      <a href="/students">Students</a>
+    </p>
+  </nav>
+  {% if students and students|length > 1 %}
+  <form method="post" action="/students/select">
+    <label class="field" for="switch-student">Student</label>
+    <select id="switch-student" name="name">
+      {% for name in students %}
+      <option value="{{ name }}" {% if student and name == student.name %}selected{% endif %}>{{ name }}</option>
+      {% endfor %}
+    </select>
+    <button class="ghost" type="submit">Switch</button>
+  </form>
+  {% endif %}
+</header>
+<main>
+  {% if msg %}<div class="callout"><p>{{ msg }}</p></div>{% endif %}
+  {% block main %}{% endblock %}
+</main>
+{% endblock %}

@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+/* drafting.css — the annotated sheet.
+   Body copy reads normally; every piece of apparatus (labels, captions,
+   sidenotes, table heads) switches to mono, the way a drawing separates
+   what is drawn from what is written about it. The margin column is an
+   annotation gutter, and a faint modular grid sits under everything. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #0f1720;
+  --bg-raised:   #16212c;
+  --ink:         #dce6ec;
+  --ink-muted:   #93a6b4;
+  --ink-faint:   #64798a;
+  --rule:        #263644;
+  --accent:      #5cc8e8;
+  --accent-ink:  #0f1720;
+  --link:        #6fd3ef;
+  --mark:        #1d3a46;
+
+  --grid-line:   #1a2733;
+  --grid-size:   1.5rem;
+
+  --font-body:    'IBM Plex Sans', system-ui, sans-serif;
+  --font-display: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-label:   'IBM Plex Mono', ui-monospace, monospace;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.8125rem;
+  --fs-md:   1.0625rem;
+  --fs-lg:   1.25rem;
+  --fs-xl:   clamp(1.35rem, 1.05rem + 1.2vw, 1.75rem);
+  --fs-xxl:  clamp(1.9rem, 1.3rem + 2.6vw, 2.9rem);
+  --fs-mono: 0.8125rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 500;
+  --lh-body:        1.68;
+  --lh-display:     1.2;
+  --tracking-display: 0.02em;
+  --tracking-label:   0.06em;
+  --case-label:       uppercase;
+
+  --measure:    35rem;
+  --margin-col: 14rem;
+  --gutter:     clamp(1.25rem, 5vw, 4.5rem);
+  --space-flow:    1.2rem;
+  --space-section: 3.5rem;
+  --space-page:    clamp(2rem, 6vw, 4.5rem);
+  --radius:      2px;
+  --rule-hair:   1px;
+  --rule-thick:  2px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f4f2ea;
+  --bg-raised:  #eae7dc;
+  --ink:        #1b2733;
+  --ink-muted:  #4a5b6a;
+  --ink-faint:  #7c8b98;
+  --rule:       #c9c6b8;
+  --accent:     #10657f;
+  --accent-ink: #f4f2ea;
+  --link:       #0e5a72;
+  --mark:       #dfe8c8;
+  --grid-line:  #e4e1d5;
+}
+
+/* --- the sheet --- */
+body {
+  background-image:
+    linear-gradient(to right, var(--grid-line) var(--rule-hair), transparent var(--rule-hair)),
+    linear-gradient(to bottom, var(--grid-line) var(--rule-hair), transparent var(--rule-hair));
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+/* Section heads read as sheet callouts, with a leader rule running out
+   through the annotation gutter. */
+main > h2 { grid-column: main-start / margin-end; display: flex;
+            align-items: baseline; gap: .9rem; }
+main > h2::after { content: ""; flex: 1; block-size: var(--rule-hair);
+                   background: var(--rule); }
+
+figure .figure-frame { position: relative; background: color-mix(in srgb, var(--bg-raised) 70%, transparent); }
+figure .figure-frame::before,
+figure .figure-frame::after {
+  content: ""; position: absolute; inline-size: 9px; block-size: 9px;
+  border: var(--rule-thick) solid var(--accent);
+}
+figure .figure-frame::before { inset-block-start: -1px; inset-inline-start: -1px;
+                               border-inline-end: 0; border-block-end: 0; }
+figure .figure-frame::after  { inset-block-end: -1px; inset-inline-end: -1px;
+                               border-inline-start: 0; border-block-start: 0; }
+
+.sidenote { border-inline-start: var(--rule-hair) solid var(--rule);
+            padding-inline-start: .9rem; }

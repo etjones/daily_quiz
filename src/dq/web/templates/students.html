@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+{% block main %}
+{% if rows %}
+<table>
+  <thead><tr><th>Name</th><th>Since</th><th class="num">Pace cap</th><th></th></tr></thead>
+  <tbody>
+  {% for s in rows %}
+  <tr>
+    <td>{{ s.name }}{% if s.name == default %} <small>(default)</small>{% endif %}{% if student and s.name == student.name %} <small>(current)</small>{% endif %}</td>
+    <td>{{ s.created }}</td>
+    <td class="num">{{ s.pace_cap }}</td>
+    <td>
+      <form method="post" action="/students/select">
+        <input type="hidden" name="name" value="{{ s.name }}">
+        <button class="ghost" type="submit">Use</button>
+      </form>
+      {% if s.name != default %}
+      <form method="post" action="/students/default">
+        <input type="hidden" name="name" value="{{ s.name }}">
+        <button class="ghost" type="submit">Make default</button>
+      </form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="lede">No students yet.</p>
+{% endif %}
+
+<h2>Add a student</h2>
+<form method="post" action="/students">
+  <p>
+    <label class="field" for="name">Name</label>
+    <input type="text" id="name" name="name" required pattern="[A-Za-z0-9_-]+">
+  </p>
+  <p>
+    <label class="field" for="pace_cap">New skills per day, at most</label>
+    <select id="pace_cap" name="pace_cap">
+      <option value="1">1</option>
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+    </select>
+  </p>
+  <p><button type="submit">Add student</button></p>
+</form>
+<p>The first student added becomes the default for the CLI too. Placement comes next.</p>
+{% endblock %}

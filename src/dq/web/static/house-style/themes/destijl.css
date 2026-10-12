@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@400;700;900&display=swap');
+
+/* destijl.css — Van Doesburg's Counter-composition VIII, 1924, and the
+   Rietveld Schröder house it shares a grammar with. Everything is a plane
+   bounded by a black bar; the primaries are never mixed and never shaded.
+   Rules are the loudest thing on the page, which is the point — in De Stijl
+   the line is structure, not decoration. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #15161a;
+  --bg-raised:   #1e2026;
+  --ink:         #f0efe9;
+  --ink-muted:   #a8a9a6;
+  --ink-faint:   #75767a;
+  --rule:        #f0efe9;
+  --accent:      #d8202a;
+  --accent-ink:  #f0efe9;
+  --link:        #3f6fd4;
+  --mark:        #6b5a00;
+
+  --font-body:    'Chivo', system-ui, sans-serif;
+  --font-display: 'Chivo', system-ui, sans-serif;
+  --font-label:   'Chivo', system-ui, sans-serif;
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.72rem;
+  --fs-sm:   0.875rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.35rem;
+  --fs-xl:   clamp(1.6rem, 1.2rem + 1.8vw, 2.3rem);
+  --fs-xxl:  clamp(2.5rem, 1.4rem + 4.4vw, 4.2rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    400;
+  --weight-bold:    700;
+  --weight-display: 900;
+  --lh-body:        1.58;
+  --lh-display:     0.98;
+  --tracking-display: -0.03em;
+  --tracking-label:   0.12em;
+  --case-label:       uppercase;
+
+  --measure:    34rem;
+  --margin-col: 13rem;
+  --gutter:     clamp(1.25rem, 5vw, 4rem);
+  --space-flow:    1.15rem;
+  --space-section: 3.25rem;
+  --space-page:    clamp(2rem, 6vw, 5rem);
+  --radius:      0px;
+  --rule-hair:   2px;
+  --rule-thick:  8px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #f4f3ee;
+  --bg-raised:  #e7e6e0;
+  --ink:        #16171b;
+  --ink-muted:  #4c4d51;
+  --ink-faint:  #7d7e82;
+  --rule:       #16171b;
+  --accent:     #cc1720;
+  --accent-ink: #f4f3ee;
+  --link:       #1b45b0;
+  --mark:       #f3d64a;
+}
+
+/* --- structural overrides --- */
+
+/* A Counter-composition is bars crossing a field, so the section rule runs
+   the full width and the heading that follows sits hard against it. */
+hr { block-size: var(--rule-thick); background: var(--ink); opacity: 1; }
+
+main > h2 { border-block-start: var(--rule-thick) solid var(--ink);
+            padding-block-start: .5rem; }
+
+/* One plane in red, one in blue, never blended. */
+blockquote { border-inline-start-color: var(--accent); }
+.callout { border-inline-start-color: var(--link); }
+.figure-frame { border-width: var(--rule-hair); border-color: var(--ink); }

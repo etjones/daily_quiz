@@ -5,10 +5,19 @@ parent script. Spelling and arithmetic are broken into small skills in TOML file
 scheduler (Leitner boxes) decides what appears each day. No model is needed for any decision.
 
 ## Install (on a computer)
-    python3 -m venv .venv && . .venv/bin/activate
-    pip install -e '.[dev]'
-    pytest -q                 # 22 tests
-    dq validate               # checks the curriculum files
+    uv sync --extra dev
+    just test                 # pytest
+    just validate             # checks the curriculum files
+    just run                  # web app at http://localhost:8000 (hot reload)
+
+## Web app
+`just run` serves the same daily loop in a browser, on the same data as the CLI: today's steps
+(grade the quiz, log the mood, build and print the worksheet and quiz), per-item quiz entry like
+`dq oral`, photo grading, placement (with undo), history, the progress report, skills, and dictation
+sentences. Switch students from the header; the choice is a cookie, falling back to the CLI's default
+student. There is no login. Photo grading and sentence writing use `DQ_BACKEND` (default `lmstudio`,
+`none` to disable) and `DQ_LLM_URL` / `DQ_LLM_MODEL`. Styling is the house style, exported into
+`src/dq/web/static/house-style`; pick a theme with the control at the top right.
 
 Data lives in `~/.dq` (override with `--home` or `DQ_HOME`): `dq.db` (SQLite) and `out/<student>/<date>/*.pdf`.
 Back up that folder; it is the child's whole history.
@@ -37,4 +46,4 @@ been tested against a mock server, not a real model.
 - Never run on the child's machine yet; the code has been tested only in simulation with synthetic children.
 - Photo grading depends on printing at 100% scale on US Letter and a reasonably flat, well-lit photo.
 
-See docs/SCHEMA.md for the skill format.
+See docs/SCHEMA.md for the skill format, and [CHANGELOG.md](CHANGELOG.md) for changes.

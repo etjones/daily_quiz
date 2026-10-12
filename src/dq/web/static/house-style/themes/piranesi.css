@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cormorant+Garamond:wght@400;600&family=Courier+Prime:ital,wght@0,400;1,400&display=swap');
+
+/* piranesi.css — the Carceri d'Invenzione and the Vedute di Roma.
+   Etched line on warm paper: everything is hatching, so the page is built
+   from hairlines and the ink is never quite black. Piranesi set his own
+   plate captions in a high-contrast roman with long descenders and let them
+   breathe, which is why the measure is wide and the leading is generous.
+   No accent colour exists in an engraving; here it is the red of the
+   printer's sanguine chalk, used once. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #16130f;
+  --bg-raised:   #1e1a15;
+  --ink:         #ded5c6;
+  --ink-muted:   #ab9f8d;
+  --ink-faint:   #7d7263;
+  --rule:        #352e25;
+  --accent:      #b4553a;
+  --accent-ink:  #16130f;
+  --link:        #c08a6a;
+  --mark:        #3d2a1c;
+
+  --font-body:    'EB Garamond', Georgia, serif;
+  --font-display: 'Cormorant Garamond', 'EB Garamond', serif;
+  --font-label:   'EB Garamond', Georgia, serif;
+  --font-mono:    'Courier Prime', ui-monospace, monospace;
+
+  --fs-base: 1.1875rem;
+  --fs-xs:   0.875rem;
+  --fs-sm:   1rem;
+  --fs-md:   1.25rem;
+  --fs-lg:   1.5rem;
+  --fs-xl:   clamp(1.7rem, 1.2rem + 2vw, 2.5rem);
+  --fs-xxl:  clamp(2.6rem, 1.5rem + 4.4vw, 4.2rem);
+  --fs-mono: 0.9rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 600;
+  --lh-body:        1.76;
+  --lh-display:     1.1;
+  --tracking-display: 0.005em;
+  --tracking-label:   0.1em;
+  --case-label:       none;
+  --quote-style:      italic;
+  --body-features:    "liga" 1, "onum" 1;
+
+  --measure:    36rem;
+  --margin-col: 14rem;
+  --gutter:     clamp(1.25rem, 5vw, 4.5rem);
+  --space-flow:    1.35rem;
+  --space-section: 4rem;
+  --space-page:    clamp(2.5rem, 7vw, 6rem);
+  --radius:      1px;
+  --rule-hair:   1px;
+  --rule-thick:  2px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #efe7d8;
+  --bg-raised:  #e5dcc9;
+  --ink:        #2a2118;
+  --ink-muted:  #5a4c3c;
+  --ink-faint:  #8a7a66;
+  --rule:       #c9bca4;
+  --accent:     #97432a;
+  --accent-ink: #efe7d8;
+  --link:       #7a4a2c;
+  --mark:       #ddcba8;
+}
+
+/* --- structural overrides --- */
+
+/* An etched rule is not a solid bar but a run of hatching that fades at
+   both ends, the way Piranesi's shading leaves the plate edge. */
+hr {
+  block-size: 3px;
+  background:
+    repeating-linear-gradient(90deg, var(--ink-faint) 0 1px, transparent 1px 4px);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+.kicker { font-style: italic; letter-spacing: .06em; }
+figcaption { font-style: italic; max-width: 34ch; }
+.figure-frame { padding: calc(var(--space-flow) * 1.4); }

@@ -1,7 +1,12 @@
 default:
     @just --list
 
-run *args:
+port := env("DQ_PORT", "8000")
+
+run:
+    uv run uvicorn dq.web.app:create_app --factory --reload --reload-dir src --reload-include '*.html' --port {{port}}
+
+dq *args:
     uv run dq {{args}}
 
 test *args:

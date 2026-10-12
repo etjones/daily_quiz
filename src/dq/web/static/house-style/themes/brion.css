@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Antonio:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400&display=swap');
+
+/* brion.css — Carlo Scarpa, Tomba Brion, San Vito d'Altivole, 1978.
+   Black granite against warm poured concrete, and the stepped fascia Scarpa
+   cut into every edge — a set of receding ledges, never a single line. His
+   incised lettering is narrow and squared, letterspaced into bronze. The
+   page is mostly silence: a wide reserved margin, long section breaks, and
+   one metal colour. */
+
+:root {
+  color-scheme: dark;
+
+  --bg:          #101110;
+  --bg-raised:   #191a18;
+  --ink:         #d3cdc0;
+  --ink-muted:   #9c968a;
+  --ink-faint:   #6e6a61;
+  --rule:        #2b2c29;
+  --accent:      #a3803f;
+  --accent-ink:  #101110;
+  --link:        #8fa08b;
+  --mark:        #2f2a1a;
+
+  --font-body:    'Source Serif 4', Georgia, serif;
+  --font-display: 'Antonio', 'Source Serif 4', sans-serif;
+  --font-label:   'Antonio', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', ui-monospace, monospace;
+
+  --fs-base: 1.0625rem;
+  --fs-xs:   0.8rem;
+  --fs-sm:   0.9rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.3125rem;
+  --fs-xl:   clamp(1.7rem, 1.2rem + 2vw, 2.4rem);
+  --fs-xxl:  clamp(2.6rem, 1.5rem + 4.4vw, 4.2rem);
+  --fs-mono: 0.85rem;
+
+  --weight-body:    400;
+  --weight-bold:    600;
+  --weight-display: 500;
+  --lh-body:        1.7;
+  --lh-display:     1.02;
+  --tracking-display: 0.06em;
+  --tracking-label:   0.2em;
+  --case-label:       uppercase;
+
+  --measure:    33rem;
+  --margin-col: 16rem;
+  --gutter:     clamp(1.5rem, 6vw, 5rem);
+  --space-flow:    1.25rem;
+  --space-section: 4.75rem;
+  --space-page:    clamp(3rem, 8vw, 7rem);
+  --radius:      0px;
+  --rule-hair:   1px;
+  --rule-thick:  2px;
+}
+
+:root[data-mode="light"] {
+  color-scheme: light;
+  --bg:         #e9e5dc;
+  --bg-raised:  #ded9ce;
+  --ink:        #1b1c1a;
+  --ink-muted:  #4d4e49;
+  --ink-faint:  #7b7c75;
+  --rule:       #c2beb2;
+  --accent:     #7d5c1f;
+  --accent-ink: #f2efe7;
+  --link:       #4a5c46;
+  --mark:       #d8d0b4;
+}
+
+/* --- structural overrides --- */
+
+/* The Scarpa step: three ledges of decreasing length where another theme
+   would put one rule. It appears at section breaks and nowhere else. */
+hr {
+  block-size: 9px;
+  background:
+    linear-gradient(var(--accent) 0 0) 0 0 / 100% 1px no-repeat,
+    linear-gradient(var(--rule)   0 0) 0 4px / 70% 1px no-repeat,
+    linear-gradient(var(--rule)   0 0) 0 8px / 40% 1px no-repeat;
+}
+
+h1, h2, h3 { text-transform: uppercase; }
+.kicker { color: var(--accent); }

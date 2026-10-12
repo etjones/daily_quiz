@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+{% block main %}
+<h2>Graded quizzes</h2>
+{% if quizzes %}
+<table>
+  <thead><tr><th>Quiz for</th><th>Graded</th><th class="num">Right</th><th class="num">Score</th><th>How</th></tr></thead>
+  <tbody>
+  {% for q in quizzes %}
+  <tr>
+    <td><a href="/quiz/{{ q.id }}">{{ q.for_date }}</a></td>
+    <td>{{ q.graded_on }}</td>
+    <td class="num">{{ q.n_right or 0 }} / {{ q.n or 0 }}</td>
+    <td class="num">{% if q.n %}{{ (100 * q.n_right / q.n)|round|int }}%{% else %}—{% endif %}</td>
+    <td>{{ q.mode or '' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No graded quizzes yet.</p>
+{% endif %}
+
+<h2>Days</h2>
+{% if logs %}
+<table>
+  <thead><tr><th>Worksheet day</th><th>Mood</th><th>Story</th><th>Note</th></tr></thead>
+  <tbody>
+  {% for d in logs %}
+  <tr>
+    <td>{{ d.on_date }}</td>
+    <td>{{ d.mood or '' }}</td>
+    <td>{% if d.composition_done is not none %}{{ 'done' if d.composition_done else 'skipped' }}{% endif %}</td>
+    <td>{{ d.note or '' }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Nothing logged yet.</p>
+{% endif %}
+
+<h2>Worksheets</h2>
+{% if plans %}
+<ul>{% for p in plans %}<li><a href="/day/{{ p.for_date }}">Day {{ p.day_no }}: {{ p.for_date }}</a></li>{% endfor %}</ul>
+{% else %}
+<p>No days built yet.</p>
+{% endif %}
+{% endblock %}
