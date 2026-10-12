@@ -2,9 +2,11 @@
 
 A normal day, in this order:
     1. quiz (printed yesterday)           parent reads words, child writes
-    2. dq grade NAME photo.jpg            or  dq oral NAME
-    3. dq mood NAME ok                    how last night's worksheet went
-    4. dq next NAME                       prints tonight's worksheet and tomorrow's quiz
+    2. dq grade photo.jpg                 or  dq oral
+    3. dq mood ok                         how last night's worksheet went
+    4. dq next                            prints tonight's worksheet and tomorrow's quiz
+
+NAME is optional everywhere: commands use the default student (set by the first `dq init`, or `dq default NAME`).
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ from . import report as report_mod
 from .db import DB
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+MOODS = ("easy", "ok", "hard", "tears")
 
 
 def default_home() -> Path:
@@ -51,6 +54,34 @@ def load_curriculum(args) -> curriculum.Curriculum:
 def open_db(args) -> tuple[DB, Path]:
     home = Path(args.home) if args.home else default_home()
     return DB(home / "dq.db"), home
+
+
+def default_student_path(home: Path) -> Path:
+    return home / "default_student"
+
+
+def resolve_student(name: str | None, home: Path) -> str:
+    if name:
+        return name
+    path = default_student_path(home)
+    if path.exists() and path.read_text().strip():
+        return path.read_text().strip()
+    raise KeyError("no student given and no default recorded; run `dq default NAME`")
+
+
+def split_positionals(words: list[str], n_tail: int) -> tuple[str | None, list[str]]:
+    """Split `[NAME] tail...` into (name or None, tail)."""
+    if len(words) == n_tail:
+        return None, words
+    if len(words) == n_tail + 1:
+        return words[0], words[1:]
+    raise KeyError(f"expected [NAME] plus {n_tail} more argument(s), got {len(words)}")
+
+
+def open_for_student(args) -> tuple[DB, Path]:
+    db, home = open_db(args)
+    args.name = resolve_student(args.name, home)
+    return db, home
 
 
 # --------------------------------------------------------------------------- commands
@@ -98,6 +129,9 @@ def cmd_init(args) -> int:
         print(f"could not add student: {e}")
         return 1
     print(f"Added {args.name}. Data lives in {home / 'dq.db'}")
+    if not default_student_path(home).exists():
+        default_student_path(home).write_text(args.name + "\n")
+        print(f"{args.name} is now the default student.")
     print(
         f"Recommended next step: dq placement {args.name}   (about 10 minutes, you ask and he answers aloud)"
     )
@@ -105,13 +139,32 @@ def cmd_init(args) -> int:
     return 0
 
 
+def ask_yes_no(prompt: str) -> bool:
+    while True:
+        reply = input(prompt).strip().lower()
+        if reply in ("y", "n"):
+            return reply == "y"
+        print("   please type y or n")
+
+
+def cmd_default(args) -> int:
+    db, home = open_db(args)
+    if args.name:
+        db.student(args.name)
+        default_student_path(home).write_text(args.name + "\n")
+        print(f"Default student is now {args.name}.")
+        return 0
+    print(resolve_student(None, home))
+    return 0
+
+
 def cmd_placement(args) -> int:
-    db, _ = open_db(args)
+    db, _ = open_for_student(args)
     cur = load_curriculum(args)
     student = db.student(args.name)
     on = parse_date(args.date)
     print(
-        "Placement: ask each item aloud. Press Enter if he got it right, anything else if not."
+        "Placement: ask each item aloud. Type y if he got it right, n if not, then Enter."
     )
     print("Don't help. Stop whenever he is tired; you can rerun later.\n")
 
@@ -123,7 +176,7 @@ def cmd_placement(args) -> int:
             )
         else:
             print(f"[{item['title']}] {item['say']}   [answer: {item['expected']}]")
-        return input("   right? > ").strip() == ""
+        return ask_yes_no("   right? (y/n) > ")
 
     tracks = tuple(args.tracks) if args.tracks else placement.TRACKS
     rep = placement.run_placement(db, cur, student, on, ask, tracks)
@@ -137,7 +190,7 @@ def cmd_placement(args) -> int:
 
 
 def cmd_next(args) -> int:
-    db, home = open_db(args)
+    db, home = open_for_student(args)
     cur = load_curriculum(args)
     on = parse_date(args.date)
     qd = parse_date(args.quiz_date) if args.quiz_date else None
@@ -201,7 +254,7 @@ def _pick_quiz(db: DB, student, args, on: date):
 
 
 def cmd_oral(args) -> int:
-    db, home = open_db(args)
+    db, home = open_for_student(args)
     cur = load_curriculum(args)
     student = db.student(args.name)
     on = parse_date(args.date)
@@ -224,7 +277,8 @@ def cmd_oral(args) -> int:
 def cmd_grade(args) -> int:
     import cv2
 
-    db, home = open_db(args)
+    args.name, (args.photo,) = split_positionals(args.words, 1)
+    db, home = open_for_student(args)
     cur = load_curriculum(args)
     student = db.student(args.name)
     on = parse_date(args.date)
@@ -266,7 +320,10 @@ def cmd_grade(args) -> int:
 
 
 def cmd_mood(args) -> int:
-    db, _ = open_db(args)
+    args.name, (args.mood,) = split_positionals(args.words, 1)
+    if args.mood not in MOODS:
+        raise KeyError(f"mood must be one of {', '.join(MOODS)}; got {args.mood!r}")
+    db, _ = open_for_student(args)
     student = db.student(args.name)
     on = parse_date(args.date) if args.date else date.today() - timedelta(days=1)
     done = {"done": True, "skipped": False, None: None}[args.story]
@@ -289,7 +346,7 @@ def cmd_mood(args) -> int:
 
 
 def cmd_report(args) -> int:
-    db, home = open_db(args)
+    db, home = open_for_student(args)
     cur = load_curriculum(args)
     student = db.student(args.name)
     on = parse_date(args.date)
@@ -356,7 +413,7 @@ def cmd_sentences(args) -> int:
 
 
 def cmd_status(args) -> int:
-    db, _ = open_db(args)
+    db, _ = open_for_student(args)
     student = db.student(args.name)
     on = parse_date(args.date)
     plan = db.plan_for(student["id"], on.isoformat())
@@ -396,6 +453,10 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--student")
     sp.set_defaults(fn=cmd_skills)
 
+    sp = sub.add_parser("default", help="show or set the default student")
+    sp.add_argument("name", nargs="?")
+    sp.set_defaults(fn=cmd_default)
+
     sp = sub.add_parser("init", help="add a student")
     sp.add_argument("name")
     sp.add_argument("--pace-cap", type=int, default=2, choices=[1, 2, 3])
@@ -405,7 +466,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser(
         "placement", help="find where the student already is (oral, ~10 minutes)"
     )
-    sp.add_argument("name")
+    sp.add_argument("name", nargs="?")
     sp.add_argument("--tracks", nargs="*", choices=list(placement.TRACKS))
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_placement)
@@ -413,7 +474,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser(
         "next", help="grade nothing; build tonight's worksheet and tomorrow's quiz"
     )
-    sp.add_argument("name")
+    sp.add_argument("name", nargs="?")
     sp.add_argument("--date")
     sp.add_argument(
         "--quiz-date", help="when the quiz will be taken (default: tomorrow)"
@@ -426,14 +487,13 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser(
         "oral", help="enter quiz results by hand (fastest, most reliable)"
     )
-    sp.add_argument("name")
+    sp.add_argument("name", nargs="?")
     sp.add_argument("--quiz", type=int)
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_oral)
 
     sp = sub.add_parser("grade", help="grade a photo of the quiz")
-    sp.add_argument("name")
-    sp.add_argument("photo")
+    sp.add_argument("words", nargs="+", metavar="[NAME] PHOTO")
     sp.add_argument("--backend", default=None, help="vision model: lmstudio | none")
     sp.add_argument("--quiz", type=int)
     sp.add_argument("--date")
@@ -441,15 +501,14 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(fn=cmd_grade)
 
     sp = sub.add_parser("mood", help="log how the last worksheet went")
-    sp.add_argument("name")
-    sp.add_argument("mood", choices=["easy", "ok", "hard", "tears"])
+    sp.add_argument("words", nargs="+", metavar="[NAME] MOOD")
     sp.add_argument("--story", choices=["done", "skipped"])
     sp.add_argument("--date", help="the day of the worksheet (default: yesterday)")
     sp.add_argument("--note")
     sp.set_defaults(fn=cmd_mood)
 
     sp = sub.add_parser("report", help="progress report")
-    sp.add_argument("name")
+    sp.add_argument("name", nargs="?")
     sp.add_argument("--days", type=int, default=14)
     sp.add_argument("--date")
     sp.add_argument("--pdf", action="store_true")
@@ -471,7 +530,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(fn=cmd_sentences)
 
     sp = sub.add_parser("status", help="where things stand")
-    sp.add_argument("name")
+    sp.add_argument("name", nargs="?")
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_status)
     return p

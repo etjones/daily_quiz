@@ -245,3 +245,54 @@ def test_sentence_and_narrative_clients(server):
     with pytest.raises(ValueError):
         be.dictation_sentence("elephant")  # the sentence must contain the word
     assert be.narrate({"x": 1}) == "A short note."
+
+
+def test_placement_answers_need_explicit_y_or_n(monkeypatch, capsys):
+    replies = iter(["", "maybe", "N", " y "])
+    monkeypatch.setattr(builtins, "input", lambda prompt="": next(replies))
+    assert cli.ask_yes_no("> ") is False
+    assert cli.ask_yes_no("> ") is True
+    assert capsys.readouterr().out.count("please type y or n") == 2
+
+
+def test_placement_all_n_places_at_the_start(monkeypatch, tmp_path, capsys):
+    run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
+    monkeypatch.setattr(builtins, "input", lambda prompt="": "n")
+    code, out = run(
+        monkeypatch, tmp_path, ["placement", "Sam", "--date", D1], capsys=capsys
+    )
+    assert code == 0
+    assert "0/77 skills already known" in out and "0/61 skills already known" in out
+
+
+def test_first_init_records_default_student(monkeypatch, tmp_path, capsys):
+    _, out = run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
+    assert "Sam is now the default student" in out
+    run(monkeypatch, tmp_path, ["init", "Ann", "--date", D1], capsys=capsys)
+    assert run(monkeypatch, tmp_path, ["default"], capsys=capsys)[1].strip() == "Sam"
+    code, out = run(monkeypatch, tmp_path, ["default", "Ann"], capsys=capsys)
+    assert code == 0 and (tmp_path / "default_student").read_text().strip() == "Ann"
+
+
+def test_commands_use_default_student_without_a_name(monkeypatch, tmp_path, capsys):
+    run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
+    code, out = run(monkeypatch, tmp_path, ["next", "--date", D1], capsys=capsys)
+    assert code == 0 and "for Sam" in out
+    assert run(monkeypatch, tmp_path, ["status", "--date", D1], capsys=capsys)[0] == 0
+    code, out = run(monkeypatch, tmp_path, ["mood", "ok", "--date", D1], capsys=capsys)
+    assert code == 0 and "Logged: Sam" in out
+    code, out = run(
+        monkeypatch, tmp_path, ["mood", "Sam", "hard", "--date", D1], capsys=capsys
+    )
+    assert code == 0 and "mood=hard" in out
+
+
+def test_no_default_and_no_name_fails_clearly(monkeypatch, tmp_path, capsys):
+    code, out = run(monkeypatch, tmp_path, ["status"], capsys=capsys)
+    assert code == 1 and "dq default NAME" in out
+
+
+def test_mood_rejects_unknown_mood(monkeypatch, tmp_path, capsys):
+    run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
+    code, out = run(monkeypatch, tmp_path, ["mood", "grumpy"], capsys=capsys)
+    assert code == 1 and "mood must be one of" in out
