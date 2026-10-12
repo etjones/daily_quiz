@@ -8,6 +8,7 @@ Models are used at only three formalised touchpoints, each with a fixed prompt i
 Default endpoint is an OpenAI-compatible server, e.g. LM Studio at http://localhost:1234/v1.
 Override with DQ_LLM_URL / DQ_LLM_MODEL / DQ_LLM_KEY.
 """
+
 from __future__ import annotations
 
 import base64
@@ -35,7 +36,7 @@ class NotConfigured(RuntimeError):
 
 
 def _extract_json(text: str) -> dict:
-    m = re.search(r"\{.*\}", text, re.S)
+    m = re.search(r"\{.*\}", text, re.DOTALL)
     if not m:
         raise ValueError(f"no JSON object in model output: {text[:200]!r}")
     return json.loads(m.group(0))
@@ -49,7 +50,7 @@ class OpenAICompat:
     timeout: float = 120.0
 
     @classmethod
-    def from_env(cls) -> "OpenAICompat":
+    def from_env(cls) -> OpenAICompat:
         return cls(
             base_url=os.environ.get("DQ_LLM_URL", "http://localhost:1234/v1"),
             model=os.environ.get("DQ_LLM_MODEL", ""),
@@ -57,11 +58,20 @@ class OpenAICompat:
         )
 
     def _post(self, messages: list[dict], max_tokens: int = 300) -> str:
-        body = {"model": self.model, "messages": messages, "temperature": 0, "max_tokens": max_tokens}
+        body = {
+            "model": self.model,
+            "messages": messages,
+            "temperature": 0,
+            "max_tokens": max_tokens,
+        }
         req = urllib.request.Request(
             self.base_url.rstrip("/") + "/chat/completions",
             data=json.dumps(body).encode(),
-            headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"})
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_key}",
+            },
+        )
         with urllib.request.urlopen(req, timeout=self.timeout) as resp:
             data = json.load(resp)
         return data["choices"][0]["message"]["content"]
@@ -70,10 +80,18 @@ class OpenAICompat:
     def transcribe_box(self, png: bytes, kind: str) -> dict:
         prompt = load_prompt("transcribe_box").replace("{kind}", kind)
         b64 = base64.b64encode(png).decode()
-        messages = [{"role": "user", "content": [
-            {"type": "text", "text": prompt},
-            {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
-        ]}]
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/png;base64,{b64}"},
+                    },
+                ],
+            }
+        ]
         out = _extract_json(self._post(messages))
         return {
             "text": str(out.get("text", "")).strip(),
@@ -84,15 +102,28 @@ class OpenAICompat:
 
     # -- text LLM ----------------------------------------------------------
     def dictation_sentence(self, word: str) -> str:
-        messages = [{"role": "user", "content": load_prompt("dictation_sentence") + f"\n\nTarget word: {word}"}]
+        messages = [
+            {
+                "role": "user",
+                "content": load_prompt("dictation_sentence")
+                + f"\n\nTarget word: {word}",
+            }
+        ]
         out = _extract_json(self._post(messages, max_tokens=120))
         sentence = str(out.get("sentence", "")).strip()
-        if not re.search(rf"\b{re.escape(word)}\b", sentence, re.I):
+        if not re.search(rf"\b{re.escape(word)}\b", sentence, re.IGNORECASE):
             raise ValueError(f"model sentence does not contain {word!r}: {sentence!r}")
         return sentence
 
     def narrate(self, report: dict) -> str:
-        messages = [{"role": "user", "content": load_prompt("report_narrative") + "\n\n" + json.dumps(report)}]
+        messages = [
+            {
+                "role": "user",
+                "content": load_prompt("report_narrative")
+                + "\n\n"
+                + json.dumps(report),
+            }
+        ]
         return self._post(messages, max_tokens=300).strip()
 
 

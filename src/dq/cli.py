@@ -6,6 +6,7 @@ A normal day, in this order:
     3. dq mood NAME ok                    how last night's worksheet went
     4. dq next NAME                       prints tonight's worksheet and tomorrow's quiz
 """
+
 from __future__ import annotations
 
 import argparse
@@ -15,7 +16,17 @@ import sys
 from datetime import date, timedelta
 from pathlib import Path
 
-from . import build, curriculum, entry, grade, llm, placement, render, scheduler, session
+from . import (
+    build,
+    curriculum,
+    entry,
+    grade,
+    llm,
+    placement,
+    render,
+    scheduler,
+    session,
+)
 from . import report as report_mod
 from .db import DB
 
@@ -31,7 +42,9 @@ def parse_date(s: str | None) -> date:
 
 
 def load_curriculum(args) -> curriculum.Curriculum:
-    path = Path(args.curriculum or os.environ.get("DQ_CURRICULUM", PROJECT_ROOT / "curriculum"))
+    path = Path(
+        args.curriculum or os.environ.get("DQ_CURRICULUM", PROJECT_ROOT / "curriculum")
+    )
     return curriculum.load(path)
 
 
@@ -49,8 +62,10 @@ def cmd_validate(args) -> int:
     n_sp = len(cur.subject("spelling"))
     n_m = len(cur.subject("math"))
     words = sum(len(s.words) for s in cur.subject("spelling"))
-    print(f"{len(cur.skills)} skills ({n_sp} spelling with {words} words, {n_m} math), "
-          f"{len(cur.strands)} strands, {len(cur.sentences)} dictation sentences")
+    print(
+        f"{len(cur.skills)} skills ({n_sp} spelling with {words} words, {n_m} math), "
+        f"{len(cur.strands)} strands, {len(cur.sentences)} dictation sentences"
+    )
     for e in errs:
         print("  ERROR:", e)
     print("curriculum is valid" if not errs else f"{len(errs)} problem(s) found")
@@ -83,7 +98,9 @@ def cmd_init(args) -> int:
         print(f"could not add student: {e}")
         return 1
     print(f"Added {args.name}. Data lives in {home / 'dq.db'}")
-    print(f"Recommended next step: dq placement {args.name}   (about 10 minutes, you ask and he answers aloud)")
+    print(
+        f"Recommended next step: dq placement {args.name}   (about 10 minutes, you ask and he answers aloud)"
+    )
     print(f"Or skip placement and start from the beginning with: dq next {args.name}")
     return 0
 
@@ -93,13 +110,17 @@ def cmd_placement(args) -> int:
     cur = load_curriculum(args)
     student = db.student(args.name)
     on = parse_date(args.date)
-    print("Placement: ask each item aloud. Press Enter if he got it right, anything else if not.")
+    print(
+        "Placement: ask each item aloud. Press Enter if he got it right, anything else if not."
+    )
     print("Don't help. Stop whenever he is tired; you can rerun later.\n")
 
     def ask(item: dict) -> bool:
         if item["kind"] == "word":
             extra = f"  ({item['sentence']})" if item["sentence"] else ""
-            print(f"[{item['title']}] Say the word: \"{item['say']}\"{extra}   (he writes or spells it aloud)")
+            print(
+                f'[{item["title"]}] Say the word: "{item["say"]}"{extra}   (he writes or spells it aloud)'
+            )
         else:
             print(f"[{item['title']}] {item['say']}   [answer: {item['expected']}]")
         return input("   right? > ").strip() == ""
@@ -108,7 +129,9 @@ def cmd_placement(args) -> int:
     rep = placement.run_placement(db, cur, student, on, ask, tracks)
     print("\nPlacement result")
     for t, r in rep.items():
-        print(f"  {t:<8} starts at: {r['starts_at']}  ({r['frontier']}/{r['total']} skills already known, {r['asked']} checks)")
+        print(
+            f"  {t:<8} starts at: {r['starts_at']}  ({r['frontier']}/{r['total']} skills already known, {r['asked']} checks)"
+        )
     print(f"\nNext: dq next {args.name}")
     return 0
 
@@ -120,32 +143,50 @@ def cmd_next(args) -> int:
     qd = parse_date(args.quiz_date) if args.quiz_date else None
     b = build.build_day(db, cur, home, args.name, on, force=args.force, quiz_date=qd)
     s = b.selection
-    print(f"{'Built' if b.created else 'Already built'} day {s.day_no} for {args.name} ({on.isoformat()})")
+    print(
+        f"{'Built' if b.created else 'Already built'} day {s.day_no} for {args.name} ({on.isoformat()})"
+    )
     print(f"  worksheet : {b.worksheet}")
     print(f"  quiz      : {b.quiz}   (for {b.quiz_date})")
     print(f"  script    : {b.parent}")
-    words = ", ".join(f"{x['word']}{'*' if x['role'] == 'new' else ''}" for x in s.spelling)
+    words = ", ".join(
+        f"{x['word']}{'*' if x['role'] == 'new' else ''}" for x in s.spelling
+    )
     print(f"  words     : {words}   (* = new)")
-    print(f"  math      : " + "; ".join(f"{cur.by_id[m['skill_id']].title} ×{m['n']}" for m in s.math))
-    print(f"  pace {s.pace}, clean-quiz streak {s.clean_days}" + (", probing for skills he may already know" if s.probing else ""))
+    print(
+        "  math      : "
+        + "; ".join(f"{cur.by_id[m['skill_id']].title} ×{m['n']}" for m in s.math)
+    )
+    print(
+        f"  pace {s.pace}, clean-quiz streak {s.clean_days}"
+        + (", probing for skills he may already know" if s.probing else "")
+    )
     if s.load_reason:
         print(f"  note      : {s.load_reason}")
     if s.consolidating:
-        print("  note      : last quiz was hard, so no new math today and fewer new words; reviewing instead")
+        print(
+            "  note      : last quiz was hard, so no new math today and fewer new words; reviewing instead"
+        )
     return 0
 
 
-def _finish(db: DB, cur, home: Path, student, quiz_row, rows: list, mode: str, on: date) -> None:
+def _finish(
+    db: DB, cur, home: Path, student, quiz_row, rows: list, mode: str, on: date
+) -> None:
     summary = session.record_quiz(db, cur, student, quiz_row, rows, mode, on)
     ok, n = summary["taught_correct"], summary["taught_items"]
-    print(f"\nSaved. {ok} of {n} right on taught material ({round(100 * ok / max(1, n))}%).")
+    print(
+        f"\nSaved. {ok} of {n} right on taught material ({round(100 * ok / max(1, n))}%)."
+    )
     for sk in summary["probes_passed"]:
         print(f"  He already knew '{cur.by_id[sk].title}': skipping ahead.")
     for sk in summary["probes_failed"]:
         print(f"  '{cur.by_id[sk].title}' isn't known yet; it will be taught normally.")
     if summary["misses"]:
         print("  To practise tonight: " + ", ".join(summary["misses"]))
-    print(f"\nNext: dq mood {student['name']} <easy|ok|hard|tears>   then   dq next {student['name']}")
+    print(
+        f"\nNext: dq mood {student['name']} <easy|ok|hard|tears>   then   dq next {student['name']}"
+    )
 
 
 def _pick_quiz(db: DB, student, args, on: date):
@@ -153,7 +194,9 @@ def _pick_quiz(db: DB, student, args, on: date):
         return db.quiz(args.quiz)
     q = db.latest_open_quiz(student["id"], on.isoformat())
     if q is None:
-        raise SystemExit("No open quiz to grade. (A quiz is created by `dq next` the day before.)")
+        raise SystemExit(
+            "No open quiz to grade. (A quiz is created by `dq next` the day before.)"
+        )
     return q
 
 
@@ -165,8 +208,14 @@ def cmd_oral(args) -> int:
     q = _pick_quiz(db, student, args, on)
     manifest = json.loads(q["manifest"])
     print(f"Quiz for {q['for_date']} ({len(manifest['items'])} items)")
-    rows = entry.run_entry(manifest, sentence_fn=lambda w: build.dictation_sentence(cur, db, w)
-                           if cur.sentences.get(w.lower()) or db.sentence(w.lower()) else "")
+    rows = entry.run_entry(
+        manifest,
+        sentence_fn=lambda w: (
+            build.dictation_sentence(cur, db, w)
+            if cur.sentences.get(w.lower()) or db.sentence(w.lower())
+            else ""
+        ),
+    )
     rows = entry.review_loop(rows)
     _finish(db, cur, home, student, q, rows, "oral", on)
     return 0
@@ -174,6 +223,7 @@ def cmd_oral(args) -> int:
 
 def cmd_grade(args) -> int:
     import cv2
+
     db, home = open_db(args)
     cur = load_curriculum(args)
     student = db.student(args.name)
@@ -199,7 +249,9 @@ def cmd_grade(args) -> int:
         cv2.imwrite(str(audit / f"{k}.png"), c)
     backend = llm.backend_from_name(args.backend)
     if backend is None:
-        print("No vision model configured (use --backend lmstudio). Crops saved to", audit)
+        print(
+            "No vision model configured (use --backend lmstudio). Crops saved to", audit
+        )
         print("Falling back to quick manual entry.\n")
         rows = entry.run_entry(manifest)
         mode = "manual"
@@ -218,10 +270,21 @@ def cmd_mood(args) -> int:
     student = db.student(args.name)
     on = parse_date(args.date) if args.date else date.today() - timedelta(days=1)
     done = {"done": True, "skipped": False, None: None}[args.story]
-    db.log_day(student["id"], on.isoformat(), mood=args.mood, composition_done=done, note=args.note)
-    print(f"Logged: {args.name} {on.isoformat()} mood={args.mood}" + (f", story {args.story}" if args.story else ""))
+    db.log_day(
+        student["id"],
+        on.isoformat(),
+        mood=args.mood,
+        composition_done=done,
+        note=args.note,
+    )
+    print(
+        f"Logged: {args.name} {on.isoformat()} mood={args.mood}"
+        + (f", story {args.story}" if args.story else "")
+    )
     if args.mood in ("hard", "tears"):
-        print("Noted. If tomorrow also goes badly, the program will lighten the load by itself.")
+        print(
+            "Noted. If tomorrow also goes badly, the program will lighten the load by itself."
+        )
     return 0
 
 
@@ -237,7 +300,18 @@ def cmd_report(args) -> int:
     if args.narrate:
         backend = llm.backend_from_name(args.backend or "lmstudio")
         try:
-            note = backend.narrate({k: rep[k] for k in ("questions", "accuracy", "tears_days", "load_reductions", "recommendations")})
+            note = backend.narrate(
+                {
+                    k: rep[k]
+                    for k in (
+                        "questions",
+                        "accuracy",
+                        "tears_days",
+                        "load_reductions",
+                        "recommendations",
+                    )
+                }
+            )
             print("\n" + note)
             rep["narrative"] = note
         except Exception as e:  # noqa: BLE001
@@ -247,7 +321,9 @@ def cmd_report(args) -> int:
         p.write_text(json.dumps(rep, indent=1))
         print(f"\nJSON: {p}")
     if args.pdf:
-        p = render.render_pdf(home, "report", rep, out_dir / f"report-{on.isoformat()}.pdf")
+        p = render.render_pdf(
+            home, "report", rep, out_dir / f"report-{on.isoformat()}.pdf"
+        )
         print(f"\nPDF: {p}")
     return 0
 
@@ -285,7 +361,9 @@ def cmd_status(args) -> int:
     on = parse_date(args.date)
     plan = db.plan_for(student["id"], on.isoformat())
     q = db.latest_open_quiz(student["id"])
-    print(f"{args.name}: story stage {student['composition_stage']}, pace cap {student['pace_cap']}")
+    print(
+        f"{args.name}: story stage {student['composition_stage']}, pace cap {student['pace_cap']}"
+    )
     print(f"  plan for {on.isoformat()}: {'built' if plan else 'not built yet'}")
     print(f"  open quiz: {q['for_date'] if q else 'none'}")
     days = db.quiz_days(student["id"])
@@ -300,12 +378,18 @@ def cmd_status(args) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="dq", description="Daily quiz and worksheet system")
+    p = argparse.ArgumentParser(
+        prog="dq", description="Daily quiz and worksheet system"
+    )
     p.add_argument("--home", help="data directory (default $DQ_HOME or ~/.dq)")
-    p.add_argument("--curriculum", help="curriculum directory (default: the project's curriculum/)")
+    p.add_argument(
+        "--curriculum", help="curriculum directory (default: the project's curriculum/)"
+    )
     sub = p.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("validate", help="check the curriculum files").set_defaults(fn=cmd_validate)
+    sub.add_parser("validate", help="check the curriculum files").set_defaults(
+        fn=cmd_validate
+    )
 
     sp = sub.add_parser("skills", help="list skills")
     sp.add_argument("--subject", choices=["spelling", "math"])
@@ -318,20 +402,30 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_init)
 
-    sp = sub.add_parser("placement", help="find where the student already is (oral, ~10 minutes)")
+    sp = sub.add_parser(
+        "placement", help="find where the student already is (oral, ~10 minutes)"
+    )
     sp.add_argument("name")
     sp.add_argument("--tracks", nargs="*", choices=list(placement.TRACKS))
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_placement)
 
-    sp = sub.add_parser("next", help="grade nothing; build tonight's worksheet and tomorrow's quiz")
+    sp = sub.add_parser(
+        "next", help="grade nothing; build tonight's worksheet and tomorrow's quiz"
+    )
     sp.add_argument("name")
     sp.add_argument("--date")
-    sp.add_argument("--quiz-date", help="when the quiz will be taken (default: tomorrow)")
-    sp.add_argument("--force", action="store_true", help="rebuild today's plan from scratch")
+    sp.add_argument(
+        "--quiz-date", help="when the quiz will be taken (default: tomorrow)"
+    )
+    sp.add_argument(
+        "--force", action="store_true", help="rebuild today's plan from scratch"
+    )
     sp.set_defaults(fn=cmd_next)
 
-    sp = sub.add_parser("oral", help="enter quiz results by hand (fastest, most reliable)")
+    sp = sub.add_parser(
+        "oral", help="enter quiz results by hand (fastest, most reliable)"
+    )
     sp.add_argument("name")
     sp.add_argument("--quiz", type=int)
     sp.add_argument("--date")
@@ -360,11 +454,17 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--date")
     sp.add_argument("--pdf", action="store_true")
     sp.add_argument("--json", action="store_true")
-    sp.add_argument("--narrate", action="store_true", help="ask a model to write a short note from the report data")
+    sp.add_argument(
+        "--narrate",
+        action="store_true",
+        help="ask a model to write a short note from the report data",
+    )
     sp.add_argument("--backend", default=None)
     sp.set_defaults(fn=cmd_report)
 
-    sp = sub.add_parser("sentences", help="dictation sentences for words that need them")
+    sp = sub.add_parser(
+        "sentences", help="dictation sentences for words that need them"
+    )
     sp.add_argument("--fill", action="store_true")
     sp.add_argument("--all", action="store_true", help="include phonics words too")
     sp.add_argument("--backend", default=None)

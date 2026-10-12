@@ -4,12 +4,12 @@ Each generator takes a seeded `random.Random` plus the `params` table from the
 curriculum TOML, and returns one `Problem`. Prompts are Typst markup, evaluated by
 the templates with these helpers in scope: qbox, fracbar, numline, dots.
 """
+
 from __future__ import annotations
 
-import math
 import random
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 # ---------------------------------------------------------------------------
 # data type
@@ -18,18 +18,22 @@ from typing import Callable
 
 @dataclass
 class Problem:
-    prompt: str                 # Typst markup shown to the child
-    answer: str                 # canonical answer string
-    kind: str = "int"           # int | int_rem | frac | symbol | text
-    lead: str = "$=$"           # Typst markup printed just before the answer box
-    speech: str = ""            # what a parent reads aloud for an oral quiz
-    key: str = ""               # identity for de-duplication
+    prompt: str  # Typst markup shown to the child
+    answer: str  # canonical answer string
+    kind: str = "int"  # int | int_rem | frac | symbol | text
+    lead: str = "$=$"  # Typst markup printed just before the answer box
+    speech: str = ""  # what a parent reads aloud for an oral quiz
+    key: str = ""  # identity for de-duplication
     meta: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return {
-            "prompt": self.prompt, "answer": self.answer, "kind": self.kind,
-            "lead": self.lead, "speech": self.speech, "key": self.key,
+            "prompt": self.prompt,
+            "answer": self.answer,
+            "kind": self.kind,
+            "lead": self.lead,
+            "speech": self.speech,
+            "key": self.key,
         }
 
 
@@ -40,6 +44,7 @@ def register(name: str):
     def deco(fn):
         REGISTRY[name] = fn
         return fn
+
     return deco
 
 
@@ -47,10 +52,40 @@ def register(name: str):
 # helpers
 # ---------------------------------------------------------------------------
 
-_ONES = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
-         "seventeen", "eighteen", "nineteen"]
-_TENS = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"]
+_ONES = [
+    "zero",
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+    "eleven",
+    "twelve",
+    "thirteen",
+    "fourteen",
+    "fifteen",
+    "sixteen",
+    "seventeen",
+    "eighteen",
+    "nineteen",
+]
+_TENS = [
+    "",
+    "",
+    "twenty",
+    "thirty",
+    "forty",
+    "fifty",
+    "sixty",
+    "seventy",
+    "eighty",
+    "ninety",
+]
 
 
 def say(n: int) -> str:
@@ -64,7 +99,15 @@ def say(n: int) -> str:
     return f"{_ONES[h]} hundred" + (f" {say(r)}" if r else "")
 
 
-_FRAC_NAMES = {2: "half", 3: "third", 4: "fourth", 5: "fifth", 6: "sixth", 8: "eighth", 10: "tenth"}
+_FRAC_NAMES = {
+    2: "half",
+    3: "third",
+    4: "fourth",
+    5: "fifth",
+    6: "sixth",
+    8: "eighth",
+    10: "tenth",
+}
 
 
 def say_frac(n: int, d: int) -> str:
@@ -135,9 +178,14 @@ def gen_skip_count(rng, steps, start_max=20, length=6) -> Problem:
     shown = [("?" if i == hide else str(v)) for i, v in enumerate(seq)]
     return Problem(
         prompt=", ".join(shown),
-        answer=str(seq[hide]), kind="int", lead="$? =$",
-        speech="Count by " + say(step) + "s: " + ", ".join(
-            ("what comes next" if s == "?" else say(int(s))) for s in shown) + ".",
+        answer=str(seq[hide]),
+        kind="int",
+        lead="$? =$",
+        speech="Count by "
+        + say(step)
+        + "s: "
+        + ", ".join(("what comes next" if s == "?" else say(int(s))) for s in shown)
+        + ".",
         key=f"skip:{step}:{start}:{hide}",
     )
 
@@ -149,34 +197,64 @@ def gen_place_value(rng, mode="compose", digits=2) -> Problem:
         t, o = divmod(n, 10)
         if rng.random() < 0.5:
             return Problem(
-                prompt=f"{t} tens and {o} ones", answer=str(n), kind="int", lead="$=$",
-                speech=f"{say(t)} tens and {say(o)} ones. What number is that?", key=f"pv2c:{n}")
+                prompt=f"{t} tens and {o} ones",
+                answer=str(n),
+                kind="int",
+                lead="$=$",
+                speech=f"{say(t)} tens and {say(o)} ones. What number is that?",
+                key=f"pv2c:{n}",
+            )
         if rng.random() < 0.5:
             return Problem(
-                prompt=f"How many tens in ${n}$?", answer=str(t), kind="int", lead="$=$",
-                speech=f"How many tens are in {say(n)}?", key=f"pv2t:{n}")
+                prompt=f"How many tens in ${n}$?",
+                answer=str(t),
+                kind="int",
+                lead="$=$",
+                speech=f"How many tens are in {say(n)}?",
+                key=f"pv2t:{n}",
+            )
         return Problem(
-            prompt=f"How many ones in ${n}$?", answer=str(o), kind="int", lead="$=$",
-            speech=f"How many ones are in {say(n)}?", key=f"pv2o:{n}")
+            prompt=f"How many ones in ${n}$?",
+            answer=str(o),
+            kind="int",
+            lead="$=$",
+            speech=f"How many ones are in {say(n)}?",
+            key=f"pv2o:{n}",
+        )
     n = rng.randint(101, 999)
     h, rest = divmod(n, 100)
     t, o = divmod(rest, 10)
     r = rng.random()
     if r < 0.5:
         return Problem(
-            prompt=f"{h} hundreds, {t} tens, {o} ones", answer=str(n), kind="int", lead="$=$",
-            speech=f"{say(h)} hundreds, {say(t)} tens, {say(o)} ones. What number is that?", key=f"pv3c:{n}")
+            prompt=f"{h} hundreds, {t} tens, {o} ones",
+            answer=str(n),
+            kind="int",
+            lead="$=$",
+            speech=f"{say(h)} hundreds, {say(t)} tens, {say(o)} ones. What number is that?",
+            key=f"pv3c:{n}",
+        )
     if r < 0.75:
         return Problem(
-            prompt=f"How many hundreds in ${n}$?", answer=str(h), kind="int", lead="$=$",
-            speech=f"How many hundreds are in {say(n)}?", key=f"pv3h:{n}")
+            prompt=f"How many hundreds in ${n}$?",
+            answer=str(h),
+            kind="int",
+            lead="$=$",
+            speech=f"How many hundreds are in {say(n)}?",
+            key=f"pv3h:{n}",
+        )
     return Problem(
-        prompt=f"How many tens in the middle of ${n}$? (the tens digit)", answer=str(t), kind="int", lead="$=$",
-        speech=f"What is the tens digit of {say(n)}?", key=f"pv3t:{n}")
+        prompt=f"How many tens in the middle of ${n}$? (the tens digit)",
+        answer=str(t),
+        kind="int",
+        lead="$=$",
+        speech=f"What is the tens digit of {say(n)}?",
+        key=f"pv3t:{n}",
+    )
 
 
 @register("compare")
-def gen_compare(rng, range, allow_equal=False) -> Problem:  # noqa: A002
+def gen_compare(rng, range, allow_equal=False) -> Problem:
     lo, hi = range
     a = rng.randint(lo, hi)
     b = rng.randint(lo, hi)
@@ -186,9 +264,12 @@ def gen_compare(rng, range, allow_equal=False) -> Problem:  # noqa: A002
     ans = "<" if a < b else (">" if a > b else "=")
     return Problem(
         prompt=f"#box[${a}$] #h(2.2em) #box[${b}$]",
-        answer=ans, kind="symbol", lead="Write < or >",
+        answer=ans,
+        kind="symbol",
+        lead="Write < or >",
         speech=f"Which is bigger, {say(a)} or {say(b)}? Say less than or greater than.",
-        key=f"cmp:{a}:{b}")
+        key=f"cmp:{a}:{b}",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -197,7 +278,9 @@ def gen_compare(rng, range, allow_equal=False) -> Problem:  # noqa: A002
 
 
 @register("add")
-def gen_add(rng, a, b, max_sum=None, min_sum=0, equal=False, regroup="any", multiple_of=1) -> Problem:
+def gen_add(
+    rng, a, b, max_sum=None, min_sum=0, equal=False, regroup="any", multiple_of=1
+) -> Problem:
     def attempt():
         x = _pick(rng, a, multiple_of)
         y = x if equal else _pick(rng, b, multiple_of)
@@ -213,8 +296,14 @@ def gen_add(rng, a, b, max_sum=None, min_sum=0, equal=False, regroup="any", mult
         return x, y
 
     x, y = _try(rng, attempt)
-    return Problem(prompt=f"${x} + {y}$", answer=str(x + y), kind="int", lead="$=$",
-                   speech=f"{say(x)} plus {say(y)}", key=f"add:{x}:{y}")
+    return Problem(
+        prompt=f"${x} + {y}$",
+        answer=str(x + y),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(x)} plus {say(y)}",
+        key=f"add:{x}:{y}",
+    )
 
 
 @register("sub")
@@ -231,8 +320,14 @@ def gen_sub(rng, a, b, regroup="any", multiple_of=1) -> Problem:
         return x, y
 
     x, y = _try(rng, attempt)
-    return Problem(prompt=f"${x} - {y}$", answer=str(x - y), kind="int", lead="$=$",
-                   speech=f"{say(x)} minus {say(y)}", key=f"sub:{x}:{y}")
+    return Problem(
+        prompt=f"${x} - {y}$",
+        answer=str(x - y),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(x)} minus {say(y)}",
+        key=f"sub:{x}:{y}",
+    )
 
 
 @register("missing_addend")
@@ -247,28 +342,61 @@ def gen_missing_addend(rng, total, addend) -> Problem:
     t, s = _try(rng, attempt)
     ans = t - s
     if rng.random() < 0.5:
-        prompt, speech = f"${s} + ? = {t}$", f"{say(s)} plus what number makes {say(t)}?"
+        prompt, speech = (
+            f"${s} + ? = {t}$",
+            f"{say(s)} plus what number makes {say(t)}?",
+        )
     else:
-        prompt, speech = f"$? + {s} = {t}$", f"What number plus {say(s)} makes {say(t)}?"
-    return Problem(prompt=prompt, answer=str(ans), kind="int", lead="$? =$", speech=speech,
-                   key=f"miss:{prompt}")
+        prompt, speech = (
+            f"$? + {s} = {t}$",
+            f"What number plus {say(s)} makes {say(t)}?",
+        )
+    return Problem(
+        prompt=prompt,
+        answer=str(ans),
+        kind="int",
+        lead="$? =$",
+        speech=speech,
+        key=f"miss:{prompt}",
+    )
 
 
 # ---------------------------------------------------------------------------
 # word problems
 # ---------------------------------------------------------------------------
 
-_NAMES = [("Mia", "She"), ("Leo", "He"), ("Ana", "She"), ("Sam", "He"), ("Zoe", "She"), ("Noah", "He")]
-_THINGS = ["stickers", "marbles", "blocks", "books", "cards", "crayons", "shells", "coins"]
+_NAMES = [
+    ("Mia", "She"),
+    ("Leo", "He"),
+    ("Ana", "She"),
+    ("Sam", "He"),
+    ("Zoe", "She"),
+    ("Noah", "He"),
+]
+_THINGS = [
+    "stickers",
+    "marbles",
+    "blocks",
+    "books",
+    "cards",
+    "crayons",
+    "shells",
+    "coins",
+]
 _SHARE = [
-    ("cookies", "kids", "kid"), ("stickers", "friends", "friend"), ("apples", "baskets", "basket"),
-    ("crayons", "boxes", "box"), ("marbles", "bags", "bag"), ("pencils", "cups", "cup"),
-    ("flowers", "vases", "vase"), ("grapes", "plates", "plate"),
+    ("cookies", "kids", "kid"),
+    ("stickers", "friends", "friend"),
+    ("apples", "baskets", "basket"),
+    ("crayons", "boxes", "box"),
+    ("marbles", "bags", "bag"),
+    ("pencils", "cups", "cup"),
+    ("flowers", "vases", "vase"),
+    ("grapes", "plates", "plate"),
 ]
 
 
 @register("word_addsub")
-def gen_word_addsub(rng, kind="mix", max=20) -> Problem:  # noqa: A002
+def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
     name, pron = rng.choice(_NAMES)
     other = rng.choice([n for n, _ in _NAMES if n != name])
     thing = rng.choice(_THINGS)
@@ -281,15 +409,25 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:  # noqa: A002
     elif k in ("sub", "separate"):
         a = rng.randint(max // 2, max)
         b = rng.randint(2, a - 1)
-        text = f"{name} has {a} {thing}. {pron} gives away {b}. How many {thing} are left?"
+        text = (
+            f"{name} has {a} {thing}. {pron} gives away {b}. How many {thing} are left?"
+        )
         ans = a - b
     else:
         a = rng.randint(max // 2, max)
         b = rng.randint(2, a - 1)
-        text = f"{name} has {a} {thing}. {other} has {b}. How many more does {name} have?"
+        text = (
+            f"{name} has {a} {thing}. {other} has {b}. How many more does {name} have?"
+        )
         ans = a - b
-    return Problem(prompt=text, answer=str(ans), kind="int", lead="$=$", speech=text,
-                   key=f"wd:{text}")
+    return Problem(
+        prompt=text,
+        answer=str(ans),
+        kind="int",
+        lead="$=$",
+        speech=text,
+        key=f"wd:{text}",
+    )
 
 
 @register("share")
@@ -305,7 +443,14 @@ def gen_share(rng, divisors, quotient, mode="share") -> Problem:
     else:
         text = f"There are {d} {plural}. Each {singular} has {q} {item}. How many {item} in all?"
         ans = d * q
-    return Problem(prompt=text, answer=str(ans), kind="int", lead="$=$", speech=text, key=f"share:{text}")
+    return Problem(
+        prompt=text,
+        answer=str(ans),
+        kind="int",
+        lead="$=$",
+        speech=text,
+        key=f"share:{text}",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -320,12 +465,21 @@ def gen_equal_groups(rng, rows, cols, mode="array") -> Problem:
     if mode == "array":
         return Problem(
             prompt=f"#grid(columns: 2, column-gutter: 3mm, align: horizon, dots({r}, {c}), [How many dots?])",
-            answer=str(r * c), kind="int", lead="$=$",
+            answer=str(r * c),
+            kind="int",
+            lead="$=$",
             speech=f"There are {say(r)} rows with {say(c)} dots in each row. How many dots in all?",
-            key=f"arr:{r}:{c}")
+            key=f"arr:{r}:{c}",
+        )
     terms = " + ".join([str(c)] * r)
-    return Problem(prompt=f"${terms}$", answer=str(r * c), kind="int", lead="$=$",
-                   speech=f"{say(c)}, added {say(r)} times", key=f"rep:{r}:{c}")
+    return Problem(
+        prompt=f"${terms}$",
+        answer=str(r * c),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(c)}, added {say(r)} times",
+        key=f"rep:{r}:{c}",
+    )
 
 
 @register("mul")
@@ -333,8 +487,14 @@ def gen_mul(rng, tables, other, commute=True) -> Problem:
     t = rng.choice(tables)
     o = rng.randint(*other)
     a, b = (t, o) if (not commute or rng.random() < 0.5) else (o, t)
-    return Problem(prompt=f"${a} times {b}$", answer=str(a * b), kind="int", lead="$=$",
-                   speech=f"{say(a)} times {say(b)}", key=f"mul:{a}:{b}")
+    return Problem(
+        prompt=f"${a} times {b}$",
+        answer=str(a * b),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(a)} times {say(b)}",
+        key=f"mul:{a}:{b}",
+    )
 
 
 @register("div")
@@ -344,12 +504,23 @@ def gen_div(rng, divisors, quotient, remainder=False) -> Problem:
     if remainder:
         r = rng.randint(1, d - 1)
         n = d * q + r
-        return Problem(prompt=f"${n} div {d}$", answer=f"{q} R {r}", kind="int_rem",
-                       lead="$=$", speech=f"{say(n)} divided by {say(d)}. Say the answer with a remainder.",
-                       key=f"divr:{n}:{d}")
+        return Problem(
+            prompt=f"${n} div {d}$",
+            answer=f"{q} R {r}",
+            kind="int_rem",
+            lead="$=$",
+            speech=f"{say(n)} divided by {say(d)}. Say the answer with a remainder.",
+            key=f"divr:{n}:{d}",
+        )
     n = d * q
-    return Problem(prompt=f"${n} div {d}$", answer=str(q), kind="int", lead="$=$",
-                   speech=f"{say(n)} divided by {say(d)}", key=f"div:{n}:{d}")
+    return Problem(
+        prompt=f"${n} div {d}$",
+        answer=str(q),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(n)} divided by {say(d)}",
+        key=f"div:{n}:{d}",
+    )
 
 
 @register("missing_factor")
@@ -358,11 +529,23 @@ def gen_missing_factor(rng, tables, other) -> Problem:
     o = rng.randint(*other)
     p = t * o
     if rng.random() < 0.5:
-        prompt, speech = f"${t} times ? = {p}$", f"{say(t)} times what number makes {say(p)}?"
+        prompt, speech = (
+            f"${t} times ? = {p}$",
+            f"{say(t)} times what number makes {say(p)}?",
+        )
     else:
-        prompt, speech = f"$? times {t} = {p}$", f"What number times {say(t)} makes {say(p)}?"
-    return Problem(prompt=prompt, answer=str(o), kind="int", lead="$? =$", speech=speech,
-                   key=f"mf:{prompt}")
+        prompt, speech = (
+            f"$? times {t} = {p}$",
+            f"What number times {say(t)} makes {say(p)}?",
+        )
+    return Problem(
+        prompt=prompt,
+        answer=str(o),
+        kind="int",
+        lead="$? =$",
+        speech=speech,
+        key=f"mf:{prompt}",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -377,14 +560,18 @@ def gen_frac_name(rng, dens, num=None) -> Problem:
     n = rng.randint(lo, hi)
     return Problem(
         prompt=f"#stack(dir: ttb, spacing: 1.2mm, fracbar({n}, {d}), text(size: 7.5pt)[What fraction is shaded?])",
-        answer=_frac_tex(n, d), kind="frac", lead="$=$",
+        answer=_frac_tex(n, d),
+        kind="frac",
+        lead="$=$",
         speech=f"A bar is cut into {say(d)} equal parts and {say(n)} are shaded. What fraction is shaded?",
-        key=f"fn:{n}/{d}")
+        key=f"fn:{n}/{d}",
+    )
 
 
 @register("frac_compare")
 def gen_frac_compare(rng, dens, same="den") -> Problem:
     if same == "den":
+
         def attempt():
             d = rng.choice(dens)
             if d < 3:
@@ -392,19 +579,24 @@ def gen_frac_compare(rng, dens, same="den") -> Problem:
             n1, n2 = rng.sample(range(1, d), 2)
             return d, n1, d, n2
     else:
+
         def attempt():
             if len(dens) < 2:
                 return None
             d1, d2 = rng.sample(list(dens), 2)
             top = rng.randint(1, min(d1, d2) - 1)
             return d1, top, d2, top
+
     d1, n1, d2, n2 = _try(rng, attempt)
     ans = "<" if n1 * d2 < n2 * d1 else ">"
     return Problem(
         prompt=f"#box[${n1}/{d1}$] #h(2.2em) #box[${n2}/{d2}$]",
-        answer=ans, kind="symbol", lead="Write < or >",
+        answer=ans,
+        kind="symbol",
+        lead="Write < or >",
         speech=f"Which is bigger, {say_frac(n1, d1)} or {say_frac(n2, d2)}?",
-        key=f"fc:{n1}/{d1}:{n2}/{d2}")
+        key=f"fc:{n1}/{d1}:{n2}/{d2}",
+    )
 
 
 @register("frac_numberline")
@@ -413,9 +605,12 @@ def gen_frac_numberline(rng, dens) -> Problem:
     n = rng.randint(1, d - 1)
     return Problem(
         prompt=f"#stack(dir: ttb, spacing: 0.5mm, numline({d}, {n}), text(size: 7.5pt)[What fraction is the dot?])",
-        answer=_frac_tex(n, d), kind="frac", lead="$=$",
+        answer=_frac_tex(n, d),
+        kind="frac",
+        lead="$=$",
         speech=f"A number line from zero to one is cut into {say(d)} equal jumps. The dot is at jump {say(n)}. What fraction is that?",
-        key=f"fl:{n}/{d}")
+        key=f"fl:{n}/{d}",
+    )
 
 
 @register("frac_equiv")
@@ -430,9 +625,13 @@ def gen_frac_equiv(rng, dens) -> Problem:
         raise ValueError("no equivalent-fraction pairs for these denominators")
     a, b, k = rng.choice(options)
     return Problem(
-        prompt=f"${a}/{b} = ?/{b * k}$", answer=str(a * k), kind="int", lead="$? =$",
+        prompt=f"${a}/{b} = ?/{b * k}$",
+        answer=str(a * k),
+        kind="int",
+        lead="$? =$",
         speech=f"{say_frac(a, b)} equals how many {say_frac(1, b * k)}s?",
-        key=f"fe:{a}/{b}:{b * k}")
+        key=f"fe:{a}/{b}:{b * k}",
+    )
 
 
 @register("frac_decompose")
@@ -441,9 +640,13 @@ def gen_frac_decompose(rng, dens) -> Problem:
     n = rng.randint(2, min(5, d - 1)) if d > 2 else 2
     parts = " + ".join([f"1/{d}"] * (n - 1))
     return Problem(
-        prompt=f"${n}/{d} = {parts} + ?$", answer=f"1/{d}", kind="frac", lead="$? =$",
+        prompt=f"${n}/{d} = {parts} + ?$",
+        answer=f"1/{d}",
+        kind="frac",
+        lead="$? =$",
         speech=f"{say_frac(n, d)} is made of unit pieces. What piece is missing?",
-        key=f"fd:{n}/{d}")
+        key=f"fd:{n}/{d}",
+    )
 
 
 @register("frac_of_set")
@@ -452,8 +655,13 @@ def gen_frac_of_set(rng, dens, total_max=24) -> Problem:
     m = rng.randint(1, max(1, total_max // d))
     total = d * m
     return Problem(
-        prompt=f"$1/{d}$ of ${total}$", answer=str(m), kind="int", lead="$=$",
-        speech=f"What is {say_frac(1, d)} of {say(total)}?", key=f"fs:{d}:{total}")
+        prompt=f"$1/{d}$ of ${total}$",
+        answer=str(m),
+        kind="int",
+        lead="$=$",
+        speech=f"What is {say_frac(1, d)} of {say(total)}?",
+        key=f"fs:{d}:{total}",
+    )
 
 
 @register("frac_add_like")
@@ -474,12 +682,22 @@ def gen_frac_add_like(rng, dens, op="add") -> Problem:
 
     d, n1, n2 = _try(rng, attempt)
     if op == "add":
-        return Problem(prompt=f"${n1}/{d} + {n2}/{d}$", answer=f"{n1 + n2}/{d}", kind="frac",
-                       lead="$=$", speech=f"{say_frac(n1, d)} plus {say_frac(n2, d)}",
-                       key=f"fa:{n1}+{n2}/{d}")
-    return Problem(prompt=f"${n1}/{d} - {n2}/{d}$", answer=f"{n1 - n2}/{d}", kind="frac",
-                   lead="$=$", speech=f"{say_frac(n1, d)} minus {say_frac(n2, d)}",
-                   key=f"fa:{n1}-{n2}/{d}")
+        return Problem(
+            prompt=f"${n1}/{d} + {n2}/{d}$",
+            answer=f"{n1 + n2}/{d}",
+            kind="frac",
+            lead="$=$",
+            speech=f"{say_frac(n1, d)} plus {say_frac(n2, d)}",
+            key=f"fa:{n1}+{n2}/{d}",
+        )
+    return Problem(
+        prompt=f"${n1}/{d} - {n2}/{d}$",
+        answer=f"{n1 - n2}/{d}",
+        kind="frac",
+        lead="$=$",
+        speech=f"{say_frac(n1, d)} minus {say_frac(n2, d)}",
+        key=f"fa:{n1}-{n2}/{d}",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -493,8 +711,13 @@ def generate_one(generator: str, params: dict, rng: random.Random) -> Problem:
     return REGISTRY[generator](rng, **params)
 
 
-def generate(generator: str, params: dict, rng: random.Random, n: int,
-             exclude: set[str] | None = None) -> list[Problem]:
+def generate(
+    generator: str,
+    params: dict,
+    rng: random.Random,
+    n: int,
+    exclude: set[str] | None = None,
+) -> list[Problem]:
     """Up to n distinct problems (distinct by key). May return fewer if the skill
     has a small problem space (e.g. only 22 problems exist for times 0 and 1)."""
     seen = set(exclude or ())

@@ -4,6 +4,7 @@ Everything here is deterministic. No model is involved in deciding whether an
 answer is right: models only transcribe what the child wrote, and this module
 judges it.
 """
+
 from __future__ import annotations
 
 import re
@@ -11,24 +12,34 @@ from fractions import Fraction
 
 # Error categories recorded in the database and shown in reports.
 ERROR_CATEGORIES = (
-    "blank",          # nothing written
-    "reversal",       # b/d, p/q letter or digit flips (normal at this age)
+    "blank",  # nothing written
+    "reversal",  # b/d, p/q letter or digit flips (normal at this age)
     "transposition",  # adjacent letters/digits swapped
-    "omission",       # one letter/digit missing (dropped blend letters)
-    "insertion",      # one extra letter/digit
+    "omission",  # one letter/digit missing (dropped blend letters)
+    "insertion",  # one extra letter/digit
     "vowel_pattern",  # right consonants, wrong vowel(s): wrong pattern chosen
-    "off_by_one",     # numeric answer one away (counting slip)
-    "sign",           # < and > swapped
+    "off_by_one",  # numeric answer one away (counting slip)
+    "sign",  # < and > swapped
     "capitalization",
     "other",
 )
 
 _REVERSIBLE_PAIRS = [("b", "d"), ("p", "q"), ("n", "u"), ("m", "w")]
 _SYMBOL_MAP = {
-    "<": "<", ">": ">", "=": "=",
-    "less": "<", "less than": "<", "lt": "<",
-    "greater": ">", "greater than": ">", "more": ">", "more than": ">", "gt": ">",
-    "equal": "=", "equals": "=", "same": "=",
+    "<": "<",
+    ">": ">",
+    "=": "=",
+    "less": "<",
+    "less than": "<",
+    "lt": "<",
+    "greater": ">",
+    "greater than": ">",
+    "more": ">",
+    "more than": ">",
+    "gt": ">",
+    "equal": "=",
+    "equals": "=",
+    "same": "=",
 }
 
 
@@ -84,7 +95,7 @@ def match(kind: str, expected: str, got: str | None) -> bool:
             if gd == 0 or ed == 0:
                 return False
             return Fraction(gn, gd) == Fraction(en, ed)
-        except Exception:
+        except (ValueError, ZeroDivisionError):
             return False
     return g == e
 
@@ -92,6 +103,7 @@ def match(kind: str, expected: str, got: str | None) -> bool:
 # ---------------------------------------------------------------------------
 # error classification
 # ---------------------------------------------------------------------------
+
 
 def _single_edit(a: str, b: str) -> str | None:
     """Classify the one-edit relation from expected `a` to written `b`."""
@@ -105,16 +117,21 @@ def _single_edit(a: str, b: str) -> str | None:
                 if {x, y} == {p, q}:
                     return "reversal"
             return None
-        if len(diffs) == 2 and diffs[1] == diffs[0] + 1 and a[diffs[0]] == b[diffs[1]] and a[diffs[1]] == b[diffs[0]]:
+        if (
+            len(diffs) == 2
+            and diffs[1] == diffs[0] + 1
+            and a[diffs[0]] == b[diffs[1]]
+            and a[diffs[1]] == b[diffs[0]]
+        ):
             return "transposition"
         return None
     if len(b) == len(a) - 1:
         for i in range(len(a)):
-            if a[:i] + a[i + 1:] == b:
+            if a[:i] + a[i + 1 :] == b:
                 return "omission"
     if len(b) == len(a) + 1:
         for i in range(len(b)):
-            if b[:i] + b[i + 1:] == a:
+            if b[:i] + b[i + 1 :] == a:
                 return "insertion"
     return None
 

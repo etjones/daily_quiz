@@ -5,6 +5,7 @@ no model involved. A model may optionally turn the finished data structure into 
 (prompts/report_narrative.md), but it never computes anything. To improve the report, edit
 QUESTIONS and the functions below; every future report changes with it.
 """
+
 from __future__ import annotations
 
 import json
@@ -60,7 +61,6 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
     wu = scheduler.word_units(units)
     results = db.results_since(sid, since, include_probes=False)
     logs = db.day_logs(sid, since)
-    quiz_days = [(d, a, n) for d, a, n in db.quiz_days(sid) if d >= since]
     total = len(results)
     acc = sum(r["correct"] for r in results) / total if total else None
 
@@ -71,24 +71,45 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
     math_all = cur.subject("math")
 
     # ---- 1. learned -----------------------------------------------------------
-    new_units = [u for u in units.values() if u.introduced_on >= since and u.origin == "taught"]
-    new_words = sorted({u.item_key.lower() for u in new_units if u.skill_id.startswith("sp.")})
-    new_math = [cur.by_id[u.skill_id].title for u in new_units if u.skill_id.startswith("m.")]
-    probed = [u for u in units.values() if u.introduced_on >= since and u.origin == "probed"]
+    new_units = [
+        u for u in units.values() if u.introduced_on >= since and u.origin == "taught"
+    ]
+    new_words = sorted(
+        {u.item_key.lower() for u in new_units if u.skill_id.startswith("sp.")}
+    )
+    new_math = [
+        cur.by_id[u.skill_id].title for u in new_units if u.skill_id.startswith("m.")
+    ]
+    probed = [
+        u for u in units.values() if u.introduced_on >= since and u.origin == "probed"
+    ]
     learned = []
     if new_words:
-        learned.append(f"{len(new_words)} new spelling words: " + ", ".join(new_words[:15]) + ("…" if len(new_words) > 15 else ""))
+        learned.append(
+            f"{len(new_words)} new spelling words: "
+            + ", ".join(new_words[:15])
+            + ("…" if len(new_words) > 15 else "")
+        )
     if new_math:
         learned.append("New math skills: " + "; ".join(new_math))
     pskills = sorted({cur.by_id[u.skill_id].title for u in probed})
     if pskills:
-        learned.append(f"Skipped ahead (already knew): {len(pskills)} skill(s), e.g. " + "; ".join(pskills[:4]))
+        learned.append(
+            f"Skipped ahead (already knew): {len(pskills)} skill(s), e.g. "
+            + "; ".join(pskills[:4])
+        )
 
     # ---- 2. solid -------------------------------------------------------------------
     n_words_solid = sum(1 for u in wu.values() if u.box >= scheduler.SOLID_BOX)
-    solid_lines = [f"{n_words_solid} spelling words at 'solid' or better; "
-                   f"{sum(1 for s in math_all if progress[s.id].label in ('solid', 'mastered'))} of {len(math_all)} math skills."]
-    mastered_recent = [s.title for s in solid if progress[s.id].label == "mastered"][-6:]
+    n_math_solid = sum(
+        1 for s in math_all if progress[s.id].label in ("solid", "mastered")
+    )
+    solid_lines = [
+        f"{n_words_solid} spelling words at 'solid' or better; {n_math_solid} of {len(math_all)} math skills."
+    ]
+    mastered_recent = [s.title for s in solid if progress[s.id].label == "mastered"][
+        -6:
+    ]
     if mastered_recent:
         solid_lines.append("Mastered most recently: " + "; ".join(mastered_recent))
 
@@ -102,15 +123,23 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
             shaky.append((sum(flags) / len(flags), len(flags), cur.by_id[sk].title))
     shaky.sort()
     shaky_lines = [f"{t}: {_pct(a)} over {n} items" for a, n, t in shaky[:6]]
-    missed_words = Counter(r["item_key"].lower() for r in results if r["kind"] == "spelling" and not r["correct"])
-    repeat = [f"{w} (missed {c} times)" for w, c in missed_words.most_common(6) if c >= 2]
+    missed_words = Counter(
+        r["item_key"].lower()
+        for r in results
+        if r["kind"] == "spelling" and not r["correct"]
+    )
+    repeat = [
+        f"{w} (missed {c} times)" for w, c in missed_words.most_common(6) if c >= 2
+    ]
     if repeat:
         shaky_lines.append("Words missed repeatedly: " + ", ".join(repeat))
 
     # ---- 4. mistakes -------------------------------------------------------------------
     wrong = [r for r in results if not r["correct"]]
     cats = Counter(r["error_cat"] or "other" for r in wrong)
-    mistake_lines = [f"{c} × {ERROR_EXPLAINED.get(k, k)}" for k, c in cats.most_common(5)]
+    mistake_lines = [
+        f"{c} × {ERROR_EXPLAINED.get(k, k)}" for k, c in cats.most_common(5)
+    ]
     ex = [f"{r['expected']} → {r['got'] or '(blank)'}" for r in wrong if r["got"]][:6]
     if ex:
         mistake_lines.append("Examples: " + ", ".join(ex))
@@ -122,29 +151,43 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
     clean = scheduler.clean_day_streak(db, sid)
     weeks = max(days / 7.0, 1e-9)
     pace_lines = [
-        f"Phonics: {reached(sp_phon)} of {len(sp_phon)} patterns started; "
-        f"sight words: {reached(sp_sight)} of {len(sp_sight)} lists; math: {reached(math_all)} of {len(math_all)} skills.",
+        (
+            f"Phonics: {reached(sp_phon)} of {len(sp_phon)} patterns started; "
+            f"sight words: {reached(sp_sight)} of {len(sp_sight)} lists; "
+            f"math: {reached(math_all)} of {len(math_all)} skills."
+        ),
         f"New words per week: {len(new_words) / weeks:.1f}. New math skills per week: {len(new_math) / weeks:.1f}.",
-        f"Clean-quiz streak: {clean} day(s). Pace speeds up after {scheduler.PACE_AFTER_CLEAN_DAYS[2]} clean days "
-        f"(currently capped at {student['pace_cap']} new skills per day).",
+        (
+            f"Clean-quiz streak: {clean} day(s). Pace speeds up after {scheduler.PACE_AFTER_CLEAN_DAYS[2]} clean days "
+            f"(currently capped at {student['pace_cap']} new skills per day)."
+        ),
     ]
 
     # ---- 6. mood and load -------------------------------------------------------------
     moods = Counter(r["mood"] for r in logs if r["mood"])
     done = [r["composition_done"] for r in logs if r["composition_done"] is not None]
-    plans = db.conn.execute("SELECT data FROM plan WHERE student_id = ? AND for_date >= ?", (sid, since)).fetchall()
-    reductions = sum(1 for p in plans if json.loads(p["data"])["selection"]["load"] < 1.0)
+    plans = db.conn.execute(
+        "SELECT data FROM plan WHERE student_id = ? AND for_date >= ?", (sid, since)
+    ).fetchall()
+    reductions = sum(
+        1 for p in plans if json.loads(p["data"])["selection"]["load"] < 1.0
+    )
     mood_lines = []
     if moods:
-        mood_lines.append("Mood log: " + ", ".join(f"{k} × {v}" for k, v in moods.most_common()))
+        mood_lines.append(
+            "Mood log: " + ", ".join(f"{k} × {v}" for k, v in moods.most_common())
+        )
     if done:
-        mood_lines.append(f"Story finished on {sum(done)} of {len(done)} logged days; current story stage {student['composition_stage']} of 5.")
+        mood_lines.append(
+            f"Story finished on {sum(done)} of {len(done)} logged days; current story stage {student['composition_stage']} of 5."
+        )
     mood_lines.append(f"Days the load was automatically lightened: {reductions}.")
 
     # ---- 7. next --------------------------------------------------------------------------
     exclude: set[str] = set()
-    nxt_words = scheduler._spelling_candidates(cur, units, wu, "phonics", 3, exclude) + \
-        scheduler._spelling_candidates(cur, units, wu, "sight", 1, exclude)
+    nxt_words = scheduler._spelling_candidates(
+        cur, units, wu, "phonics", 3, exclude
+    ) + scheduler._spelling_candidates(cur, units, wu, "sight", 1, exclude)
     nxt_math = scheduler._math_candidates(cur, units)[:2]
     next_lines = []
     if nxt_words:
@@ -154,38 +197,61 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
     recs: list[str] = []
     tears = moods.get("tears", 0)
     if tears >= 2:
-        recs.append("Tears on 2 or more days: keep the habit short and sit with him for the worksheet; do not add anything.")
+        recs.append(
+            "Tears on 2 or more days: keep the habit short and sit with him for the worksheet; do not add anything."
+        )
     if acc is not None and acc < 0.7:
-        recs.append("Accuracy under 70%: the program is already re-teaching; consider doing the worksheet together for a few days.")
+        recs.append(
+            "Accuracy under 70%: the program is already re-teaching; consider doing the worksheet together for a few days."
+        )
     elif clean >= 3 and clean < scheduler.PACE_AFTER_CLEAN_DAYS[2]:
-        recs.append(f"{clean} clean days so far: pace increases after {scheduler.PACE_AFTER_CLEAN_DAYS[2]}.")
+        recs.append(
+            f"{clean} clean days so far: pace increases after {scheduler.PACE_AFTER_CLEAN_DAYS[2]}."
+        )
     if cats:
         top, c = cats.most_common(1)[0]
         if c >= max(3, 0.4 * len(wrong)) and top in ADVICE:
             recs.append(ADVICE[top])
     next_lines.extend(recs)
 
-    lines = {"learned": learned, "solid": solid_lines, "shaky": shaky_lines,
-             "mistakes": mistake_lines, "pace": pace_lines, "mood": mood_lines, "next": next_lines}
-    questions = [{"id": qid, "question": text, "lines": lines[qid]} for qid, text in QUESTIONS]
+    lines = {
+        "learned": learned,
+        "solid": solid_lines,
+        "shaky": shaky_lines,
+        "mistakes": mistake_lines,
+        "pace": pace_lines,
+        "mood": mood_lines,
+        "next": next_lines,
+    }
+    questions = [
+        {"id": qid, "question": text, "lines": lines[qid]} for qid, text in QUESTIONS
+    ]
 
     headline = [
         {"label": "Quiz accuracy", "value": _pct(acc) if acc is not None else "—"},
-        {"label": "Quiz days", "value": str(len({r['on_date'] for r in results}))},
+        {"label": "Quiz days", "value": str(len({r["on_date"] for r in results}))},
         {"label": "Words solid", "value": str(n_words_solid)},
         {"label": "Clean streak", "value": f"{clean} d"},
     ]
     skills = []
     for s in started:
         pr = progress[s.id]
-        prog = (f"{pr.solid}/{pr.total} words solid" if s.subject == "spelling" else
-                f"box {units[(s.id, '')].box}")
+        prog = (
+            f"{pr.solid}/{pr.total} words solid"
+            if s.subject == "spelling"
+            else f"box {units[(s.id, '')].box}"
+        )
         skills.append({"title": s.title, "label": pr.label, "progress": prog})
     return {
-        "student": student["name"], "date": on.isoformat(),
+        "student": student["name"],
+        "date": on.isoformat(),
         "period_label": f"last {days} days to {on.isoformat()}",
-        "headline": headline, "questions": questions, "skills": skills,
-        "accuracy": acc, "tears_days": tears, "load_reductions": reductions,
+        "headline": headline,
+        "questions": questions,
+        "skills": skills,
+        "accuracy": acc,
+        "tears_days": tears,
+        "load_reductions": reductions,
         "recommendations": recs,
     }
 

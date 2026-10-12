@@ -9,6 +9,7 @@ Spelling: one unit per word.  Math: one unit per skill.
 Each unit has a box 0..6.  Box 0 = introduced but not yet tested.  A correct answer
 moves it up; a wrong answer drops it back and brings it back tomorrow.
 """
+
 from __future__ import annotations
 
 import hashlib
@@ -21,23 +22,39 @@ from .db import DB, Unit
 
 # --- tunable constants ------------------------------------------------------
 
-INTERVALS = {0: 0, 1: 1, 2: 2, 3: 4, 4: 8, 5: 16, 6: 32}   # days until next review, by box
-MASTERED_BOX = 4          # box at which a unit counts as mastered
-SOLID_BOX = 3             # box at which a unit counts as solid
-PREREQ_BOX = 2            # a prerequisite counts as satisfied at this box (spelling: 70% of core words)
+INTERVALS = {
+    0: 0,
+    1: 1,
+    2: 2,
+    3: 4,
+    4: 8,
+    5: 16,
+    6: 32,
+}  # days until next review, by box
+MASTERED_BOX = 4  # box at which a unit counts as mastered
+SOLID_BOX = 3  # box at which a unit counts as solid
+PREREQ_BOX = (
+    2  # a prerequisite counts as satisfied at this box (spelling: 70% of core words)
+)
 
 WORDS_PER_DAY = 5
-MATH_PRACTICE = 8         # problems on the worksheet
+MATH_PRACTICE = 8  # problems on the worksheet
 QUIZ_WORDS = 5
 QUIZ_MATH = 5
-NEW_WORDS_BY_PACE = {1: (3, 1), 2: (4, 1), 3: (4, 2)}   # (phonics, sight) new words per day
-NEW_MATH_PROBLEMS = 3     # worksheet problems for each new math skill
-SHAKY_WORD_BRAKE = 12     # too many shaky words -> slow down new words
-SHAKY_SKILL_BRAKE = 3     # too many shaky math skills -> no new math skill
-CLEAN_ACCURACY = 0.9      # a quiz day at or above this counts toward speeding up
+NEW_WORDS_BY_PACE = {
+    1: (3, 1),
+    2: (4, 1),
+    3: (4, 2),
+}  # (phonics, sight) new words per day
+NEW_MATH_PROBLEMS = 3  # worksheet problems for each new math skill
+SHAKY_WORD_BRAKE = 12  # too many shaky words -> slow down new words
+SHAKY_SKILL_BRAKE = 3  # too many shaky math skills -> no new math skill
+CLEAN_ACCURACY = 0.9  # a quiz day at or above this counts toward speeding up
 PACE_AFTER_CLEAN_DAYS = {2: 5, 3: 10}
 PROBE_ACTIVE_CLEAN_DAYS = 2
-CONSOLIDATE_BELOW = 0.6   # last quiz under this accuracy: stop adding new math, trim new words
+CONSOLIDATE_BELOW = (
+    0.6  # last quiz under this accuracy: stop adding new math, trim new words
+)
 
 HARD_MOODS = {"hard", "tears"}
 
@@ -74,11 +91,15 @@ class SkillProgress:
     introduced: int
     solid: int
     mastered: int
-    label: str      # new | learning | solid | mastered
+    label: str  # new | learning | solid | mastered
 
 
-def skill_progress(cur: Curriculum, units: dict[tuple[str, str], Unit], skill: Skill,
-                   wu: dict[str, Unit] | None = None) -> SkillProgress:
+def skill_progress(
+    cur: Curriculum,
+    units: dict[tuple[str, str], Unit],
+    skill: Skill,
+    wu: dict[str, Unit] | None = None,
+) -> SkillProgress:
     if skill.subject == "spelling":
         wu = wu if wu is not None else word_units(units)
         us = [wu.get(w.lower()) for w in skill.core_words]
@@ -108,7 +129,11 @@ def prereqs_ready(cur: Curriculum, units, skill: Skill, wu=None) -> bool:
         if p.subject == "spelling":
             wu = wu if wu is not None else word_units(units)
             core = p.core_words
-            ok = sum(1 for w in core if (wu.get(w.lower()) and wu[w.lower()].box >= PREREQ_BOX))
+            ok = sum(
+                1
+                for w in core
+                if (wu.get(w.lower()) and wu[w.lower()].box >= PREREQ_BOX)
+            )
             if ok < 0.7 * len(core):
                 return False
         else:
@@ -123,8 +148,16 @@ def prereqs_ready(cur: Curriculum, units, skill: Skill, wu=None) -> bool:
 
 def compute_load(db: DB, student_id: int, on: date) -> tuple[float, str]:
     """Shrink tomorrow's work after hard days. The habit matters more than the content."""
-    logs = [r for r in db.day_logs(student_id) if r["mood"] and r["on_date"] < on.isoformat()]
-    if len(logs) >= 2 and logs[-1]["mood"] in HARD_MOODS and logs[-2]["mood"] in HARD_MOODS:
+    logs = [
+        r
+        for r in db.day_logs(student_id)
+        if r["mood"] and r["on_date"] < on.isoformat()
+    ]
+    if (
+        len(logs) >= 2
+        and logs[-1]["mood"] in HARD_MOODS
+        and logs[-2]["mood"] in HARD_MOODS
+    ):
         return 0.6, "two hard days in a row: lighter load today"
     if logs and logs[-1]["mood"] == "tears":
         return 0.8, "tears yesterday: slightly lighter load today"
@@ -161,9 +194,14 @@ def maybe_advance_composition(db: DB, student, day_no: int) -> int:
     stage = student["composition_stage"]
     if stage >= 5 or day_no % 5 != 0:
         return stage
-    logs = [r for r in db.day_logs(student["id"]) if r["composition_done"] is not None][-5:]
-    if len(logs) == 5 and all(r["composition_done"] == 1 for r in logs) and \
-            not any(r["mood"] == "tears" for r in logs):
+    logs = [r for r in db.day_logs(student["id"]) if r["composition_done"] is not None][
+        -5:
+    ]
+    if (
+        len(logs) == 5
+        and all(r["composition_done"] == 1 for r in logs)
+        and not any(r["mood"] == "tears" for r in logs)
+    ):
         db.set_student_field(student["id"], "composition_stage", stage + 1)
         return stage + 1
     return stage
@@ -182,10 +220,10 @@ class Selection:
     clean_days: int
     probing: bool
     consolidating: bool = False
-    spelling: list[dict] = field(default_factory=list)    # {skill_id, word, role}
-    math: list[dict] = field(default_factory=list)        # {skill_id, n, role}
-    spell_probe: dict | None = None                       # {skill_id, words}
-    math_probe: dict | None = None                        # {skill_id, n}
+    spelling: list[dict] = field(default_factory=list)  # {skill_id, word, role}
+    math: list[dict] = field(default_factory=list)  # {skill_id, n, role}
+    spell_probe: dict | None = None  # {skill_id, words}
+    math_probe: dict | None = None  # {skill_id, n}
     quiz_spelling: list[dict] = field(default_factory=list)
     quiz_math: list[dict] = field(default_factory=list)
     reteach: list[dict] = field(default_factory=list)
@@ -204,14 +242,18 @@ def _review_key(u: Unit, today: date):
     return (-missed, u.box, -overdue, u.skill_id, u.item_key)
 
 
-def _spelling_candidates(cur: Curriculum, units, wu, track: str, n: int, exclude: set[str]) -> list[tuple[Skill, str]]:
+def _spelling_candidates(
+    cur: Curriculum, units, wu, track: str, n: int, exclude: set[str]
+) -> list[tuple[Skill, str]]:
     """Next unseen core words in a track, in order. Stops at the first skill whose
     prerequisites are not yet satisfied."""
     out: list[tuple[Skill, str]] = []
     for s in cur.subject("spelling"):
         if s.track != track:
             continue
-        remaining = [w for w in s.core_words if w.lower() not in wu and w.lower() not in exclude]
+        remaining = [
+            w for w in s.core_words if w.lower() not in wu and w.lower() not in exclude
+        ]
         if not remaining:
             continue
         started = any(w.lower() in wu for w in s.core_words)
@@ -225,7 +267,9 @@ def _spelling_candidates(cur: Curriculum, units, wu, track: str, n: int, exclude
     return out
 
 
-def _spelling_frontier(cur: Curriculum, wu, track: str, probes: dict[str, str]) -> list[Skill]:
+def _spelling_frontier(
+    cur: Curriculum, wu, track: str, probes: dict[str, str]
+) -> list[Skill]:
     """Skills in this track that still have unseen core words, in order, not yet probed."""
     out = []
     for s in cur.subject("spelling"):
@@ -237,17 +281,23 @@ def _spelling_frontier(cur: Curriculum, wu, track: str, probes: dict[str, str]) 
 
 
 def _math_candidates(cur: Curriculum, units) -> list[Skill]:
-    return [s for s in cur.subject("math")
-            if (s.id, "") not in units and prereqs_ready(cur, units, s)]
+    return [
+        s
+        for s in cur.subject("math")
+        if (s.id, "") not in units and prereqs_ready(cur, units, s)
+    ]
 
 
-def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) -> tuple[Selection, bool]:
+def plan_day(
+    db: DB, cur: Curriculum, student, on: date, force: bool = False
+) -> tuple[Selection, bool]:
     """Pick the day's content. Returns (selection, created). If a plan already exists for
     the date and `force` is false, returns the stored plan's selection with created=False."""
     sid = student["id"]
     existing = db.plan_for(sid, on.isoformat())
     if existing and not force:
         import json
+
         sel = Selection(**json.loads(existing["data"])["selection"])
         return sel, False
     if existing and force:
@@ -263,21 +313,36 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
     clean = clean_day_streak(db, sid)
     pace = compute_pace(db, student, clean, load)
     story_stage = maybe_advance_composition(db, db.student(student["name"]), day_no)
-    probing = load >= 1.0 and (day_no <= student["probe_days"] or clean >= PROBE_ACTIVE_CLEAN_DAYS)
+    probing = load >= 1.0 and (
+        day_no <= student["probe_days"] or clean >= PROBE_ACTIVE_CLEAN_DAYS
+    )
 
     last_acc = last_quiz_accuracy(db, sid)
     consolidating = last_acc is not None and last_acc < CONSOLIDATE_BELOW
     if consolidating:
         probing = False
-    sel = Selection(on=on.isoformat(), day_no=day_no, load=load, load_reason=load_reason,
-                    pace=pace, clean_days=clean, probing=probing, consolidating=consolidating,
-                    story_stage=max(1, story_stage - 1) if load < 1.0 else story_stage)
+    sel = Selection(
+        on=on.isoformat(),
+        day_no=day_no,
+        load=load,
+        load_reason=load_reason,
+        pace=pace,
+        clean_days=clean,
+        probing=probing,
+        consolidating=consolidating,
+        story_stage=max(1, story_stage - 1) if load < 1.0 else story_stage,
+    )
 
     # ---- spelling ----------------------------------------------------------
     n_words = max(3, round(WORDS_PER_DAY * load))
     due_words = sorted(
-        [u for u in units.values() if u.skill_id.startswith("sp.") and d(u.due_on) <= on],
-        key=lambda u: _review_key(u, on))
+        [
+            u
+            for u in units.values()
+            if u.skill_id.startswith("sp.") and d(u.due_on) <= on
+        ],
+        key=lambda u: _review_key(u, on),
+    )
     seen_words: set[str] = set()
     review_pool: list[Unit] = []
     for u in due_words:
@@ -296,12 +361,18 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
 
     exclude = set(seen_words)
     new_list: list[tuple[Skill, str]] = []
-    new_list += _spelling_candidates(cur, units, wu, "phonics", min(ph_q, new_cap), exclude)
+    new_list += _spelling_candidates(
+        cur, units, wu, "phonics", min(ph_q, new_cap), exclude
+    )
     room = new_cap - len(new_list)
     if room > 0:
-        new_list += _spelling_candidates(cur, units, wu, "sight", min(si_q, room), exclude)
+        new_list += _spelling_candidates(
+            cur, units, wu, "sight", min(si_q, room), exclude
+        )
 
-    spelling: list[dict] = [{"skill_id": s.id, "word": w, "role": "new"} for s, w in new_list]
+    spelling: list[dict] = [
+        {"skill_id": s.id, "word": w, "role": "new"} for s, w in new_list
+    ]
     for u in review_pool:
         if len(spelling) >= n_words:
             break
@@ -313,15 +384,27 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
             cap_extra = 0
         extra = _spelling_candidates(cur, units, wu, "phonics", cap_extra, exclude)
         if len(extra) < cap_extra:
-            extra += _spelling_candidates(cur, units, wu, "sight", cap_extra - len(extra), exclude)
+            extra += _spelling_candidates(
+                cur, units, wu, "sight", cap_extra - len(extra), exclude
+            )
         spelling += [{"skill_id": s.id, "word": w, "role": "new"} for s, w in extra]
     # still short: one transfer word from a skill whose core words are all solid
     if len(spelling) < n_words:
         for s in cur.subject("spelling"):
             if skill_progress(cur, units, s, wu).label in ("solid", "mastered"):
-                fresh = [w for w in s.transfer_words if w.lower() not in wu and w.lower() not in exclude]
+                fresh = [
+                    w
+                    for w in s.transfer_words
+                    if w.lower() not in wu and w.lower() not in exclude
+                ]
                 if fresh:
-                    spelling.append({"skill_id": s.id, "word": rng.choice(fresh), "role": "transfer"})
+                    spelling.append(
+                        {
+                            "skill_id": s.id,
+                            "word": rng.choice(fresh),
+                            "role": "transfer",
+                        }
+                    )
                     break
     sel.spelling = spelling
 
@@ -331,7 +414,13 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
         taught_ids = {x["skill_id"] for x in spelling if x["role"] == "new"}
         targets = [s for s in frontier if s.id not in taught_ids]
         # skip the skill currently being taught (first in frontier)
-        if frontier and targets and frontier[0].id == targets[0].id and len(targets) > 1 and taught_ids:
+        if (
+            frontier
+            and targets
+            and frontier[0].id == targets[0].id
+            and len(targets) > 1
+            and taught_ids
+        ):
             targets = targets[1:]
         if targets and len(targets[0].core_words) >= 2:
             t = targets[0]
@@ -351,7 +440,10 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
         k = min(NEW_MATH_PROBLEMS, max(1, n_practice - total))
         math_slots.append({"skill_id": s.id, "n": k, "role": "new"})
         total += k
-    due_math = sorted([u for u in math_units.values() if d(u.due_on) <= on], key=lambda u: _review_key(u, on))
+    due_math = sorted(
+        [u for u in math_units.values() if d(u.due_on) <= on],
+        key=lambda u: _review_key(u, on),
+    )
     for u in due_math:
         if total >= n_practice:
             break
@@ -364,7 +456,8 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
         n_practice = min(n_practice, 5)
     if total < n_practice:
         pad_pool = [s["skill_id"] for s in math_slots] or sorted(
-            math_units, key=lambda sk: math_units[sk].introduced_on, reverse=True)[:3]
+            math_units, key=lambda sk: math_units[sk].introduced_on, reverse=True
+        )[:3]
         i = 0
         while total < n_practice and pad_pool:
             sk = pad_pool[i % len(pad_pool)]
@@ -403,30 +496,53 @@ def plan_day(db: DB, cur: Curriculum, student, on: date, force: bool = False) ->
     # ---- commit introductions ---------------------------------------------------------
     for item in spelling:
         if item["role"] in ("new", "transfer"):
-            db.upsert_unit(sid, Unit(
-                skill_id=item["skill_id"], item_key=item["word"], box=0,
-                introduced_on=on.isoformat(), last_seen=None, due_on=on.isoformat(),
-                streak=0, lapses=0, last_correct=None,
-                origin="transfer" if item["role"] == "transfer" else "taught"))
+            db.upsert_unit(
+                sid,
+                Unit(
+                    skill_id=item["skill_id"],
+                    item_key=item["word"],
+                    box=0,
+                    introduced_on=on.isoformat(),
+                    last_seen=None,
+                    due_on=on.isoformat(),
+                    streak=0,
+                    lapses=0,
+                    last_correct=None,
+                    origin="transfer" if item["role"] == "transfer" else "taught",
+                ),
+            )
     for m in math_slots:
         if m["role"] == "new":
-            db.upsert_unit(sid, Unit(
-                skill_id=m["skill_id"], item_key="", box=0, introduced_on=on.isoformat(),
-                last_seen=None, due_on=on.isoformat(), streak=0, lapses=0,
-                last_correct=None, origin="taught"))
+            db.upsert_unit(
+                sid,
+                Unit(
+                    skill_id=m["skill_id"],
+                    item_key="",
+                    box=0,
+                    introduced_on=on.isoformat(),
+                    last_seen=None,
+                    due_on=on.isoformat(),
+                    streak=0,
+                    lapses=0,
+                    last_correct=None,
+                    origin="taught",
+                ),
+            )
     return sel, True
 
 
 def _reteach(db: DB, cur: Curriculum, sid: int, on: date) -> list[dict]:
     q = db.conn.execute(
         "SELECT on_date FROM result WHERE student_id = ? AND probe = 0 ORDER BY on_date DESC LIMIT 1",
-        (sid,)).fetchone()
+        (sid,),
+    ).fetchone()
     if not q:
         return []
     rows = db.conn.execute(
         "SELECT skill_id, item_key, COUNT(*) n FROM result WHERE student_id = ? AND on_date = ?"
         " AND probe = 0 AND correct = 0 GROUP BY skill_id ORDER BY n DESC, skill_id LIMIT 2",
-        (sid, q["on_date"])).fetchall()
+        (sid, q["on_date"]),
+    ).fetchall()
     return [{"skill_id": r["skill_id"], "word": r["item_key"]} for r in rows]
 
 
@@ -447,8 +563,17 @@ def advance(u: Unit, correct: bool, on: date) -> Unit:
     return u
 
 
-def fast_track(db: DB, cur: Curriculum, sid: int, skill: Skill, on: date, box: int, stagger: int = 1,
-               origin: str = "probed", offset: int = 0) -> int:
+def fast_track(
+    db: DB,
+    cur: Curriculum,
+    sid: int,
+    skill: Skill,
+    on: date,
+    box: int,
+    stagger: int = 1,
+    origin: str = "probed",
+    offset: int = 0,
+) -> int:
     """Mark a skill as already known. Review dates are staggered so they do not all fall on the same day."""
     units = db.units(sid)
     wu = word_units(units)
@@ -456,25 +581,53 @@ def fast_track(db: DB, cur: Curriculum, sid: int, skill: Skill, on: date, box: i
     if skill.subject == "spelling":
         for i, w in enumerate(skill.core_words):
             if w.lower() in wu and (skill.id, w) not in units:
-                continue   # known through another skill
+                continue  # known through another skill
             existing = units.get((skill.id, w))
             if existing and existing.box >= box:
                 continue
             due = on + timedelta(days=INTERVALS[box] + ((offset + i) % max(1, stagger)))
-            db.upsert_unit(sid, Unit(skill.id, w, box, existing.introduced_on if existing else on.isoformat(),
-                                     on.isoformat(), due.isoformat(), 1, existing.lapses if existing else 0, 1, origin))
+            db.upsert_unit(
+                sid,
+                Unit(
+                    skill.id,
+                    w,
+                    box,
+                    existing.introduced_on if existing else on.isoformat(),
+                    on.isoformat(),
+                    due.isoformat(),
+                    1,
+                    existing.lapses if existing else 0,
+                    1,
+                    origin,
+                ),
+            )
             n += 1
     else:
         existing = units.get((skill.id, ""))
         if not (existing and existing.box >= box):
             due = on + timedelta(days=INTERVALS[box] + (offset % max(1, stagger)))
-            db.upsert_unit(sid, Unit(skill.id, "", box, existing.introduced_on if existing else on.isoformat(),
-                                     on.isoformat(), due.isoformat(), 1, existing.lapses if existing else 0, 1, origin))
+            db.upsert_unit(
+                sid,
+                Unit(
+                    skill.id,
+                    "",
+                    box,
+                    existing.introduced_on if existing else on.isoformat(),
+                    on.isoformat(),
+                    due.isoformat(),
+                    1,
+                    existing.lapses if existing else 0,
+                    1,
+                    origin,
+                ),
+            )
             n = 1
     return n
 
 
-def apply_results(db: DB, cur: Curriculum, sid: int, on: date, rows: list[dict]) -> dict:
+def apply_results(
+    db: DB, cur: Curriculum, sid: int, on: date, rows: list[dict]
+) -> dict:
     """Update memory state from graded rows. Returns a small summary."""
     units = db.units(sid)
     wu = word_units(units)
@@ -485,11 +638,13 @@ def apply_results(db: DB, cur: Curriculum, sid: int, on: date, rows: list[dict])
     for r in rows:
         if r.get("probe"):
             continue
-        per_unit.setdefault((r["skill_id"], r.get("item_key", "")), []).append(bool(r["correct"]))
+        per_unit.setdefault((r["skill_id"], r.get("item_key", "")), []).append(
+            bool(r["correct"])
+        )
     for (skill_id, key), flags in per_unit.items():
         u = units.get((skill_id, key))
         if u is None and skill_id.startswith("sp."):
-            u0 = wu.get(key.lower())          # tested under an alias skill
+            u0 = wu.get(key.lower())  # tested under an alias skill
             u = u0
         if u is None:
             continue

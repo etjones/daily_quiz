@@ -3,6 +3,7 @@
 A curriculum is a set of TOML files (see curriculum/*.toml). Skills are kept in
 file order; that order is the default teaching sequence.
 """
+
 from __future__ import annotations
 
 import random
@@ -25,7 +26,7 @@ class Strand:
     rationale: str = ""
     teach: str = ""
     watch_for: str = ""
-    track: str = "main"          # spelling: "phonics" or "sight"
+    track: str = "main"  # spelling: "phonics" or "sight"
     teks: str = ""
 
 
@@ -52,7 +53,9 @@ class Skill:
     # math
     generator: str = ""
     params: dict = field(default_factory=dict)
-    min_distinct: int = 8       # smallest acceptable problem space (some skills are inherently small)
+    min_distinct: int = (
+        8  # smallest acceptable problem space (some skills are inherently small)
+    )
 
     @property
     def core_words(self) -> list[str]:
@@ -60,7 +63,7 @@ class Skill:
 
     @property
     def transfer_words(self) -> list[str]:
-        return self.words[self.core:]
+        return self.words[self.core :]
 
 
 @dataclass
@@ -68,7 +71,9 @@ class Curriculum:
     skills: list[Skill]
     strands: dict[str, Strand]
     meta: dict[str, dict]
-    sentences: dict[str, str] = field(default_factory=dict)   # lowercase word -> dictation sentence
+    sentences: dict[str, str] = field(
+        default_factory=dict
+    )  # lowercase word -> dictation sentence
 
     def __post_init__(self):
         self.by_id = {s.id: s for s in self.skills}
@@ -107,7 +112,14 @@ def load(directory: str | Path) -> Curriculum:
             raise ValueError(f"{path.name}: [meta].subject is required")
         meta[subject] = m
         for s in data.get("strand", []):
-            st = Strand(subject=subject, **{k: v for k, v in s.items() if k in Strand.__dataclass_fields__ and k != "subject"})
+            st = Strand(
+                subject=subject,
+                **{
+                    k: v
+                    for k, v in s.items()
+                    if k in Strand.__dataclass_fields__ and k != "subject"
+                },
+            )
             strands[f"{subject}:{st.id}"] = st
         for s in data.get("skill", []):
             kw = {k: v for k, v in s.items() if k in Skill.__dataclass_fields__}
@@ -122,9 +134,15 @@ def load(directory: str | Path) -> Curriculum:
                 sk.grade = st.grade
             skills.append(sk)
     sentences: dict[str, str] = {}
-    for path in sorted((directory / "sentences").glob("*.toml")) if (directory / "sentences").is_dir() else []:
+    for path in (
+        sorted((directory / "sentences").glob("*.toml"))
+        if (directory / "sentences").is_dir()
+        else []
+    ):
         with open(path, "rb") as f:
-            sentences.update({k.lower(): v for k, v in tomllib.load(f).get("sentences", {}).items()})
+            sentences.update(
+                {k.lower(): v for k, v in tomllib.load(f).get("sentences", {}).items()}
+            )
     for sk in skills:
         for w, sent in sk.sentences.items():
             sentences.setdefault(w.lower(), sent)
@@ -150,7 +168,9 @@ def validate(cur: Curriculum, smoke_seeds: int = 40) -> list[str]:
             if p not in cur.by_id:
                 errs.append(f"{where}: prerequisite {p!r} does not exist")
             elif cur.index[p] >= i:
-                errs.append(f"{where}: prerequisite {p!r} comes later in the file order")
+                errs.append(
+                    f"{where}: prerequisite {p!r} comes later in the file order"
+                )
         if s.subject == "spelling":
             errs.extend(_validate_spelling(s))
         elif s.subject == "math":
@@ -162,7 +182,7 @@ def _validate_spelling(s: Skill) -> list[str]:
     errs = []
     if not s.words:
         return [f"{s.id}: no words"]
-    if len(set(w.lower() for w in s.words)) != len(s.words):
+    if len({w.lower() for w in s.words}) != len(s.words):
         errs.append(f"{s.id}: duplicate words in pool")
     try:
         rx = re.compile(s.pattern)
@@ -182,8 +202,10 @@ def _validate_spelling(s: Skill) -> list[str]:
             errs.append(f"{s.id}: needs_sentence but no sentence for {missing}")
         for w, sent in s.sentences.items():
             if w not in s.words:
-                errs.append(f"{s.id}: sentence given for {w!r}, which is not in the word list")
-            elif not re.search(rf"\b{re.escape(w)}\b", sent, re.I):
+                errs.append(
+                    f"{s.id}: sentence given for {w!r}, which is not in the word list"
+                )
+            elif not re.search(rf"\b{re.escape(w)}\b", sent, re.IGNORECASE):
                 errs.append(f"{s.id}: sentence for {w!r} does not contain the word")
     if len(s.core_words) < 5:
         errs.append(f"{s.id}: fewer than 5 core words ({len(s.core_words)})")
@@ -197,16 +219,21 @@ def _validate_math(s: Skill, smoke_seeds: int) -> list[str]:
     if not s.demo:
         errs.append(f"{s.id}: no demo problems")
     from . import answers
+
     keys = set()
     try:
         for seed in range(smoke_seeds):
             p = generators.generate_one(s.generator, s.params, random.Random(seed))
             keys.add(p.key)
             if not answers.match(p.kind, p.answer, p.answer):
-                errs.append(f"{s.id}: generated answer {p.answer!r} does not match itself as kind {p.kind!r}")
+                errs.append(
+                    f"{s.id}: generated answer {p.answer!r} does not match itself as kind {p.kind!r}"
+                )
                 break
     except Exception as e:  # noqa: BLE001
         errs.append(f"{s.id}: generator failed: {e}")
     if len(keys) < s.min_distinct:
-        errs.append(f"{s.id}: only {len(keys)} distinct problems in {smoke_seeds} samples; widen params")
+        errs.append(
+            f"{s.id}: only {len(keys)} distinct problems in {smoke_seeds} samples; widen params"
+        )
     return errs
