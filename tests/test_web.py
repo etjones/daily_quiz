@@ -338,3 +338,10 @@ def test_photo_that_is_not_an_image(web, home):
     bad = SimpleUploadedFile("q.jpg", b"nope", "image/jpeg")
     r = post(web, f"/quiz/{q['id']}/photo", {"photo": bad})
     assert r.status_code == 400 and "Could not read" in text(r)
+
+
+def test_pages_set_same_origin_referrer_policy(web, db):
+    # Caddy sends Referrer-Policy: no-referrer, which makes browsers post Origin: null and fail CSRF.
+    meta = '<meta name="referrer" content="same-origin">'
+    assert meta in text(Client().get("/login"))
+    assert meta in text(get(web, "/students"))
