@@ -30,6 +30,7 @@
 {% endif %}
 
 <form method="post" action="/report/pdf" target="_blank">
+  {{ csrf_input }}
   <input type="hidden" name="days" value="{{ days }}">
   <p><button class="ghost" type="submit">Make a printable PDF</button></p>
 </form>

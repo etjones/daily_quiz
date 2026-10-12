@@ -17,8 +17,15 @@
       <a href="/students">Students</a>
     </p>
   </nav>
+  {% if user and user.is_authenticated %}
+  <form method="post" action="/logout">
+    {{ csrf_input }}
+    <p><small>Signed in as {{ user.get_username() }}</small> <button class="ghost" type="submit">Sign out</button></p>
+  </form>
+  {% endif %}
   {% if students and students|length > 1 %}
   <form method="post" action="/students/select">
+  {{ csrf_input }}
     <label class="field" for="switch-student">Student</label>
     <select id="switch-student" name="name">
       {% for name in students %}

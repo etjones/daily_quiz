@@ -3,12 +3,15 @@
 ## Unreleased
 
 **Breaking**
+- The web app is now Django instead of FastAPI, and every page except `/health` needs a login; production needs `DJANGO_SECRET_KEY` and `DQ_ALLOWED_HOSTS`, and a user created with `just adduser`.
+- Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
-- Added a web app (`just run`, FastAPI + Jinja) covering the daily loop, quiz entry, photo grading, placement, history, progress report, skills and dictation sentences.
-- `python -m dq.web` runs the web app as a service (reads `PORT` and `.env`, binds 127.0.0.1, `/health`), declared as a routinely service for deploy-site.
+- Web accounts use Django's auth (argon2 hashes, admin at `/admin`); sessions last 30 days after the last visit and every form has CSRF protection.
+- Added a web app (`just run`, Jinja templates) covering the daily loop, quiz entry, photo grading, placement, history, progress report, skills and dictation sentences.
+- `python -m dq.web` runs the web app as a service (migrations, then gunicorn on 127.0.0.1:$PORT, `/health`), declared as a routinely service under `op run` for deploy-site.
 - Placement can be replayed from recorded answers (`placement.next_question`), so it runs across web requests.
-- `DB` accepts `check_same_thread`, and gained `results_for_quiz` and `graded_quizzes`.
+- `DB` gained `results_for_quiz` and `graded_quizzes`.
 - `build.words_missing_sentences` is shared by `dq sentences` and the web app.
 
 ## 2026-10-12

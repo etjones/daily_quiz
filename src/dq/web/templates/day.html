@@ -25,10 +25,12 @@
 
 <h2>Rebuild</h2>
 <form method="post" action="/day">
+  {{ csrf_input }}
   <input type="hidden" name="on" value="{{ on }}">
   <p><button class="ghost" type="submit">Re-render PDFs</button></p>
 </form>
 <form method="post" action="/day" onsubmit="return confirm('Rebuild this day from scratch? The open quiz is replaced.')">
+  {{ csrf_input }}
   <input type="hidden" name="on" value="{{ on }}">
   <input type="hidden" name="force" value="true">
   <p><button class="ghost" type="submit">Rebuild plan from scratch</button></p>

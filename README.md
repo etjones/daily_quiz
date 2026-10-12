@@ -5,19 +5,26 @@ parent script. Spelling and arithmetic are broken into small skills in TOML file
 scheduler (Leitner boxes) decides what appears each day. No model is needed for any decision.
 
 ## Install (on a computer)
-    uv sync --extra dev
+    uv sync
     just test                 # pytest
     just validate             # checks the curriculum files
+    just adduser NAME         # a login for the web app (once)
     just run                  # web app at http://localhost:8000 (hot reload)
 
 ## Web app
-`just run` serves the same daily loop in a browser, on the same data as the CLI: today's steps
+`just run` serves the same daily loop in a browser (Django), on the same data as the CLI: today's steps
 (grade the quiz, log the mood, build and print the worksheet and quiz), per-item quiz entry like
 `dq oral`, photo grading, placement (with undo), history, the progress report, skills, and dictation
 sentences. Switch students from the header; the choice is a cookie, falling back to the CLI's default
-student. There is no login. Photo grading and sentence writing use `DQ_BACKEND` (default `lmstudio`,
+student. Every page needs a login (Django accounts, argon2 hashes); a device stays signed in for 30 days
+after its last visit. Accounts and sessions live in `~/.dq/web.sqlite3`, apart from `dq.db`. Add users with
+`just adduser NAME`, reset with `just passwd NAME`, or use `/admin`. Photo grading and sentence writing use `DQ_BACKEND` (default `lmstudio`,
 `none` to disable) and `DQ_LLM_URL` / `DQ_LLM_MODEL`. Styling is the house style, exported into
 `src/dq/web/static/house-style`; pick a theme with the control at the top right.
+
+Production runs `python -m dq.web` (migrations, then gunicorn on 127.0.0.1:$PORT) under
+`op run --env-file=.env`; see `.env.example` for settings. On the server, add a user with
+`just with-secrets adduser NAME`.
 
 Data lives in `~/.dq` (override with `--home` or `DQ_HOME`): `dq.db` (SQLite) and `out/<student>/<date>/*.pdf`.
 Back up that folder; it is the child's whole history.

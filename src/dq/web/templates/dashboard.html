@@ -20,6 +20,7 @@
 <p>Logged for {{ yesterday }}: <strong>{{ log.mood }}</strong>{% if log.composition_done is not none %}, story {{ 'done' if log.composition_done else 'skipped' }}{% endif %}{% if log.note %}, “{{ log.note }}”{% endif %}. You can change it below.</p>
 {% endif %}
 <form method="post" action="/mood">
+  {{ csrf_input }}
   <input type="hidden" name="on" value="{{ yesterday }}">
   <p>
     <label class="field" for="mood">Mood ({{ yesterday }})</label>
@@ -49,6 +50,7 @@
 {% else %}
 <p>Grade the open quiz and log the mood first; the plan uses both.</p>
 <form method="post" action="/day">
+  {{ csrf_input }}
   <input type="hidden" name="on" value="{{ today }}">
   <p><button type="submit">Build day for {{ today }}</button></p>
 </form>

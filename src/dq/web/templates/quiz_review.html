@@ -2,6 +2,7 @@
 {% block main %}
 <p class="lede">Check each row. Fix what was written, or flip the verdict. Nothing is saved until you press Save.</p>
 <form method="post" action="/quiz/{{ quiz.id }}/save">
+  {{ csrf_input }}
 <input type="hidden" name="mode" value="{{ mode }}">
 <table>
   <thead><tr><th class="num">#</th><th>Expected</th><th>Wrote</th><th>Verdict</th><th>Note</th></tr></thead>

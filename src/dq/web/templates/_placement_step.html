@@ -11,6 +11,7 @@
   <p>Answer: <strong>{{ item.expected }}</strong></p>
   {% endif %}
   <form method="post" action="/placement" hx-post="/placement" hx-target="#placement" hx-swap="outerHTML">
+  {{ csrf_input }}
     {% for t in tracks %}<input type="hidden" name="tracks" value="{{ t }}">{% endfor %}
     <input type="hidden" name="answers" value="{{ answers }}">
     <input type="hidden" name="on" value="{{ on }}">
@@ -21,6 +22,7 @@
   </form>
   {% if answers %}
   <form method="post" action="/placement" hx-post="/placement" hx-target="#placement" hx-swap="outerHTML">
+  {{ csrf_input }}
     {% for t in tracks %}<input type="hidden" name="tracks" value="{{ t }}">{% endfor %}
     <input type="hidden" name="answers" value="{{ answers[:-1] }}">
     <input type="hidden" name="on" value="{{ on }}">

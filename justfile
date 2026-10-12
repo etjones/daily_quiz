@@ -4,7 +4,14 @@ default:
 port := env("DQ_PORT", "8000")
 
 run:
-    uv run uvicorn dq.web.app:create_app --factory --reload --reload-dir src --reload-include '*.html' --port {{port}}
+    DQ_DEBUG=1 uv run python manage.py migrate --verbosity 0
+    DQ_DEBUG=1 uv run python manage.py runserver 127.0.0.1:{{port}}
+
+adduser name:
+    uv run python manage.py createsuperuser --username {{name}} --email ''
+
+passwd name:
+    uv run python manage.py changepassword {{name}}
 
 dq *args:
     uv run dq {{args}}
@@ -50,3 +57,6 @@ report name="":
 
 lint:
     uvx ruff check .
+
+with-secrets +args:
+    set -a; . ~/.config/op/token.env; set +a; op run --env-file=.env -- just {{args}}

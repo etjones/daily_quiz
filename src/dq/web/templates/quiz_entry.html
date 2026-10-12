@@ -3,6 +3,7 @@
 <p class="lede">Read each item aloud. Leave “right” selected when the answer was right. Otherwise type what {{ student.name }} wrote or said, or pick blank or wrong.</p>
 
 <form method="post" action="/quiz/{{ quiz.id }}/review">
+  {{ csrf_input }}
 <table>
   <thead><tr><th class="num">#</th><th>Ask</th><th>Answer</th><th>Result</th><th>What they wrote</th></tr></thead>
   <tbody>
@@ -28,6 +29,7 @@
 <h2>Or grade a photo</h2>
 <p>Take a flat, well-lit photo of the whole quiz page. A vision model reads each box; you check the result before anything is saved.</p>
 <form method="post" action="/quiz/{{ quiz.id }}/photo" enctype="multipart/form-data">
+  {{ csrf_input }}
   <p>
     <label class="field" for="photo">Photo</label>
     <input type="file" id="photo" name="photo" accept="image/*" required>
