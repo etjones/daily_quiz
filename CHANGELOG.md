@@ -7,6 +7,7 @@
 - Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
+- `dq status` and the web footer print the data directory; the README documents where data lives on the Mac and the server.
 - Pages set `<meta name="referrer" content="same-origin">` so logins work behind Caddy's `Referrer-Policy: no-referrer` (which made browsers post `Origin: null` and fail CSRF).
 - Web accounts use Django's auth (argon2 hashes, admin at `/admin`); sessions last 30 days after the last visit and every form has CSRF protection.
 - Added a web app (`just run`, Jinja templates) covering the daily loop, quiz entry, photo grading, placement, history, progress report, skills and dictation sentences.

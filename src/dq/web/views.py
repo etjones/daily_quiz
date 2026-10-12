@@ -97,6 +97,7 @@ def page(
     ctx.setdefault("students", [s["name"] for s in request.db.students()])
     ctx.setdefault("msg", request.GET.get("msg"))
     ctx.setdefault("user", request.user)
+    ctx.setdefault("data_home", str(home().resolve()))
     return render(request, name, {**house_context(request), **ctx}, status=status)
 
 

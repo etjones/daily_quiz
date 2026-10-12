@@ -26,8 +26,19 @@ Production runs `python -m dq.web` (migrations, then gunicorn on 127.0.0.1:$PORT
 `op run --env-file=.env`; see `.env.example` for settings. On the server, add a user with
 `just with-secrets adduser NAME`.
 
-Data lives in `~/.dq` (override with `--home` or `DQ_HOME`): `dq.db` (SQLite) and `out/<student>/<date>/*.pdf`.
-Back up that folder; it is the child's whole history.
+## Data
+Everything the app keeps is in one directory, `DQ_HOME` (default `~/.dq`; `--home` overrides it for the CLI):
+`dq.db` (students, quizzes, results, sentences), `web.sqlite3` (web logins and sessions),
+`default_student`, `out/<student>/<date>/*.pdf`, and `work/` (render scratch). Back it up; it is the
+child's whole history. `dq status` and the web footer print its path.
+
+- **Mac:** `~/.dq`, with a gitignored symlink `data -> ~/.dq` in the project. The live SQLite files stay
+  out of Dropbox, which can sync a database mid-write into a corrupt or conflicted copy.
+- **Server:** `/home/deploy/dev/daily_quiz/data` (gitignored), set by `DQ_HOME` in that checkout's `.env`.
+  Deleting or `git clean -fdx`-ing the checkout deletes the data.
+
+To copy the learning data up, replace only `dq.db` (never `web.sqlite3`), using SQLite's backup so a
+running app can't leave a half-written copy, then restart the service.
 
 The first `dq init` records the default student (`~/.dq/default_student`); every command that takes a NAME can omit it. Change it with `dq default NAME`.
 

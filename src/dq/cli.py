@@ -406,7 +406,7 @@ def cmd_sentences(args) -> int:
 
 
 def cmd_status(args) -> int:
-    db, _ = open_for_student(args)
+    db, home = open_for_student(args)
     student = db.student(args.name)
     on = parse_date(args.date)
     plan = db.plan_for(student["id"], on.isoformat())
@@ -421,6 +421,7 @@ def cmd_status(args) -> int:
         d, a, n = days[-1]
         print(f"  last graded quiz: {d}, {round(100 * a)}% of {n}")
     print(f"  clean-quiz streak: {scheduler.clean_day_streak(db, student['id'])}")
+    print(f"  data: {home.resolve()}")
     return 0
 
 

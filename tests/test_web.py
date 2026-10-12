@@ -345,3 +345,7 @@ def test_pages_set_same_origin_referrer_policy(web, db):
     meta = '<meta name="referrer" content="same-origin">'
     assert meta in text(Client().get("/login"))
     assert meta in text(get(web, "/students"))
+
+
+def test_footer_shows_data_directory(web, home):
+    assert str(home.resolve()) in text(get(web, "/students"))
