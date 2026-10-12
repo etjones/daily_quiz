@@ -13,6 +13,8 @@ dependencies = [
     "uvicorn[standard]>=0.54.0",
     "jinja2>=3.1.6",
     "python-multipart>=0.0.32",
+    "routinely>=0.3.0",
+    "python-dotenv>=1.2.4",
 ]
 
 [project.optional-dependencies]
@@ -23,6 +25,14 @@ dev = [
 
 [project.scripts]
 dq = "dq.cli:main"
+
+# Long-running web service (routinely keeps it alive with systemd). Reads PORT from .env (assigned by
+# deploy-site) and binds 127.0.0.1 only; Caddy terminates TLS at quizzes.dayonetools.com.
+[tool.routinely.dq-web]
+command     = "uv run --no-dev python -m dq.web"
+schedule    = "always"
+label       = "com.evanjones.dq-web"
+environment = { PATH = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:~/.local/bin" }
 
 [build-system]
 requires = ["setuptools>=68"]

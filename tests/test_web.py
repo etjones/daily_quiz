@@ -260,3 +260,8 @@ def test_photo_that_is_not_an_image(client, tmp_path):
         f"/quiz/{q['id']}/photo", files={"photo": ("q.jpg", b"nope", "image/jpeg")}
     )
     assert r.status_code == 400 and "Could not read" in r.text
+
+
+def test_health(client):
+    r = client.get("/health")
+    assert r.status_code == 200 and r.text == "ok"

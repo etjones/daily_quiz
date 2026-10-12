@@ -6,6 +6,7 @@
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
 - Added a web app (`just run`, FastAPI + Jinja) covering the daily loop, quiz entry, photo grading, placement, history, progress report, skills and dictation sentences.
+- `python -m dq.web` runs the web app as a service (reads `PORT` and `.env`, binds 127.0.0.1, `/health`), declared as a routinely service for deploy-site.
 - Placement can be replayed from recorded answers (`placement.next_question`), so it runs across web requests.
 - `DB` accepts `check_same_thread`, and gained `results_for_quiz` and `graded_quizzes`.
 - `build.words_missing_sentences` is shared by `dq sentences` and the web app.

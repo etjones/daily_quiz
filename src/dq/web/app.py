@@ -18,7 +18,13 @@ from urllib.parse import quote
 import cv2
 import numpy as np
 from fastapi import APIRouter, Depends, FastAPI, Form, Request, UploadFile
-from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
+from fastapi.responses import (
+    FileResponse,
+    HTMLResponse,
+    PlainTextResponse,
+    RedirectResponse,
+    Response,
+)
 from fastapi.templating import Jinja2Templates
 from starlette.datastructures import FormData
 
@@ -171,6 +177,11 @@ def _quiz_for(db: DB, student: sqlite3.Row, quiz_id: int) -> sqlite3.Row:
     if q is None:
         raise PageError("No such quiz for this student.", 404)
     return q
+
+
+@router.get("/health")
+def health() -> PlainTextResponse:
+    return PlainTextResponse("ok")
 
 
 # --------------------------------------------------------------------------- students
