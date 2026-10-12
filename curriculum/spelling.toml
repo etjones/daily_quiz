@@ -1,0 +1,966 @@
+# Spelling curriculum — Texas-aligned scope and sequence (draft v0.1)
+#
+# Structure
+#   [meta]      file-level information
+#   [[strand]]  a family of related skills; carries the adult-facing rationale
+#   [[skill]]   one atomic, testable pattern; carries a word pool
+#
+# Word pools: the first `core` words (default 10, or all if fewer) are TAUGHT, in order.
+# Words after `core` are TRANSFER words: unseen words with the same pattern, used later
+# as "can you apply the pattern?" checks. Every word must match the skill's `pattern`
+# regex (enforced by `dq validate`).
+#
+# Sources / honesty note: the pattern inventory follows the TEKS foundational-skills
+# phonics list (consonant blends; digraphs ch/tch/sh/th/wh/ng/ck/kn/-dge/ph; vowel
+# digraphs oo, ea, ee, ow, ou, ay, ai, aw, au, ew, oa, ie, -igh; diphthongs oy/oi/ou/ow;
+# common patterns -ink/-onk/-ick) plus the TEKS spelling expectations (sound-spelling
+# patterns, high-frequency words from a research-based list). Grade bands and the exact
+# ordering are my own judgement of a common phonics scope and sequence, not TEA text.
+# Sight-word lists follow the Fry list order. Verify before relying on either.
+
+[meta]
+subject = "spelling"
+version = "0.1"
+teks_ref = "ELAR §110.3(b), foundational language skills: spelling by sound-spelling patterns; high-frequency words"
+teks_numbering_verified = false
+
+# ---------------------------------------------------------------------------
+# STRANDS
+# ---------------------------------------------------------------------------
+
+[[strand]]
+id = "cvc"
+title = "Short vowels in CVC words"
+track = "phonics"
+grade = 1
+rationale = "Every later pattern is a variation on consonant-vowel-consonant. Short vowels first because each letter has one dependable sound and children can segment these words by ear."
+teach = "Say the word slowly, stretching it (c-a-t). Child taps one finger per sound, then writes one letter per tap."
+watch_for = "Short e and i get confused (pin/pen): the sounds are close in many accents. Reversed b/d and p/q are normal at this age; record them but do not scold."
+
+[[strand]]
+id = "digraph"
+title = "Consonant digraphs and -ng/-nk"
+track = "phonics"
+grade = 1
+rationale = "Two letters, one sound. Children who have not met digraphs will spell 'ship' as 'sip'. These are among the most common errors on first-grade writing."
+teach = "Show that sh/ch/th/ck are one sound, not two. Have the child say the sound, then write the pair as a single unit."
+watch_for = "ck vs k (duck written 'duk'). Rule of thumb: ck follows a short vowel at the end of a one-syllable word."
+
+[[strand]]
+id = "blend"
+title = "Consonant blends"
+track = "phonics"
+grade = 1
+rationale = "Blends keep both consonant sounds (unlike digraphs). Children usually drop the second letter (stop -> sop, jump -> jup). Final blends are where most first-grade spelling errors live."
+teach = "Segment aloud and count the sounds: s-t-o-p is four sounds, so four letters. Contrast with digraphs: sh-o-p is three sounds."
+watch_for = "Dropped letters in the middle of a word, especially a nasal before a consonant (lamp -> lap, tent -> tet). Nasals are hard to hear; say them with exaggeration."
+
+[[strand]]
+id = "silent-e"
+title = "Silent-e long vowels"
+track = "phonics"
+grade = 1
+rationale = "The first spelling pattern where a letter you cannot hear changes another letter. It is the gateway to long vowels."
+teach = "Contrast pairs on paper: cap/cape, kit/kite, hop/hope, cub/cube. Cover the e and the vowel says its short sound."
+watch_for = "Leaving the e off (mak) or writing long vowels with the letter name only (mak for make, bik for bike). Both come from spelling by letter names."
+
+[[strand]]
+id = "vowel-team"
+title = "Vowel teams and diphthongs"
+track = "phonics"
+grade = 1
+rationale = "English spells most long vowels with a team of two letters. Teaching each team separately, with its own word set, prevents the guess-and-check habit (rain/rane/rayn)."
+teach = "Teach one team per day. Sort words by team. For ai/ay and oa/ow, teach position: ai and oa sit in the middle, ay and ow sit at the end."
+watch_for = "Choosing the wrong team for the right sound (rane for rain). That is a good error: it shows the child hears the sound. It just needs the pattern, so do not mark it as careless."
+
+[[strand]]
+id = "r-controlled"
+title = "R-controlled vowels"
+track = "phonics"
+grade = 1
+rationale = "A vowel followed by r changes sound. ar and or are reliable. er, ir and ur all say the same sound, so those three must be memorised word by word."
+teach = "Teach ar and or first. Teach er/ir/ur as three separate spellings of one sound, with a small set of words each."
+watch_for = "er/ir/ur are interchangeable by ear, so a child who writes 'berd' for bird has done nothing wrong phonetically. Count it as a pattern error, not a careless one."
+
+[[strand]]
+id = "other-patterns"
+title = "Other common patterns"
+track = "phonics"
+grade = 2
+rationale = "Letter patterns that stand for sounds you cannot predict by ear: tch, -dge, silent kn and wr, ph = /f/, soft c and g."
+teach = "Teach a rule where one exists: tch/dge come right after a short vowel, soft c/g come before e, i or y."
+watch_for = "Writing the sound instead of the pattern (cach for catch, bij for bridge)."
+
+[[strand]]
+id = "y-and-le"
+title = "Vowel y and -le endings"
+track = "phonics"
+grade = 2
+rationale = "y acts as a vowel at the end of words, and -le is the most common final syllable pattern in two-syllable words."
+teach = "Say the ending sound, then write it. Put the long-e y words and the long-i y words in separate piles."
+watch_for = "Spelling the end of 'happy' as -ee or -ie (happee). The sound is right, the pattern is not."
+
+[[strand]]
+id = "inflection"
+title = "Plurals and word endings"
+track = "phonics"
+grade = 1
+rationale = "Adding -s, -es, -ed and -ing changes a word's meaning. The rules (doubling, dropping the e, y to i) turn up in nearly all writing."
+teach = "Always start from the base word. Ask: does it end in a short vowel plus one consonant (double it)? A silent e (drop it)? A y (change it)?"
+watch_for = "-ed is spoken as /t/, /d/ or /id/ but always written -ed. Children write 'jumpt', which is phonetically right, so treat it as a pattern error."
+
+[[strand]]
+id = "morphology"
+title = "Contractions, compounds, prefixes and suffixes"
+track = "phonics"
+grade = 2
+rationale = "The TEKS add morphology (word parts) as a spelling tool. Children who see words as parts can spell long words they have never met."
+teach = "Show the parts with a gap (un | happy, sun | shine), then close the gap. For contractions, point at the missing letters."
+watch_for = "Apostrophe placement in contractions (do'nt). Doubling the letter at a prefix join: un + necessary is the rare exception, un + lock is not."
+
+[[strand]]
+id = "sight"
+title = "High-frequency words (Fry list, in order)"
+track = "sight"
+grade = 1
+rationale = "The first 100 Fry words make up about half of everything children read and write. Many break the usual patterns (said, was, of), so they must be learned as whole words."
+teach = "Look, say, cover, write, check. Spell it aloud once, then write it from memory. Say which part is the tricky part."
+watch_for = "Phonetic spellings of irregular words (sed for said, wuz for was). The child hears it correctly and has not yet memorised the exception."
+
+# ---------------------------------------------------------------------------
+# SKILLS
+# ---------------------------------------------------------------------------
+# --- cvc ---
+
+[[skill]]
+id = "sp.cvc.a"
+strand = "cvc"
+hl = "a"
+title = "Short a (cat, map)"
+pattern = '^[bcdfghjklmnpqrstvwxyz]a[bcdfghjklmnpqrstvwxyz]$'
+tip = "The sound /a/ as in cat is spelled with the letter a."
+words = ["cat","bat","hat","mat","rat","sat","can","fan","man","pan","ran","van","bag","tag","nap","tap","cap","map","jam","ham","dad","bad","had","pad","sad","gap","lap"]
+
+[[skill]]
+id = "sp.cvc.e"
+strand = "cvc"
+hl = "e"
+title = "Short e (bed, pen)"
+prereqs = ["sp.cvc.a"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]e[bcdfghjklmnpqrstvwxyz]$'
+tip = "The sound /e/ as in bed is spelled with the letter e."
+words = ["bed","red","pen","ten","hen","men","net","pet","wet","jet","web","leg","beg","peg","get","let","set","den","wed","vet","yes"]
+
+[[skill]]
+id = "sp.cvc.i"
+strand = "cvc"
+hl = "i"
+title = "Short i (pig, sit)"
+prereqs = ["sp.cvc.e"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]i[bcdfghjklmnpqrstvwxyz]$'
+tip = "The sound /i/ as in pig is spelled with the letter i."
+words = ["pig","big","dig","wig","fin","pin","win","bin","sit","hit","bit","fit","lip","tip","zip","dip","kid","lid","did","rib","bib","six","mix","fix"]
+
+[[skill]]
+id = "sp.cvc.o"
+strand = "cvc"
+hl = "o"
+title = "Short o (dog, hop)"
+prereqs = ["sp.cvc.i"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]o[bcdfghjklmnpqrstvwxyz]$'
+tip = "The sound /o/ as in dog is spelled with the letter o."
+words = ["dog","log","fog","hog","hop","mop","top","pop","pot","hot","dot","cot","box","fox","rob","job","lot","not","nod","cob"]
+
+[[skill]]
+id = "sp.cvc.u"
+strand = "cvc"
+hl = "u"
+title = "Short u (bug, sun)"
+prereqs = ["sp.cvc.o"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]u[bcdfghjklmnpqrstvwxyz]$'
+tip = "The sound /u/ as in bug is spelled with the letter u."
+words = ["bug","hug","rug","mug","jug","sun","run","fun","bun","cup","pup","cut","nut","hut","bus","gum","sum","mud","bud","tub","rub"]
+
+[[skill]]
+id = "sp.cvc.mixed"
+strand = "cvc"
+hl = "[aeiou]"
+title = "Mixed short vowels"
+prereqs = ["sp.cvc.u"]
+pattern = '^[bcdfghjklmnpqrstvwxyz][aeiou][bcdfghjklmnpqrstvwxyz]$'
+tip = "Listen to the middle sound. Which vowel makes it?"
+note = "Interleaves all five vowels so the child must choose the vowel by ear instead of by the day's lesson."
+words = ["sit","hop","bed","cup","ran","big","dog","net","bus","map","pin","fox","red","mud","lap","ten","zip","hot","jam","leg","cut"]
+
+# --- digraph ---
+
+[[skill]]
+id = "sp.digraph.sh"
+strand = "digraph"
+title = "sh (ship, fish)"
+prereqs = ["sp.cvc.mixed"]
+pattern = 'sh'
+tip = "The sound /sh/ is spelled sh. Two letters, one sound."
+words = ["ship","shop","shed","shut","shin","fish","dish","wish","rush","cash","bush","mash","dash","trash","flash"]
+
+[[skill]]
+id = "sp.digraph.ch"
+strand = "digraph"
+title = "ch (chip, much)"
+prereqs = ["sp.digraph.sh"]
+pattern = 'ch'
+tip = "The sound /ch/ is spelled ch."
+words = ["chat","chip","chop","chin","chest","much","such","rich","lunch","bench","punch","ranch","chill","chum"]
+
+[[skill]]
+id = "sp.digraph.th"
+strand = "digraph"
+title = "th (this, bath)"
+prereqs = ["sp.digraph.ch"]
+pattern = 'th'
+tip = "The sound /th/ is spelled th. Put your tongue between your teeth."
+words = ["that","this","them","then","thin","thick","bath","path","math","with","moth","thump","cloth","thank"]
+
+[[skill]]
+id = "sp.digraph.ck"
+strand = "digraph"
+title = "ck (back, duck)"
+prereqs = ["sp.digraph.th"]
+pattern = 'ck$'
+tip = "At the end of a short word, the sound /k/ after a short vowel is spelled ck."
+words = ["back","pack","sack","rock","sock","lock","duck","luck","neck","deck","kick","sick","pick","tick","black","clock","stick"]
+
+[[skill]]
+id = "sp.digraph.ng"
+strand = "digraph"
+title = "-ng (ring, song)"
+prereqs = ["sp.digraph.ck"]
+pattern = 'ng$'
+tip = "The sound /ng/ at the end is spelled ng."
+words = ["ring","sing","king","wing","song","long","hung","rung","sung","hang","bang","sang","gang","lung"]
+
+[[skill]]
+id = "sp.digraph.nk"
+strand = "digraph"
+title = "-nk (bank, sink)"
+prereqs = ["sp.digraph.ng"]
+pattern = 'nk$'
+tip = "The sounds /ng/ + /k/ at the end are spelled nk."
+words = ["bank","tank","sank","sink","pink","wink","junk","sunk","bunk","honk","drink","trunk","blank","plank"]
+
+# --- blend ---
+
+[[skill]]
+id = "sp.blend.l"
+strand = "blend"
+title = "l-blends (clap, flag, slip)"
+prereqs = ["sp.digraph.nk"]
+pattern = '^(bl|cl|fl|gl|pl|sl)'
+tip = "Say both sounds at the start: c-l, f-l, s-l."
+words = ["clap","clip","club","flag","flap","flip","flat","glad","glum","plan","plug","plum","slam","sled","slip","slim","slug","blob","blot","clam","clan"]
+
+[[skill]]
+id = "sp.blend.r"
+strand = "blend"
+title = "r-blends (crab, trip)"
+prereqs = ["sp.blend.l"]
+pattern = '^(br|cr|dr|fr|gr|pr|tr)'
+tip = "Say both sounds at the start: c-r, t-r, d-r."
+words = ["brag","crab","crib","drip","drum","frog","grab","grin","grip","prop","trap","trip","trim","bred","crop","drop","fret"]
+
+[[skill]]
+id = "sp.blend.s"
+strand = "blend"
+title = "s-blends (stop, swim)"
+prereqs = ["sp.blend.r"]
+pattern = '^(st|sp|sk|sn|sm|sw|sc)'
+tip = "Say both sounds at the start: s-t, s-p, s-w."
+words = ["stop","step","stem","spin","spot","span","skip","skin","skid","snap","snip","snug","swim","swam","smog","stub","spud","scan"]
+
+[[skill]]
+id = "sp.blend.final.nd"
+strand = "blend"
+title = "Ending -nd (hand, sand)"
+prereqs = ["sp.blend.s"]
+pattern = 'nd$'
+tip = "Listen for the n before the d. Do not skip it."
+words = ["hand","sand","band","land","bend","send","lend","fund","fond","pond","mend","tend","blend","stand"]
+
+[[skill]]
+id = "sp.blend.final.nt"
+strand = "blend"
+title = "Ending -nt (tent, hunt)"
+prereqs = ["sp.blend.final.nd"]
+pattern = 'nt$'
+tip = "Listen for the n before the t. Do not skip it."
+words = ["tent","bent","went","sent","rent","hunt","ant","punt","dent","vent","hint","mint","lint","pant"]
+
+[[skill]]
+id = "sp.blend.final.mp"
+strand = "blend"
+title = "Ending -mp (lamp, jump)"
+prereqs = ["sp.blend.final.nt"]
+pattern = 'mp$'
+tip = "Listen for the m before the p. Do not skip it."
+words = ["lamp","camp","jump","bump","damp","lump","pump","romp","dump","hump","limp","stamp","clump","stump"]
+
+[[skill]]
+id = "sp.blend.final.st"
+strand = "blend"
+title = "Ending -st (fast, nest)"
+prereqs = ["sp.blend.final.mp"]
+pattern = 'st$'
+tip = "Two sounds at the end: s and t."
+words = ["fast","last","best","nest","rest","test","fist","list","mist","dust","must","just","cost","vest"]
+
+[[skill]]
+id = "sp.blend.final.ft"
+strand = "blend"
+title = "Endings -ft, -lt, -lf (lift, belt)"
+prereqs = ["sp.blend.final.st"]
+pattern = '(ft|lt|lf)$'
+tip = "Two sounds at the end. Say them slowly and write both."
+words = ["left","lift","gift","soft","raft","belt","melt","felt","gulf","self","loft","shift","swift","tilt"]
+
+[[skill]]
+id = "sp.blend.final.sk"
+strand = "blend"
+title = "Endings -sk, -sp (desk, wasp)"
+prereqs = ["sp.blend.final.ft"]
+pattern = '(sk|sp)$'
+tip = "Two sounds at the end: s and k, or s and p."
+words = ["desk","risk","task","mask","disk","husk","tusk","dusk","wasp","gasp","lisp","crisp","clasp","grasp"]
+
+# --- silent-e ---
+
+[[skill]]
+id = "sp.silent-e.a"
+strand = "silent-e"
+title = "a-e (cake, make)"
+prereqs = ["sp.blend.final.sk"]
+pattern = 'a[^aeiou]e$'
+tip = "The silent e at the end makes the a say its name: cap becomes cape."
+words = ["cake","make","take","lake","same","game","name","came","late","gate","safe","wave","cave","face","race","page","bake","plane","flame","snake"]
+
+[[skill]]
+id = "sp.silent-e.i"
+strand = "silent-e"
+title = "i-e (bike, time)"
+prereqs = ["sp.silent-e.a"]
+pattern = 'i[^aeiou]e$'
+tip = "The silent e makes the i say its name: kit becomes kite."
+words = ["bike","like","time","five","nine","line","mine","hide","ride","side","wide","kite","smile","slide","drive"]
+
+[[skill]]
+id = "sp.silent-e.o"
+strand = "silent-e"
+title = "o-e (home, bone)"
+prereqs = ["sp.silent-e.i"]
+pattern = 'o[^aeiou]e$'
+tip = "The silent e makes the o say its name: hop becomes hope."
+words = ["bone","cone","home","nose","rose","hole","pole","note","vote","joke","rope","stone","woke","code","hope","broke"]
+
+[[skill]]
+id = "sp.silent-e.u"
+strand = "silent-e"
+title = "u-e (cube, cute)"
+prereqs = ["sp.silent-e.o"]
+pattern = 'u[^aeiou]e$'
+tip = "The silent e makes the u say its name: cub becomes cube."
+words = ["cube","cute","tube","tune","huge","mule","rule","use","fuse","mute","flute","dune","prune"]
+
+[[skill]]
+id = "sp.silent-e.mixed"
+strand = "silent-e"
+title = "Mixed silent-e"
+prereqs = ["sp.silent-e.u"]
+pattern = '[aiou][^aeiou]e$'
+tip = "Hear the long vowel, then add the silent e."
+words = ["make","time","rope","tune","game","bike","home","cute","late","hide","nose","rule","cake","five"]
+
+# --- vowel-team ---
+
+[[skill]]
+id = "sp.vt.ai"
+strand = "vowel-team"
+title = "ai (rain, train)"
+prereqs = ["sp.silent-e.mixed"]
+pattern = 'ai'
+tip = "The long a sound in the middle of a word is often spelled ai."
+words = ["rain","train","paid","mail","tail","wait","sail","snail","brain","chain","main","pain","gain","plain"]
+
+[[skill]]
+id = "sp.vt.ay"
+strand = "vowel-team"
+title = "ay (day, play)"
+prereqs = ["sp.vt.ai"]
+pattern = 'ay$'
+tip = "The long a sound at the end of a word is often spelled ay."
+words = ["day","say","play","stay","way","may","gray","tray","pay","hay","clay","spray","stray"]
+
+[[skill]]
+id = "sp.vt.ee"
+strand = "vowel-team"
+title = "ee (see, tree)"
+prereqs = ["sp.vt.ay"]
+pattern = 'ee'
+tip = "The long e sound is often spelled ee."
+words = ["see","tree","feet","seed","week","keep","green","sleep","three","need","feed","deep","meet","street","sheep"]
+
+[[skill]]
+id = "sp.vt.ea-long"
+strand = "vowel-team"
+title = "ea, long e (eat, beach)"
+prereqs = ["sp.vt.ee"]
+pattern = 'ea'
+tip = "The long e sound can also be spelled ea."
+words = ["eat","sea","beat","team","leaf","bean","meat","clean","dream","seat","neat","heat","peach","beach"]
+
+[[skill]]
+id = "sp.vt.oa"
+strand = "vowel-team"
+title = "oa (boat, coat)"
+prereqs = ["sp.vt.ea-long"]
+pattern = 'oa'
+tip = "The long o sound in the middle of a word is often spelled oa."
+words = ["boat","coat","road","soap","goat","toad","load","foam","roam","float","groan","throat","coach"]
+
+[[skill]]
+id = "sp.vt.ow-long"
+strand = "vowel-team"
+title = "ow, long o (snow, grow)"
+prereqs = ["sp.vt.oa"]
+pattern = 'ow'
+tip = "The long o sound at the end of a word is often spelled ow."
+words = ["snow","grow","show","slow","blow","flow","low","glow","crow","throw","bowl","yellow","window","pillow"]
+
+[[skill]]
+id = "sp.vt.ow-out"
+strand = "vowel-team"
+title = "ow, as in cow (now, down)"
+prereqs = ["sp.vt.ow-long"]
+pattern = 'ow'
+tip = "Here ow says the sound in cow. Compare snow and now."
+note = "ow has two sounds. Sort snow words and cow words side by side; this is the one place this strand needs a contrast drill."
+words = ["cow","now","how","down","town","brown","clown","crown","owl","howl","frown","drown","plow","growl"]
+
+[[skill]]
+id = "sp.vt.ou"
+strand = "vowel-team"
+title = "ou (out, house)"
+prereqs = ["sp.vt.ow-out"]
+pattern = 'ou'
+tip = "The sound in out is often spelled ou in the middle of a word."
+words = ["out","loud","house","mouse","cloud","sound","found","round","ground","shout","south","mouth","count","pound"]
+
+[[skill]]
+id = "sp.vt.igh"
+strand = "vowel-team"
+title = "igh (high, night)"
+prereqs = ["sp.vt.ou"]
+pattern = 'igh'
+tip = "The long i sound is spelled igh in these words. The gh is silent."
+words = ["high","light","night","right","fight","sight","might","tight","flight","bright","fright","sigh","thigh","slight"]
+
+[[skill]]
+id = "sp.vt.ie"
+strand = "vowel-team"
+title = "ie (pie, chief)"
+prereqs = ["sp.vt.igh"]
+pattern = 'ie'
+tip = "ie can say long i (pie) or long e (chief)."
+note = "Two sounds from one pattern. The two groups are mixed here on purpose; the TEKS list names both."
+words = ["pie","tie","lie","die","fried","tried","chief","field","thief","brief","shield","yield","piece","niece"]
+
+[[skill]]
+id = "sp.vt.oo-moon"
+strand = "vowel-team"
+title = "oo, as in moon (food, cool)"
+prereqs = ["sp.vt.ie"]
+pattern = 'oo'
+tip = "The long oo sound, as in moon, is spelled oo."
+words = ["moon","food","cool","pool","room","zoo","tooth","spoon","boot","soon","roof","broom","school","noon"]
+
+[[skill]]
+id = "sp.vt.oo-foot"
+strand = "vowel-team"
+title = "oo, as in book (look, good)"
+prereqs = ["sp.vt.oo-moon"]
+pattern = 'oo'
+tip = "The short oo sound, as in book, is also spelled oo."
+note = "Sort against the moon words. The pattern is identical; only the sound differs."
+words = ["book","look","cook","foot","good","wood","hook","took","stood","shook","brook","hood","crook","wool"]
+
+[[skill]]
+id = "sp.vt.oi"
+strand = "vowel-team"
+title = "oi (oil, coin)"
+prereqs = ["sp.vt.oo-foot"]
+pattern = 'oi'
+tip = "The sound in oil is spelled oi in the middle of a word."
+words = ["oil","coin","boil","soil","join","point","noise","voice","moist","foil","spoil","toil"]
+
+[[skill]]
+id = "sp.vt.oy"
+strand = "vowel-team"
+title = "oy (boy, toy)"
+prereqs = ["sp.vt.oi"]
+pattern = 'oy'
+tip = "The sound in boy is spelled oy at the end of a word."
+words = ["boy","toy","joy","enjoy","royal","annoy","destroy","loyal","cowboy","ploy"]
+
+[[skill]]
+id = "sp.vt.aw"
+strand = "vowel-team"
+title = "aw (saw, draw)"
+prereqs = ["sp.vt.oy"]
+pattern = 'aw'
+tip = "The sound in saw is spelled aw."
+words = ["saw","paw","draw","claw","straw","yawn","lawn","dawn","hawk","jaw","law","raw","thaw","crawl","shawl"]
+
+[[skill]]
+id = "sp.vt.au"
+strand = "vowel-team"
+title = "au (sauce, cause)"
+prereqs = ["sp.vt.aw"]
+pattern = 'au'
+tip = "The sound in saw can also be spelled au in the middle of a word."
+words = ["sauce","cause","pause","haul","vault","launch","author","because","applaud","faucet"]
+
+[[skill]]
+id = "sp.vt.ew"
+strand = "vowel-team"
+title = "ew (new, grew)"
+prereqs = ["sp.vt.au"]
+pattern = 'ew'
+tip = "The sound in new is spelled ew."
+words = ["new","few","grew","flew","chew","drew","blew","stew","crew","threw","screw","dew"]
+
+[[skill]]
+id = "sp.vt.wh"
+strand = "digraph"
+title = "wh (when, whip)"
+prereqs = ["sp.vt.ee", "sp.vt.ea-long", "sp.silent-e.mixed"]
+pattern = '^wh'
+tip = "Questions often start with wh. The sound is /w/."
+note = "Placed late because the pool needs silent-e and ee/ea words (white, wheel, wheat)."
+words = ["when","whip","whiz","whisk","whack","whiff","white","while","whale","whine","wheel","wheat","whim","whelp"]
+
+[[skill]]
+id = "sp.vt.ea-short"
+strand = "vowel-team"
+title = "ea, short e (bread, head)"
+prereqs = ["sp.vt.wh"]
+pattern = 'ea'
+tip = "ea can also say short e, as in bread."
+note = "Contrast with sp.vt.ea-long. Child must remember which words use which sound."
+words = ["bread","head","dead","thread","sweat","spread","breath","wealth","ready","heavy","feather","weather"]
+
+# --- r-controlled ---
+
+[[skill]]
+id = "sp.r.ar"
+strand = "r-controlled"
+title = "ar (car, farm)"
+prereqs = ["sp.vt.ea-short"]
+pattern = 'ar'
+tip = "The sound in car is spelled ar."
+words = ["car","star","farm","barn","yard","park","dark","shark","card","hard","march","start","sharp","smart"]
+
+[[skill]]
+id = "sp.r.or"
+strand = "r-controlled"
+title = "or (for, horn)"
+prereqs = ["sp.r.ar"]
+pattern = 'or'
+tip = "The sound in for is spelled or."
+words = ["for","horn","corn","fork","storm","short","sport","born","north","torn","porch","cord","sort"]
+
+[[skill]]
+id = "sp.r.er"
+strand = "r-controlled"
+title = "er (her, sister)"
+prereqs = ["sp.r.or"]
+pattern = 'er'
+tip = "The sound at the end of sister is spelled er."
+note = "er is the most common spelling of this sound. Teach it first, then ir and ur."
+words = ["her","fern","jerk","herd","term","perch","sister","under","after","never","over","paper","letter","dinner","winter"]
+
+[[skill]]
+id = "sp.r.ir"
+strand = "r-controlled"
+title = "ir (bird, girl)"
+prereqs = ["sp.r.er"]
+pattern = 'ir'
+tip = "The same sound as her can be spelled ir."
+words = ["bird","girl","first","shirt","dirt","stir","skirt","third","thirst","chirp","swirl","fir","birth","twirl"]
+
+[[skill]]
+id = "sp.r.ur"
+strand = "r-controlled"
+title = "ur (burn, turn)"
+prereqs = ["sp.r.ir"]
+pattern = 'ur'
+tip = "The same sound as her can also be spelled ur."
+words = ["burn","turn","fur","hurt","nurse","curl","surf","curb","burst","church","purse","blur","spur"]
+
+# --- other-patterns ---
+
+[[skill]]
+id = "sp.other.tch"
+strand = "other-patterns"
+title = "tch (catch, pitch)"
+prereqs = ["sp.r.ur"]
+pattern = 'tch$'
+tip = "After a short vowel, the sound /ch/ at the end is spelled tch."
+words = ["catch","match","patch","hatch","pitch","witch","fetch","stitch","ditch","batch","latch","scratch","itch","switch"]
+
+[[skill]]
+id = "sp.other.dge"
+strand = "other-patterns"
+title = "dge (bridge, badge)"
+prereqs = ["sp.other.tch"]
+pattern = 'dge$'
+tip = "After a short vowel, the sound /j/ at the end is spelled dge."
+words = ["bridge","badge","edge","fudge","ridge","judge","hedge","dodge","lodge","smudge","wedge","pledge","budge"]
+
+[[skill]]
+id = "sp.other.kn"
+strand = "other-patterns"
+title = "kn (knee, knot)"
+prereqs = ["sp.other.dge"]
+pattern = '^kn'
+tip = "The k is silent. Say n, write kn."
+words = ["knee","knit","know","knot","knock","knife","kneel","knew","knob","knack","knight"]
+
+[[skill]]
+id = "sp.other.wr"
+strand = "other-patterns"
+title = "wr (write, wrap)"
+prereqs = ["sp.other.kn"]
+pattern = '^wr'
+tip = "The w is silent. Say r, write wr."
+words = ["write","wrap","wrong","wrist","wreck","wren","wrote","wrench","wreath","wrinkle"]
+
+[[skill]]
+id = "sp.other.ph"
+strand = "other-patterns"
+title = "ph (phone, photo)"
+prereqs = ["sp.other.wr"]
+pattern = 'ph'
+tip = "ph says /f/ in these words."
+words = ["phone","photo","graph","alphabet","dolphin","elephant","phonics","orphan","trophy","nephew"]
+
+[[skill]]
+id = "sp.other.soft-c"
+strand = "other-patterns"
+title = "Soft c (city, nice)"
+prereqs = ["sp.other.ph"]
+pattern = 'c[eiy]'
+tip = "c says /s/ when e, i or y comes right after it."
+words = ["city","cent","ice","nice","rice","mice","dance","fence","pencil","circle","circus","cell","space","place"]
+
+[[skill]]
+id = "sp.other.soft-g"
+strand = "other-patterns"
+title = "Soft g (gem, giant)"
+prereqs = ["sp.other.soft-c"]
+pattern = 'g[eiy]'
+tip = "g can say /j/ when e, i or y comes right after it."
+words = ["gem","giant","giraffe","gentle","germ","cage","ginger","magic","gym","stage","large","orange","change","engine"]
+
+# --- y-and-le ---
+
+[[skill]]
+id = "sp.y.long-e"
+strand = "y-and-le"
+title = "y = long e (happy, baby)"
+prereqs = ["sp.other.soft-g"]
+pattern = 'y$'
+tip = "At the end of a word with more than one syllable, y says long e."
+words = ["happy","baby","puppy","funny","sunny","lucky","candy","story","family","bunny","silly","windy","rainy","messy"]
+
+[[skill]]
+id = "sp.y.long-i"
+strand = "y-and-le"
+title = "y = long i (my, fly)"
+prereqs = ["sp.y.long-e"]
+pattern = 'y$'
+tip = "At the end of a short word, y can say long i."
+words = ["my","by","fly","try","sky","cry","dry","why","shy","spy","fry","sly"]
+
+[[skill]]
+id = "sp.y.le"
+strand = "y-and-le"
+title = "-le (table, little)"
+prereqs = ["sp.y.long-i"]
+pattern = 'le$'
+tip = "The ending sound /ul/ is often spelled le."
+words = ["table","little","apple","candle","puzzle","bubble","giggle","middle","purple","turtle","simple","bottle","eagle","jungle"]
+
+# --- inflection ---
+
+[[skill]]
+id = "sp.infl.s"
+strand = "inflection"
+title = "Plural -s (cats, dogs)"
+prereqs = ["sp.cvc.mixed"]
+pattern = 's$'
+tip = "More than one: add s."
+words = ["cats","dogs","hats","pigs","cups","bugs","frogs","hens","beds","books","trees","birds","tops","pens"]
+
+[[skill]]
+id = "sp.infl.es"
+strand = "inflection"
+title = "Plural -es (boxes, dishes)"
+prereqs = ["sp.infl.s", "sp.digraph.sh", "sp.digraph.ch"]
+pattern = 'es$'
+tip = "If the word ends in s, x, z, ch or sh, add es."
+words = ["boxes","dishes","wishes","buses","glasses","foxes","churches","brushes","lunches","kisses","watches","classes","bushes","peaches"]
+
+[[skill]]
+id = "sp.infl.ed"
+strand = "inflection"
+title = "-ed (jumped, played)"
+prereqs = ["sp.infl.es"]
+pattern = 'ed$'
+tip = "Something that already happened: add ed, even when it sounds like t or d."
+words = ["jumped","played","wanted","helped","looked","started","painted","pulled","asked","walked","cooked","called","climbed","filled"]
+
+[[skill]]
+id = "sp.infl.ing"
+strand = "inflection"
+title = "-ing (jumping, reading)"
+prereqs = ["sp.infl.ed"]
+pattern = 'ing$'
+tip = "Something happening now: add ing."
+words = ["jumping","playing","helping","looking","eating","going","reading","singing","walking","asking","cooking","calling","painting","starting"]
+
+[[skill]]
+id = "sp.infl.double"
+strand = "inflection"
+title = "Doubling the last letter (hopping, stopped)"
+prereqs = ["sp.infl.ing"]
+pattern = '(.)\1(ed|ing)$'
+tip = "Short vowel plus one consonant: double the consonant before ing or ed."
+words = ["hopping","running","sitting","stopped","clapped","swimming","digging","hugged","planned","dropped","zipped","skipped","getting","patted"]
+
+[[skill]]
+id = "sp.infl.drop-e"
+strand = "inflection"
+title = "Dropping the e (making, liked)"
+prereqs = ["sp.infl.double", "sp.silent-e.mixed"]
+pattern = '(ing|ed)$'
+tip = "If the word ends in silent e, drop the e before ing or ed."
+words = ["making","taking","hiking","riding","biking","baking","hoping","smiling","liked","lived","named","moved","shared","writing"]
+
+[[skill]]
+id = "sp.infl.ies"
+strand = "inflection"
+title = "y to ies (babies, puppies)"
+prereqs = ["sp.infl.drop-e", "sp.y.long-e"]
+pattern = 'ies$'
+tip = "Consonant plus y: change the y to i and add es."
+words = ["babies","puppies","flies","cities","stories","families","candies","bunnies","ponies","cries","tries","berries"]
+
+[[skill]]
+id = "sp.infl.irregular"
+strand = "inflection"
+title = "Irregular plurals (children, feet)"
+prereqs = ["sp.infl.ies"]
+pattern = '.'
+tip = "Some words change in a special way. You just have to remember them."
+note = "Memorised by form; no rule helps. Keep it to this small set."
+words = ["children","men","women","feet","teeth","mice","geese","leaves","wolves","knives","shelves","loaves"]
+
+# --- morphology ---
+
+[[skill]]
+id = "sp.morph.contraction"
+strand = "morphology"
+title = "Contractions (can't, it's)"
+prereqs = ["sp.infl.ing"]
+pattern = "'"
+tip = "An apostrophe takes the place of the letters that are left out."
+words = ["can't","don't","isn't","didn't","it's","I'm","we're","they're","I'll","let's","that's","he's","she's","won't"]
+
+[[skill]]
+id = "sp.morph.compound"
+strand = "morphology"
+title = "Compound words (sunshine, cupcake)"
+prereqs = ["sp.silent-e.mixed", "sp.vt.ai"]
+pattern = '^[a-z]{7,}$'
+tip = "Two small words stuck together make one big word."
+words = ["sunshine","cupcake","airplane","football","playground","rainbow","bedroom","backpack","popcorn","sidewalk","butterfly","birthday","homework","snowman"]
+
+[[skill]]
+id = "sp.morph.un"
+strand = "morphology"
+title = "Prefix un- (unhappy, unlock)"
+prereqs = ["sp.y.long-e"]
+pattern = '^un'
+tip = "un- means not, or do the opposite."
+words = ["unhappy","unlock","undo","unfair","unfold","unpack","untie","unsafe","unkind","unwrap","unfit","unlike"]
+
+[[skill]]
+id = "sp.morph.re"
+strand = "morphology"
+title = "Prefix re- (redo, replay)"
+prereqs = ["sp.morph.un"]
+pattern = '^re'
+tip = "re- means again."
+words = ["redo","replay","rewrite","reread","rebuild","refill","reuse","recall","retell","repack","rewind","restart"]
+
+[[skill]]
+id = "sp.morph.ful"
+strand = "morphology"
+title = "Suffix -ful (helpful, careful)"
+prereqs = ["sp.infl.ing"]
+pattern = 'ful$'
+tip = "-ful means full of. It has one l."
+note = "The suffix -ful has one l even though the word 'full' has two. Common error."
+words = ["helpful","careful","painful","joyful","thankful","hopeful","playful","useful","colorful","wonderful"]
+
+[[skill]]
+id = "sp.morph.less"
+strand = "morphology"
+title = "Suffix -less (helpless, hopeless)"
+prereqs = ["sp.morph.ful"]
+pattern = 'less$'
+tip = "-less means without."
+words = ["helpless","hopeless","homeless","careless","useless","endless","painless","fearless","harmless"]
+
+[[skill]]
+id = "sp.morph.er-est"
+strand = "morphology"
+title = "-er and -est (taller, biggest)"
+prereqs = ["sp.infl.double", "sp.infl.drop-e"]
+pattern = '(er|est)$'
+tip = "-er compares two. -est compares three or more."
+words = ["taller","tallest","bigger","biggest","faster","fastest","smaller","smallest","happier","happiest","longer","longest"]
+
+[[skill]]
+id = "sp.morph.ly"
+strand = "morphology"
+title = "Suffix -ly (quickly, slowly)"
+prereqs = ["sp.morph.less"]
+pattern = 'ly$'
+tip = "-ly tells how something is done."
+words = ["quickly","slowly","sadly","gladly","loudly","softly","nicely","badly","kindly","quietly","lastly","neatly"]
+
+[[skill]]
+id = "sp.morph.homophone"
+strand = "morphology"
+title = "Homophones (here/hear, no/know)"
+prereqs = ["sp.other.kn", "sp.vt.ea-long", "sp.other.wr"]
+pattern = '.'
+needs_sentence = true
+tip = "Same sound, different spelling. The meaning tells you which one to write."
+note = "These words can only be tested in a sentence. The parent script always reads the sentence."
+words = ["here","hear","no","know","one","won","to","too","two","there","their","write","right","sea"]
+[skill.sentences]
+here = "Come here, please."
+hear = "I can hear a bird."
+no = "No, thank you."
+know = "I know the answer."
+one = "I have one cat."
+won = "Our team won the game."
+to = "We walked to school."
+too = "I want to come too."
+two = "She has two dogs."
+there = "Put the book over there."
+their = "The kids put on their coats."
+write = "Please write your name."
+right = "Turn right at the corner."
+sea = "The sea is blue."
+
+# --- sight (Fry first 100, in 10s) ---
+
+[[skill]]
+id = "sp.hf.01"
+strand = "sight"
+title = "Sight words 1-10"
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["the","of","and","a","to","in","is","you","that","it"]
+
+[[skill]]
+id = "sp.hf.02"
+strand = "sight"
+title = "Sight words 11-20"
+prereqs = ["sp.hf.01"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["he","was","for","on","are","as","with","his","they","I"]
+
+[[skill]]
+id = "sp.hf.03"
+strand = "sight"
+title = "Sight words 21-30"
+prereqs = ["sp.hf.02"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["at","be","this","have","from","or","one","had","by","word"]
+
+[[skill]]
+id = "sp.hf.04"
+strand = "sight"
+title = "Sight words 31-40"
+prereqs = ["sp.hf.03"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["but","not","what","all","were","we","when","your","can","said"]
+
+[[skill]]
+id = "sp.hf.05"
+strand = "sight"
+title = "Sight words 41-50"
+prereqs = ["sp.hf.04"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["there","use","an","each","which","she","do","how","their","if"]
+
+[[skill]]
+id = "sp.hf.06"
+strand = "sight"
+title = "Sight words 51-60"
+prereqs = ["sp.hf.05"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["will","up","other","about","out","many","then","them","these","so"]
+
+[[skill]]
+id = "sp.hf.07"
+strand = "sight"
+title = "Sight words 61-70"
+prereqs = ["sp.hf.06"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["some","her","would","make","like","him","into","time","has","look"]
+
+[[skill]]
+id = "sp.hf.08"
+strand = "sight"
+title = "Sight words 71-80"
+prereqs = ["sp.hf.07"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["two","more","write","go","see","number","no","way","could","people"]
+
+[[skill]]
+id = "sp.hf.09"
+strand = "sight"
+title = "Sight words 81-90"
+prereqs = ["sp.hf.08"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["my","than","first","water","been","call","who","oil","its","now"]
+
+[[skill]]
+id = "sp.hf.10"
+strand = "sight"
+title = "Sight words 91-100"
+prereqs = ["sp.hf.09"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["find","long","down","day","did","get","come","made","may","part"]

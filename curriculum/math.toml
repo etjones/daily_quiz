@@ -1,0 +1,773 @@
+# Math curriculum — Texas-aligned scope and sequence, grade 1 through early grade 4 (draft v0.1)
+#
+# Each [[skill]] names a `generator` (see src/dq/generators.py) and its `params`, so the
+# program can produce unlimited fresh problems. `demo` holds hand-written examples with
+# answers for the adult reading the skill list.
+#
+# TEKS notes: the grade 3 fraction standards (111.5(b)(3)(A)-(H)) are quoted from TEA
+# text I retrieved, and I know grade 3 includes "recall facts to multiply up to 10 by 10
+# with automaticity and recall the corresponding division facts". The exact section
+# numbering for the other items and the grade bands are my own mapping. Treat them as a
+# starting point to check against the TEKS, not a citation.
+
+[meta]
+subject = "math"
+version = "0.1"
+teks_ref = "Mathematics §111.3 (grade 1), §111.4 (grade 2), §111.5 (grade 3), §111.6 (grade 4)"
+teks_numbering_verified = false
+
+# ---------------------------------------------------------------------------
+# STRANDS
+# ---------------------------------------------------------------------------
+
+[[strand]]
+id = "number"
+title = "Number sense and place value"
+grade = 1
+rationale = "Place value is the idea underneath every algorithm. A child who knows that 47 is 4 tens and 7 ones will understand regrouping; a child who does not will memorise carrying as a trick."
+teach = "Use physical objects: ten-sticks and single cubes (or dimes and pennies). Build the number, then write it."
+watch_for = "Reversed digits (writing 17 for 71) are very common at this age. Record them as 'reversal', not as a math error."
+
+[[strand]]
+id = "addsub"
+title = "Addition and subtraction"
+grade = 1
+rationale = "Automatic recall of facts within 20 frees working memory for everything later. The sequence runs facts, then tens, then two-digit without regrouping, then with regrouping."
+teach = "Make-ten and doubles first: they give children a strategy, not only memory. Use a ten-frame or fingers until the facts are automatic."
+watch_for = "Counting on fingers is fine at first. It is a sign the fact is not automatic yet. Watch for subtracting the smaller digit from the larger in each column (52 - 28 = 36)."
+
+[[strand]]
+id = "multdiv"
+title = "Multiplication and division"
+grade = 2
+rationale = "TEKS grade 3 expects automatic recall of the multiplication table to 10x10 and the matching division facts. Teaching division as the inverse of multiplication (3 x 4 = 12 so 12 / 3 = 4) halves the memorisation load."
+teach = "Start with arrays: rows and columns of dots. Skip-count along the rows. Pair every multiplication fact with its division fact and its commuted fact."
+watch_for = "Times tables are not equally hard. 6, 7, 8 and 9 take the longest. The scheduler will give them more slots on its own; no need to rush."
+
+[[strand]]
+id = "fractions"
+title = "Fractions"
+grade = 2
+rationale = "TEKS grade 3 teaches fractions as numbers on a number line, not only slices of a pie: denominators 2, 3, 4, 6, 8, unit fractions, equivalence, and comparison by reasoning about size. Grade 4 adds adding and subtracting with like denominators."
+teach = "Use strips of paper folded into equal parts, and a number line from 0 to 1. Always draw the whole first. Emphasise that parts must be EQUAL."
+watch_for = "Children think a bigger denominator means a bigger fraction (1/8 > 1/4) because 8 is bigger than 4. Pictures fix this faster than rules."
+
+[[strand]]
+id = "word"
+title = "Word problems"
+grade = 1
+rationale = "TEKS asks children to apply math in everyday situations. The hard part is choosing the operation from the story, not the arithmetic."
+teach = "Read the problem twice. Ask: is something joining, leaving, or being compared? Draw a quick picture."
+watch_for = "Children who add every pair of numbers they see. Ask them to say what the answer will measure."
+
+# ---------------------------------------------------------------------------
+# SKILLS — number sense
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.num.skip-count"
+strand = "number"
+title = "Skip counting by 2, 5 and 10"
+grade = 1
+generator = "skip_count"
+params = { steps = [2, 5, 10], start_max = 20, length = 6 }
+tip = "Count by jumps. 2, 4, 6, 8: each number is 2 more."
+demo = [{ q = "5, 10, 15, ?, 25", a = "20" }, { q = "2, 4, ?, 8, 10", a = "6" }]
+
+[[skill]]
+id = "m.num.tens-ones"
+strand = "number"
+title = "Tens and ones (to 99)"
+grade = 1
+generator = "place_value"
+params = { mode = "compose", digits = 2 }
+prereqs = ["m.num.skip-count"]
+tip = "Each ten-stick is 10. Count the sticks by tens, then add the ones."
+note = "Mixes composing (3 tens and 4 ones) with reading (how many tens in 47?)."
+demo = [{ q = "3 tens and 4 ones", a = "34" }, { q = "How many tens in 58?", a = "5" }]
+
+[[skill]]
+id = "m.num.compare-100"
+strand = "number"
+title = "Compare numbers to 100"
+grade = 1
+generator = "compare"
+params = { range = [0, 100], allow_equal = false }
+prereqs = ["m.num.tens-ones"]
+tip = "The alligator eats the bigger number. Look at the tens first."
+note = "The < and > signs are a known stumbling block: children mirror them often. If the child consistently reverses, check the sign first before concluding they don't know which number is bigger."
+demo = [{ q = "34 ? 43", a = "<" }, { q = "81 ? 18", a = ">" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — add and subtract
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.add.within-10"
+strand = "addsub"
+title = "Add within 10"
+grade = 1
+generator = "add"
+params = { a = [0, 10], b = [0, 10], max_sum = 10 }
+tip = "Start at the bigger number and count up."
+demo = [{ q = "3 + 4", a = "7" }, { q = "6 + 2", a = "8" }]
+
+[[skill]]
+id = "m.sub.within-10"
+strand = "addsub"
+title = "Subtract within 10"
+grade = 1
+generator = "sub"
+params = { a = [1, 10], b = [0, 10] }
+prereqs = ["m.add.within-10"]
+tip = "Start with the big number and take some away."
+demo = [{ q = "9 - 4", a = "5" }, { q = "7 - 7", a = "0" }]
+
+[[skill]]
+id = "m.add.make-10"
+strand = "addsub"
+title = "Make ten"
+grade = 1
+generator = "missing_addend"
+params = { total = [10, 10], addend = [1, 9] }
+prereqs = ["m.add.within-10"]
+tip = "Which number goes with 7 to make 10?"
+note = "The most useful single fact family in early math. It is the foundation for adding across a ten (8 + 5 = 8 + 2 + 3)."
+demo = [{ q = "7 + ? = 10", a = "3" }, { q = "? + 4 = 10", a = "6" }]
+
+[[skill]]
+id = "m.add.doubles"
+strand = "addsub"
+title = "Doubles (up to 10 + 10)"
+grade = 1
+generator = "add"
+params = { a = [1, 10], b = [1, 10], equal = true }
+prereqs = ["m.add.within-10"]
+tip = "A double is a number plus itself. 6 + 6 = 12."
+demo = [{ q = "6 + 6", a = "12" }, { q = "9 + 9", a = "18" }]
+
+[[skill]]
+id = "m.add.within-20"
+strand = "addsub"
+title = "Add across ten (sums 11 to 20)"
+grade = 1
+generator = "add"
+params = { a = [2, 10], b = [2, 10], min_sum = 11, max_sum = 20 }
+prereqs = ["m.add.make-10", "m.add.doubles"]
+tip = "Make a ten first. For 8 + 5: 8 + 2 = 10, then 10 + 3 = 13."
+demo = [{ q = "8 + 5", a = "13" }, { q = "7 + 9", a = "16" }]
+
+[[skill]]
+id = "m.sub.within-20"
+strand = "addsub"
+title = "Subtract within 20"
+grade = 1
+generator = "sub"
+params = { a = [11, 20], b = [2, 10] }
+prereqs = ["m.add.within-20", "m.sub.within-10"]
+tip = "Think of a missing addend. 13 - 5 asks: 5 + ? = 13."
+demo = [{ q = "13 - 5", a = "8" }, { q = "16 - 9", a = "7" }]
+
+[[skill]]
+id = "m.add.missing-addend-20"
+strand = "addsub"
+title = "Missing number (to 20)"
+grade = 1
+generator = "missing_addend"
+params = { total = [6, 20], addend = [1, 12] }
+prereqs = ["m.sub.within-20"]
+tip = "A box hides one number. What goes in the box to make the sum true?"
+demo = [{ q = "9 + ? = 15", a = "6" }, { q = "? + 8 = 14", a = "6" }]
+
+[[skill]]
+id = "m.add.tens"
+strand = "addsub"
+title = "Add tens (30 + 40)"
+grade = 1
+generator = "add"
+params = { a = [10, 90], b = [10, 90], max_sum = 100, multiple_of = 10 }
+prereqs = ["m.num.tens-ones", "m.add.within-10"]
+tip = "Count the tens, like adding 3 + 4, then say 'tens'."
+demo = [{ q = "30 + 40", a = "70" }, { q = "20 + 60", a = "80" }]
+
+[[skill]]
+id = "m.add.2d-1d"
+strand = "addsub"
+title = "Add 2-digit and 1-digit (no regrouping)"
+grade = 1
+generator = "add"
+params = { a = [11, 98], b = [1, 8], max_sum = 99, regroup = "none" }
+prereqs = ["m.add.tens"]
+tip = "Add the ones, keep the tens. 23 + 4: 3 + 4 = 7, so 27."
+demo = [{ q = "23 + 4", a = "27" }, { q = "52 + 6", a = "58" }]
+
+[[skill]]
+id = "m.add.2d-2d-none"
+strand = "addsub"
+title = "Add 2-digit numbers (no regrouping)"
+grade = 2
+generator = "add"
+params = { a = [11, 89], b = [11, 88], max_sum = 99, regroup = "none" }
+prereqs = ["m.add.2d-1d"]
+tip = "Add ones with ones and tens with tens."
+demo = [{ q = "23 + 45", a = "68" }, { q = "31 + 26", a = "57" }]
+
+[[skill]]
+id = "m.add.2d-1d-regroup"
+strand = "addsub"
+title = "Add 2-digit and 1-digit (regrouping)"
+grade = 2
+generator = "add"
+params = { a = [11, 98], b = [2, 9], max_sum = 99, regroup = "yes" }
+prereqs = ["m.add.2d-2d-none", "m.add.within-20"]
+tip = "When the ones make 10 or more, trade 10 ones for 1 ten."
+demo = [{ q = "38 + 7", a = "45" }, { q = "26 + 9", a = "35" }]
+
+[[skill]]
+id = "m.add.2d-2d-regroup"
+strand = "addsub"
+title = "Add 2-digit numbers (regrouping)"
+grade = 2
+generator = "add"
+params = { a = [12, 89], b = [12, 87], max_sum = 99, regroup = "yes" }
+prereqs = ["m.add.2d-1d-regroup"]
+tip = "Add the ones. If it makes ten or more, carry a ten."
+demo = [{ q = "38 + 27", a = "65" }, { q = "46 + 35", a = "81" }]
+
+[[skill]]
+id = "m.sub.tens"
+strand = "addsub"
+title = "Subtract tens (70 - 30)"
+grade = 1
+generator = "sub"
+params = { a = [20, 100], b = [10, 90], multiple_of = 10 }
+prereqs = ["m.add.tens", "m.sub.within-10"]
+tip = "Subtract the tens like 7 - 3, then say 'tens'."
+demo = [{ q = "70 - 30", a = "40" }, { q = "90 - 50", a = "40" }]
+
+[[skill]]
+id = "m.sub.2d-1d-none"
+strand = "addsub"
+title = "Subtract 1-digit from 2-digit (no regrouping)"
+grade = 2
+generator = "sub"
+params = { a = [11, 99], b = [1, 8], regroup = "none" }
+prereqs = ["m.sub.tens", "m.sub.within-20"]
+tip = "Take the ones away from the ones."
+demo = [{ q = "37 - 5", a = "32" }, { q = "68 - 3", a = "65" }]
+
+[[skill]]
+id = "m.sub.2d-2d-none"
+strand = "addsub"
+title = "Subtract 2-digit numbers (no regrouping)"
+grade = 2
+generator = "sub"
+params = { a = [21, 99], b = [11, 88], regroup = "none" }
+prereqs = ["m.sub.2d-1d-none"]
+tip = "Subtract ones from ones and tens from tens."
+demo = [{ q = "68 - 25", a = "43" }, { q = "97 - 34", a = "63" }]
+
+[[skill]]
+id = "m.sub.2d-regroup"
+strand = "addsub"
+title = "Subtract 2-digit numbers (regrouping)"
+grade = 2
+generator = "sub"
+params = { a = [21, 99], b = [11, 88], regroup = "yes" }
+prereqs = ["m.sub.2d-2d-none", "m.add.2d-2d-regroup"]
+tip = "Not enough ones? Trade 1 ten for 10 ones."
+note = "The hardest skill in this strand. Do it with physical tens and ones until the trade is obvious."
+demo = [{ q = "52 - 28", a = "24" }, { q = "71 - 36", a = "35" }]
+
+[[skill]]
+id = "m.num.place-value-1000"
+strand = "number"
+title = "Hundreds, tens and ones"
+grade = 2
+generator = "place_value"
+params = { mode = "compose", digits = 3 }
+prereqs = ["m.num.tens-ones"]
+tip = "100 is ten tens. 3 hundreds, 4 tens and 5 ones is 345."
+demo = [{ q = "2 hundreds, 5 tens, 7 ones", a = "257" }, { q = "How many hundreds in 614?", a = "6" }]
+
+[[skill]]
+id = "m.num.compare-1000"
+strand = "number"
+title = "Compare numbers to 1000"
+grade = 2
+generator = "compare"
+params = { range = [100, 999], allow_equal = false }
+prereqs = ["m.num.place-value-1000", "m.num.compare-100"]
+tip = "Compare hundreds first, then tens, then ones."
+demo = [{ q = "354 ? 345", a = ">" }, { q = "212 ? 221", a = "<" }]
+
+[[skill]]
+id = "m.add.3d"
+strand = "addsub"
+title = "Add 3-digit numbers"
+grade = 2
+generator = "add"
+params = { a = [100, 699], b = [100, 299], max_sum = 999 }
+prereqs = ["m.add.2d-2d-regroup", "m.num.place-value-1000"]
+tip = "Start with the ones, then tens, then hundreds."
+demo = [{ q = "243 + 135", a = "378" }, { q = "457 + 286", a = "743" }]
+
+[[skill]]
+id = "m.sub.3d"
+strand = "addsub"
+title = "Subtract 3-digit numbers"
+grade = 2
+generator = "sub"
+params = { a = [200, 999], b = [100, 599] }
+prereqs = ["m.sub.2d-regroup", "m.add.3d"]
+tip = "Start with the ones. Trade from the next column when you need to."
+demo = [{ q = "568 - 243", a = "325" }, { q = "703 - 258", a = "445" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — word problems
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.word.addsub-20"
+strand = "word"
+title = "Add and subtract story problems (within 20)"
+grade = 1
+generator = "word_addsub"
+params = { kind = "mix", max = 20 }
+prereqs = ["m.sub.within-20"]
+tip = "Read it twice. Is something joining or leaving?"
+demo = [{ q = "Mia has 8 stickers. She gets 5 more. How many now?", a = "13" }]
+
+[[skill]]
+id = "m.word.addsub-100"
+strand = "word"
+title = "Add and subtract story problems (within 100)"
+grade = 2
+generator = "word_addsub"
+params = { kind = "mix", max = 100 }
+prereqs = ["m.word.addsub-20", "m.add.2d-2d-regroup", "m.sub.2d-regroup"]
+tip = "Draw a quick picture. Decide: add or take away?"
+demo = [{ q = "A shelf has 45 books. 18 are borrowed. How many are left?", a = "27" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — multiplication
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.mul.arrays"
+strand = "multdiv"
+title = "Equal groups and arrays"
+grade = 2
+generator = "equal_groups"
+params = { rows = [2, 5], cols = [2, 6], mode = "array" }
+prereqs = ["m.add.doubles", "m.num.skip-count"]
+tip = "Rows of equal size. Count the dots by rows."
+demo = [{ q = "3 rows of 4 dots: how many dots?", a = "12" }]
+
+[[skill]]
+id = "m.mul.repeated-add"
+strand = "multdiv"
+title = "Repeated addition"
+grade = 2
+generator = "equal_groups"
+params = { rows = [2, 5], cols = [2, 6], mode = "repeated_add" }
+prereqs = ["m.mul.arrays"]
+tip = "4 + 4 + 4 is 3 groups of 4. We write it 3 x 4."
+demo = [{ q = "4 + 4 + 4 = ?", a = "12" }]
+
+[[skill]]
+id = "m.mul.x0-1"
+strand = "multdiv"
+title = "Times 0 and times 1"
+grade = 3
+generator = "mul"
+params = { tables = [0, 1], other = [0, 10] }
+prereqs = ["m.mul.repeated-add"]
+tip = "Times 1 stays the same. Times 0 is always 0."
+demo = [{ q = "7 x 1", a = "7" }, { q = "5 x 0", a = "0" }]
+
+[[skill]]
+id = "m.mul.x2"
+strand = "multdiv"
+title = "Times 2"
+grade = 3
+generator = "mul"
+params = { tables = [2], other = [0, 10] }
+prereqs = ["m.mul.repeated-add", "m.add.doubles"]
+tip = "Times 2 is a double."
+demo = [{ q = "2 x 6", a = "12" }, { q = "8 x 2", a = "16" }]
+
+[[skill]]
+id = "m.mul.x10"
+strand = "multdiv"
+title = "Times 10"
+grade = 3
+generator = "mul"
+params = { tables = [10], other = [0, 10] }
+prereqs = ["m.mul.x2"]
+tip = "Times 10 puts a zero on the end. 7 x 10 = 70."
+demo = [{ q = "10 x 4", a = "40" }, { q = "7 x 10", a = "70" }]
+
+[[skill]]
+id = "m.mul.x5"
+strand = "multdiv"
+title = "Times 5"
+grade = 3
+generator = "mul"
+params = { tables = [5], other = [0, 10] }
+prereqs = ["m.mul.x10", "m.num.skip-count"]
+tip = "Skip count by 5, or take half of times 10."
+demo = [{ q = "5 x 6", a = "30" }, { q = "8 x 5", a = "40" }]
+
+[[skill]]
+id = "m.mul.x3"
+strand = "multdiv"
+title = "Times 3"
+grade = 3
+generator = "mul"
+params = { tables = [3], other = [0, 10] }
+prereqs = ["m.mul.x2"]
+tip = "Times 3 is double plus one more. 3 x 4 = 4 + 4 + 4."
+demo = [{ q = "3 x 7", a = "21" }, { q = "6 x 3", a = "18" }]
+
+[[skill]]
+id = "m.mul.x4"
+strand = "multdiv"
+title = "Times 4"
+grade = 3
+generator = "mul"
+params = { tables = [4], other = [0, 10] }
+prereqs = ["m.mul.x2"]
+tip = "Times 4 is double double. 4 x 6 = double 6 = 12, double again = 24."
+demo = [{ q = "4 x 7", a = "28" }, { q = "9 x 4", a = "36" }]
+
+[[skill]]
+id = "m.mul.x9"
+strand = "multdiv"
+title = "Times 9"
+grade = 3
+generator = "mul"
+params = { tables = [9], other = [0, 10] }
+prereqs = ["m.mul.x10"]
+tip = "Times 9 is times 10 minus one group. 9 x 6 = 60 - 6 = 54."
+note = "The answer's digits always add to 9 (54: 5 + 4). A handy self-check."
+demo = [{ q = "9 x 3", a = "27" }, { q = "7 x 9", a = "63" }]
+
+[[skill]]
+id = "m.mul.x6"
+strand = "multdiv"
+title = "Times 6"
+grade = 3
+generator = "mul"
+params = { tables = [6], other = [0, 10] }
+prereqs = ["m.mul.x5", "m.mul.x3"]
+tip = "6 x 7 is 5 x 7 plus one more 7: 35 + 7 = 42."
+demo = [{ q = "6 x 4", a = "24" }, { q = "7 x 6", a = "42" }]
+
+[[skill]]
+id = "m.mul.x7"
+strand = "multdiv"
+title = "Times 7"
+grade = 3
+generator = "mul"
+params = { tables = [7], other = [0, 10] }
+prereqs = ["m.mul.x6"]
+tip = "7 x 8 is 5 x 8 plus 2 x 8: 40 + 16 = 56."
+demo = [{ q = "7 x 5", a = "35" }, { q = "8 x 7", a = "56" }]
+
+[[skill]]
+id = "m.mul.x8"
+strand = "multdiv"
+title = "Times 8"
+grade = 3
+generator = "mul"
+params = { tables = [8], other = [0, 10] }
+prereqs = ["m.mul.x4"]
+tip = "Times 8 is double double double."
+demo = [{ q = "8 x 3", a = "24" }, { q = "6 x 8", a = "48" }]
+
+[[skill]]
+id = "m.mul.mixed"
+strand = "multdiv"
+title = "Mixed multiplication to 10 x 10"
+grade = 3
+generator = "mul"
+params = { tables = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], other = [0, 10] }
+prereqs = ["m.mul.x7", "m.mul.x8", "m.mul.x9"]
+tip = "Fast and automatic. You know these."
+note = "The TEKS grade 3 target: automatic recall of all facts to 10 x 10."
+demo = [{ q = "7 x 8", a = "56" }, { q = "6 x 9", a = "54" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — division
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.div.share"
+strand = "multdiv"
+title = "Fair sharing"
+grade = 2
+generator = "share"
+params = { divisors = [2, 3, 4, 5], quotient = [1, 6] }
+prereqs = ["m.mul.repeated-add"]
+tip = "Deal them out one at a time, like cards."
+demo = [{ q = "12 cookies shared equally among 3 kids. How many each?", a = "4" }]
+
+[[skill]]
+id = "m.div.by-2"
+strand = "multdiv"
+title = "Divide by 2"
+grade = 3
+generator = "div"
+params = { divisors = [2], quotient = [1, 10] }
+prereqs = ["m.mul.x2", "m.div.share"]
+tip = "12 / 2 asks: 2 times what is 12?"
+demo = [{ q = "14 / 2", a = "7" }, { q = "18 / 2", a = "9" }]
+
+[[skill]]
+id = "m.div.by-10"
+strand = "multdiv"
+title = "Divide by 10"
+grade = 3
+generator = "div"
+params = { divisors = [10], quotient = [1, 10] }
+prereqs = ["m.mul.x10", "m.div.by-2"]
+tip = "Take the zero off the end."
+demo = [{ q = "70 / 10", a = "7" }, { q = "40 / 10", a = "4" }]
+
+[[skill]]
+id = "m.div.by-5"
+strand = "multdiv"
+title = "Divide by 5"
+grade = 3
+generator = "div"
+params = { divisors = [5], quotient = [1, 10] }
+prereqs = ["m.mul.x5", "m.div.by-10"]
+tip = "35 / 5 asks: 5 times what is 35?"
+demo = [{ q = "35 / 5", a = "7" }, { q = "20 / 5", a = "4" }]
+
+[[skill]]
+id = "m.div.by-3"
+strand = "multdiv"
+title = "Divide by 3"
+grade = 3
+generator = "div"
+params = { divisors = [3], quotient = [1, 10] }
+prereqs = ["m.mul.x3", "m.div.by-2"]
+tip = "21 / 3 asks: 3 times what is 21?"
+demo = [{ q = "21 / 3", a = "7" }, { q = "15 / 3", a = "5" }]
+
+[[skill]]
+id = "m.div.by-4"
+strand = "multdiv"
+title = "Divide by 4"
+grade = 3
+generator = "div"
+params = { divisors = [4], quotient = [1, 10] }
+prereqs = ["m.mul.x4", "m.div.by-2"]
+tip = "Half and half again."
+demo = [{ q = "28 / 4", a = "7" }, { q = "16 / 4", a = "4" }]
+
+[[skill]]
+id = "m.div.by-9"
+strand = "multdiv"
+title = "Divide by 9"
+grade = 3
+generator = "div"
+params = { divisors = [9], quotient = [1, 10] }
+prereqs = ["m.mul.x9", "m.div.by-3"]
+tip = "63 / 9 asks: 9 times what is 63?"
+demo = [{ q = "54 / 9", a = "6" }, { q = "81 / 9", a = "9" }]
+
+[[skill]]
+id = "m.div.by-6-7-8"
+strand = "multdiv"
+title = "Divide by 6, 7 and 8"
+grade = 3
+generator = "div"
+params = { divisors = [6, 7, 8], quotient = [1, 10] }
+prereqs = ["m.mul.x6", "m.mul.x7", "m.mul.x8", "m.div.by-4"]
+tip = "Every division is a missing multiplication."
+demo = [{ q = "42 / 6", a = "7" }, { q = "56 / 8", a = "7" }]
+
+[[skill]]
+id = "m.div.mixed"
+strand = "multdiv"
+title = "Mixed division facts"
+grade = 3
+generator = "div"
+params = { divisors = [2, 3, 4, 5, 6, 7, 8, 9, 10], quotient = [1, 10] }
+prereqs = ["m.div.by-6-7-8", "m.div.by-9", "m.div.by-5"]
+tip = "Fast and automatic. You know these."
+demo = [{ q = "72 / 9", a = "8" }, { q = "48 / 6", a = "8" }]
+
+[[skill]]
+id = "m.div.missing-factor"
+strand = "multdiv"
+title = "Missing factor"
+grade = 3
+generator = "missing_factor"
+params = { tables = [2, 3, 4, 5, 6, 7, 8, 9, 10], other = [1, 10] }
+prereqs = ["m.div.by-3", "m.div.by-4"]
+tip = "A box hides one number. Division finds it."
+demo = [{ q = "4 x ? = 28", a = "7" }, { q = "? x 3 = 24", a = "8" }]
+
+[[skill]]
+id = "m.div.remainder"
+strand = "multdiv"
+title = "Division with remainders"
+grade = 4
+generator = "div"
+params = { divisors = [2, 3, 4, 5, 6, 7, 8, 9], quotient = [2, 9], remainder = true }
+prereqs = ["m.div.mixed"]
+tip = "Make as many equal groups as you can. What is left over is the remainder."
+demo = [{ q = "17 / 5", a = "3 R 2" }]
+
+[[skill]]
+id = "m.word.mul-div"
+strand = "word"
+title = "Multiplication and division story problems"
+grade = 3
+generator = "share"
+params = { divisors = [2, 3, 4, 5, 6, 7, 8, 9, 10], quotient = [2, 10], mode = "mix" }
+prereqs = ["m.div.mixed", "m.mul.mixed"]
+tip = "Are the groups equal? Then multiply or divide."
+demo = [{ q = "24 apples shared equally among 6 baskets. How many in each?", a = "4" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — fractions
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.frac.name-2-4"
+strand = "fractions"
+title = "Name halves and fourths"
+grade = 2
+generator = "frac_name"
+params = { dens = [2, 4] }
+min_distinct = 4
+prereqs = ["m.num.tens-ones"]
+tip = "The bottom number is how many EQUAL parts. The top is how many are shaded."
+teks = "§111.5(b)(3)(A): represent fractions with denominators 2, 3, 4, 6, 8 using concrete objects and pictorial models"
+demo = [{ q = "A bar split in 4, 3 shaded. What fraction?", a = "3/4" }]
+
+[[skill]]
+id = "m.frac.name-3-6-8"
+strand = "fractions"
+title = "Name thirds, sixths and eighths"
+grade = 3
+generator = "frac_name"
+params = { dens = [3, 6, 8] }
+prereqs = ["m.frac.name-2-4"]
+tip = "Count all the equal parts for the bottom. Count the shaded parts for the top."
+teks = "§111.5(b)(3)(A)"
+demo = [{ q = "A bar split in 6, 5 shaded. What fraction?", a = "5/6" }]
+
+[[skill]]
+id = "m.frac.unit"
+strand = "fractions"
+title = "Unit fractions (one part)"
+grade = 3
+generator = "frac_name"
+params = { dens = [2, 3, 4, 6, 8], num = [1, 1] }
+min_distinct = 5
+prereqs = ["m.frac.name-3-6-8"]
+tip = "A unit fraction has a 1 on top: one part of the whole."
+teks = "§111.5(b)(3)(C): explain that the unit fraction 1/b represents one part of a whole partitioned into b equal parts"
+demo = [{ q = "A bar split in 8, 1 shaded. What fraction?", a = "1/8" }]
+
+[[skill]]
+id = "m.frac.numberline"
+strand = "fractions"
+title = "Fractions on a number line"
+grade = 3
+generator = "frac_numberline"
+params = { dens = [2, 3, 4, 6, 8] }
+prereqs = ["m.frac.unit"]
+tip = "The number line goes from 0 to 1. Count the jumps."
+teks = "§111.5(b)(3)(B): determine the fraction given a specified point on a number line"
+demo = [{ q = "A dot at the 3rd mark on a line cut in 4. What fraction?", a = "3/4" }]
+
+[[skill]]
+id = "m.frac.compare-den"
+strand = "fractions"
+title = "Compare fractions with the same bottom"
+grade = 3
+generator = "frac_compare"
+params = { dens = [3, 4, 6, 8], same = "den" }
+prereqs = ["m.frac.numberline"]
+tip = "Same size pieces: the one with more pieces is bigger."
+teks = "§111.5(b)(3)(H): compare fractions having the same numerator or denominator by reasoning about their sizes"
+demo = [{ q = "3/8 ? 5/8", a = "<" }]
+
+[[skill]]
+id = "m.frac.compare-num"
+strand = "fractions"
+title = "Compare fractions with the same top"
+grade = 3
+generator = "frac_compare"
+params = { dens = [2, 3, 4, 6, 8], same = "num" }
+prereqs = ["m.frac.compare-den"]
+tip = "Same number of pieces: smaller pieces make a smaller fraction."
+note = "The surprising one: 1/8 < 1/4 even though 8 > 4. Draw both bars every time until it feels obvious."
+teks = "§111.5(b)(3)(H)"
+demo = [{ q = "1/3 ? 1/4", a = ">" }]
+
+[[skill]]
+id = "m.frac.equivalent"
+strand = "fractions"
+title = "Equivalent fractions"
+grade = 3
+generator = "frac_equiv"
+params = { dens = [2, 3, 4, 6, 8] }
+prereqs = ["m.frac.compare-num"]
+tip = "Cut the pieces smaller: 1/2 = 2/4 = 4/8."
+teks = "§111.5(b)(3)(F)-(G): represent equivalent fractions; same point on a number line or same portion of the same whole"
+demo = [{ q = "1/2 = ?/4", a = "2" }, { q = "2/3 = ?/6", a = "4" }]
+
+[[skill]]
+id = "m.frac.decompose"
+strand = "fractions"
+title = "Build a fraction from unit fractions"
+grade = 3
+generator = "frac_decompose"
+params = { dens = [3, 4, 6, 8] }
+prereqs = ["m.frac.unit"]
+tip = "3/4 is three pieces of 1/4: 1/4 + 1/4 + 1/4."
+teks = "§111.5(b)(3)(D): compose and decompose a/b as a sum of parts 1/b"
+demo = [{ q = "3/4 = 1/4 + 1/4 + ?", a = "1/4" }]
+
+[[skill]]
+id = "m.frac.of-set"
+strand = "fractions"
+title = "Fraction of a group"
+grade = 3
+generator = "frac_of_set"
+params = { dens = [2, 3, 4], total_max = 24 }
+prereqs = ["m.frac.unit", "m.div.by-3"]
+tip = "Split the group into equal parts. 1/4 of 12 is 12 / 4."
+teks = "§111.5(b)(3)(E): partition a set among recipients using fractions with denominators 2, 3, 4, 6, 8"
+demo = [{ q = "1/2 of 8", a = "4" }, { q = "1/3 of 12", a = "4" }]
+
+[[skill]]
+id = "m.frac.add-like"
+strand = "fractions"
+title = "Add fractions with the same bottom"
+grade = 4
+generator = "frac_add_like"
+params = { dens = [3, 4, 5, 6, 8, 10], op = "add" }
+prereqs = ["m.frac.decompose", "m.frac.equivalent"]
+tip = "Same size pieces. Add the tops. The bottom stays."
+note = "Grade 4 content. Early finishers only."
+demo = [{ q = "2/5 + 1/5", a = "3/5" }]
+
+[[skill]]
+id = "m.frac.sub-like"
+strand = "fractions"
+title = "Subtract fractions with the same bottom"
+grade = 4
+generator = "frac_add_like"
+params = { dens = [3, 4, 5, 6, 8, 10], op = "sub" }
+prereqs = ["m.frac.add-like"]
+tip = "Same size pieces. Subtract the tops. The bottom stays."
+demo = [{ q = "4/5 - 1/5", a = "3/5" }]

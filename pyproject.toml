@@ -1,0 +1,23 @@
+[project]
+name = "dq"
+version = "0.1.0"
+description = "Adaptive daily quiz and worksheet system for home education"
+requires-python = ">=3.11"
+dependencies = ["typst>=0.11", "opencv-python-headless>=4.8", "numpy", "pillow", "pypdf"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+dq = "dq.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
