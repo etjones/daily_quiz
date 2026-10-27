@@ -32,7 +32,7 @@ BOX_W = {"int": 18.0, "int_rem": 26.0, "frac": 20.0, "symbol": 14.0, "text": 18.
 LEAD_W = {"symbol": 33.0}
 LEAD_W_DEFAULT = 22.0
 PROSE_LEAD_W = 6.0  # word problems get a short lead-in, leaving room for the text
-PROSE_PAD = 1.5  # word-problem prompts grow this far above and below the answer box
+PROSE_PAD = 0.5  # word-problem prompts grow this far above and below the answer box
 
 
 def marks() -> list[dict]:

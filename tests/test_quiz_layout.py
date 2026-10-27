@@ -74,11 +74,11 @@ def test_prose_prompt_gets_more_room_without_moving_the_answer_box() -> None:
     assert b["prompt_box"]["x"] + b["prompt_box"]["w"] < b["lead"]["x"]
 
 
-def test_prose_prompt_boxes_do_not_overlap_between_rows() -> None:
+def test_consecutive_word_problems_are_visibly_separated() -> None:
     m = _manifest(_longest_word_problems(layout.MAX_ROWS))
     boxes = [it["prompt_box"] for it in m["items"]]
     for upper, lower in pairwise(boxes):
-        assert upper["y"] + upper["h"] < lower["y"]
+        assert lower["y"] - (upper["y"] + upper["h"]) >= 3.0
     assert boxes[0]["y"] > m["cols"]["label_y"] + 3
     assert boxes[-1]["y"] + boxes[-1]["h"] < m["footer"]["y"]
 
