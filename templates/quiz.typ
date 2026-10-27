@@ -35,9 +35,13 @@
 
 // items
 #for it in m.items {
-  // number: right-aligned in the gutter, so "1." and "10." both keep a gap before the item
-  place(top + left, dx: mm(it.num_x), dy: mm(it.box.y),
-    box(width: mm(it.num_w), height: mm(it.box.h),
+  // number: right-aligned in the gutter, so "1." and "10." both keep a gap before the item.
+  // Plans saved before num_w existed get a gutter measured back from the item instead.
+  let content_x = if it.kind_group == "spelling" { it.box.x } else { it.prompt_box.x }
+  let num_w = it.at("num_w", default: 6.2)
+  let num_x = calc.min(it.num_x, content_x - 1.8 - num_w)
+  place(top + left, dx: mm(num_x), dy: mm(it.box.y),
+    box(width: mm(num_w), height: mm(it.box.h),
       align(right + horizon, text(size: 9pt, weight: "bold", fill: luma(100))[#(str(it.n) + ".")])))
   if it.kind_group == "spelling" {
     place(top + left, dx: mm(it.box.x), dy: mm(it.box.y), guide(mm(it.box.w), mm(it.box.h)))

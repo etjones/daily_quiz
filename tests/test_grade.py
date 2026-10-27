@@ -75,6 +75,21 @@ def page_png(tmp_path_factory):
     return m, render.render_png(home, "quiz", data, ppi=helpers.PPI)
 
 
+def test_renders_plans_saved_before_num_w(tmp_path):
+    """Days already in the database re-render from their stored manifest, which has no num_w."""
+    m = _manifest()
+    for it in m["items"]:
+        del it["num_w"]
+    data = {
+        "student": "Test",
+        "date": "2026-10-12",
+        "date_pretty": "Mon Oct 12",
+        "quiz_label": "Quiz test",
+        "manifest": m,
+    }
+    assert render.render_png(tmp_path, "quiz", data, ppi=72.0)
+
+
 WRITTEN = {
     "q1": "cat",
     "q2": "ship",
