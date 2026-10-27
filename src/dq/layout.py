@@ -24,6 +24,9 @@ SPELL_BOX_W = 74.0
 
 MATH_X = PAGE_W / 2 + 2.0
 MATH_RIGHT = PAGE_W - MARGIN_X
+MATH_PROMPT_DX = 8.0  # prompt starts this far right of the item number
+
+NUM_GAP = 1.8  # blank space between "7." and whatever follows it
 
 BOX_W = {"int": 18.0, "int_rem": 26.0, "frac": 20.0, "symbol": 14.0, "text": 18.0}
 LEAD_W = {"symbol": 33.0}
@@ -62,6 +65,7 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
                 "prompt_text": it.get("prompt", it["expected"]),
                 "lead_typ": "",
                 "num_x": SPELL_NUM_X,
+                "num_w": SPELL_BOX_X - SPELL_NUM_X - NUM_GAP,
                 "box": {"x": SPELL_BOX_X, "y": y, "w": SPELL_BOX_W, "h": BOX_H},
             }
         )
@@ -73,7 +77,7 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
         bx = MATH_RIGHT - bw
         lw = LEAD_W.get(kind, LEAD_W_DEFAULT)
         lx = bx - lw - 1.0
-        px = MATH_X + 5.0
+        px = MATH_X + MATH_PROMPT_DX
         pw = max(18.0, lx - px - 1.0)
         out.append(
             {
@@ -88,6 +92,7 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
                 "prompt_text": it["prompt"],
                 "lead_typ": it["lead"],
                 "num_x": MATH_X,
+                "num_w": MATH_PROMPT_DX - NUM_GAP,
                 "box": {"x": bx, "y": y, "w": bw, "h": BOX_H},
                 "prompt_box": {"x": px, "y": y, "w": pw, "h": BOX_H},
                 "lead": {"x": lx, "y": y, "w": lw, "h": BOX_H},

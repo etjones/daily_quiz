@@ -33,7 +33,7 @@
     columns: (6mm, 44mm, 1fr, 1fr),
     column-gutter: 2.5mm,
     align: horizon,
-    text(size: 9pt, fill: luma(120))[#(i + 1)],
+    text(size: 9pt, fill: luma(120))[#(str(i + 1) + ".")],
     {
       hlword(w.parts)
       if w.role == "review" { h(1.5mm); text(size: 7.5pt, fill: luma(130))[again] }
@@ -73,7 +73,7 @@
         columns: (5mm, 1fr, auto, auto),
         column-gutter: 1.5mm,
         align: horizon,
-        text(size: 8.5pt, fill: luma(120))[#(i + 1)],
+        text(size: 8.5pt, fill: luma(120))[#(str(i + 1) + ".")],
         text(size: 12.5pt)[#ev(p.prompt)],
         text(size: 12.5pt)[#ev(p.lead)],
         answer-line(w: if p.kind == "frac" { 16mm } else if p.kind == "int_rem" { 26mm } else { 18mm }),

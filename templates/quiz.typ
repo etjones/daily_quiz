@@ -35,9 +35,10 @@
 
 // items
 #for it in m.items {
-  // number
-  place(top + left, dx: mm(it.num_x), dy: mm(it.box.y + it.box.h / 2 - 2.6),
-    text(size: 9pt, weight: "bold", fill: luma(100))[#it.n])
+  // number: right-aligned in the gutter, so "1." and "10." both keep a gap before the item
+  place(top + left, dx: mm(it.num_x), dy: mm(it.box.y),
+    box(width: mm(it.num_w), height: mm(it.box.h),
+      align(right + horizon, text(size: 9pt, weight: "bold", fill: luma(100))[#(str(it.n) + ".")])))
   if it.kind_group == "spelling" {
     place(top + left, dx: mm(it.box.x), dy: mm(it.box.y), guide(mm(it.box.w), mm(it.box.h)))
   } else {

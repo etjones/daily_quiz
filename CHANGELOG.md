@@ -7,6 +7,7 @@
 - Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
+- Quiz and worksheet item numbers now read "1." and are right-aligned in their gutter, so there is always a visible gap before the word box or the math prompt (two-digit numbers used to crowd it).
 - Added a web grading sheet (`/quiz/<id>/grade`): the parent script with a live “right” checkbox per item and a running tally; saving records the quiz directly. The dashboard's “Grade it” opens it.
 - `dq status` and the web footer print the data directory; the README documents where data lives on the Mac and the server.
 - Pages set `<meta name="referrer" content="same-origin">` so logins work behind Caddy's `Referrer-Policy: no-referrer` (which made browsers post `Origin: null` and fail CSRF).
