@@ -1,0 +1,218 @@
+# Sound-alikes: pick the right spelling for the sentence. `answer` must be one of `choices`.
+# The sentence has ___ where the word goes.
+
+[[homophone]]
+sentence = "The wind ___ the leaves away."
+choices = ["blew", "blue"]
+answer = "blew"
+level = 1
+
+[[homophone]]
+sentence = "The sky is ___ today."
+choices = ["blew", "blue"]
+answer = "blue"
+level = 1
+
+[[homophone]]
+sentence = "I can ___ the birds singing."
+choices = ["here", "hear"]
+answer = "hear"
+level = 1
+
+[[homophone]]
+sentence = "Come over ___ and sit."
+choices = ["here", "hear"]
+answer = "here"
+level = 1
+
+[[homophone]]
+sentence = "I ate ___ cookies."
+choices = ["two", "to", "too"]
+answer = "two"
+level = 2
+
+[[homophone]]
+sentence = "We walked ___ the park."
+choices = ["two", "to", "too"]
+answer = "to"
+level = 2
+
+[[homophone]]
+sentence = "Can I come ___?"
+choices = ["two", "to", "too"]
+answer = "too"
+level = 2
+
+[[homophone]]
+sentence = "The kids lost ___ ball."
+choices = ["there", "their"]
+answer = "their"
+level = 2
+
+[[homophone]]
+sentence = "Put the box over ___."
+choices = ["there", "their"]
+answer = "there"
+level = 2
+
+[[homophone]]
+sentence = "I ___ a red bike."
+choices = ["see", "sea"]
+answer = "see"
+level = 1
+
+[[homophone]]
+sentence = "Fish swim in the ___."
+choices = ["see", "sea"]
+answer = "sea"
+level = 1
+
+[[homophone]]
+sentence = "I ___ the answer!"
+choices = ["no", "know"]
+answer = "know"
+level = 2
+
+[[homophone]]
+sentence = "There are ___ cookies left."
+choices = ["no", "know"]
+answer = "no"
+level = 1
+
+[[homophone]]
+sentence = "There are seven days in a ___."
+choices = ["week", "weak"]
+answer = "week"
+level = 2
+
+[[homophone]]
+sentence = "After being sick, I felt ___."
+choices = ["week", "weak"]
+answer = "weak"
+level = 2
+
+[[homophone]]
+sentence = "We ___ pizza for dinner."
+choices = ["eight", "ate"]
+answer = "ate"
+level = 1
+
+[[homophone]]
+sentence = "A spider has ___ legs."
+choices = ["eight", "ate"]
+answer = "eight"
+level = 1
+
+[[homophone]]
+sentence = "I won ___ prize."
+choices = ["one", "won"]
+answer = "one"
+level = 2
+
+[[homophone]]
+sentence = "Our team ___ the game."
+choices = ["one", "won"]
+answer = "won"
+level = 2
+
+[[homophone]]
+sentence = "A ___ has big paws and fur."
+choices = ["bear", "bare"]
+answer = "bear"
+level = 2
+
+[[homophone]]
+sentence = "In winter the trees are ___."
+choices = ["bear", "bare"]
+answer = "bare"
+level = 3
+
+[[homophone]]
+sentence = "I have one nose and ___ eyes."
+choices = ["to", "two"]
+answer = "two"
+level = 1
+
+[[homophone]]
+sentence = "Please ___ a letter to Grandma."
+choices = ["write", "right"]
+answer = "write"
+level = 2
+
+[[homophone]]
+sentence = "Turn ___ at the corner."
+choices = ["write", "right"]
+answer = "right"
+level = 2
+
+[[homophone]]
+sentence = "The ___ has a long tail."
+choices = ["tale", "tail"]
+answer = "tail"
+level = 2
+
+[[homophone]]
+sentence = "Grandpa told us a funny ___."
+choices = ["tale", "tail"]
+answer = "tale"
+level = 3
+
+[[homophone]]
+sentence = "I ___ the ball to my dog."
+choices = ["threw", "through"]
+answer = "threw"
+level = 3
+
+[[homophone]]
+sentence = "The train went ___ the tunnel."
+choices = ["threw", "through"]
+answer = "through"
+level = 3
+
+[[homophone]]
+sentence = "We read the ___ book."
+choices = ["hole", "whole"]
+answer = "whole"
+level = 3
+
+[[homophone]]
+sentence = "The dog dug a ___ in the yard."
+choices = ["hole", "whole"]
+answer = "hole"
+level = 2
+
+[[homophone]]
+sentence = "A ___ ran into the woods."
+choices = ["dear", "deer"]
+answer = "deer"
+level = 2
+
+[[homophone]]
+sentence = "Dad bought a ___ of pears at the store."
+choices = ["pair", "pear"]
+answer = "pair"
+level = 3
+
+[[homophone]]
+sentence = "We use ___ to bake bread."
+choices = ["flour", "flower"]
+answer = "flour"
+level = 3
+
+[[homophone]]
+sentence = "Nice to ___ you!"
+choices = ["meat", "meet"]
+answer = "meet"
+level = 2
+
+[[homophone]]
+sentence = "She ___ her bike to the park."
+choices = ["road", "rode"]
+answer = "rode"
+level = 2
+
+[[homophone]]
+sentence = "The toy store is having a big ___."
+choices = ["sail", "sale"]
+answer = "sale"
+level = 2

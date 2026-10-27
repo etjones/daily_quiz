@@ -8,12 +8,13 @@ One call to `build_day` produces three files:
 
 from __future__ import annotations
 
+import json
 import random
 from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 
-from . import generators, layout, render, scheduler
+from . import generators, layout, puzzles, render, scheduler
 from .curriculum import Curriculum
 from .db import DB
 
@@ -104,6 +105,82 @@ def words_missing_sentences(
     return sorted(want)
 
 
+WORKSHEET_PUZZLES = 3  # puzzle corner: a word scale plus two other types
+
+
+def _puzzle_history(db: DB, sid: int) -> tuple[dict[str, str], list[str]]:
+    """(puzzle id -> last date used, quiz puzzle types in the order used)."""
+    last: dict[str, str] = {}
+    types: list[str] = []
+    for row in db.plans(sid):
+        data = json.loads(row["data"])
+        for it in data.get("manifest", {}).get("items", []):
+            if it.get("kind_group") == "puzzle":
+                last[it["puzzle_id"]] = row["for_date"]
+                if it["ptype"] != "clue":
+                    types.append(it["ptype"])
+        for pz in data.get("worksheet", {}).get("puzzles", []):
+            last[pz["id"]] = row["for_date"]
+    return last, types
+
+
+def _quiz_puzzle_item(p: puzzles.Puzzle, skill_id: str, item_key: str = "") -> dict:
+    return {
+        "group": "puzzle",
+        "kind": "clue" if p.type == "clue" else "puzzle",
+        "ptype": p.type,
+        "puzzle_id": p.id,
+        "skill_id": skill_id,
+        "item_key": item_key,
+        "expected": p.answer,
+        "accept": p.accept,
+        "prompt": p.prompt,
+        "note": p.note,
+        "start": p.start,
+        "probe": False,
+    }
+
+
+def _choose_puzzles(
+    db: DB, cur: Curriculum, student, sel: scheduler.Selection, rng: random.Random
+) -> tuple[list[dict], list[dict]]:
+    """(quiz puzzle items, worksheet puzzle corner)."""
+    last, recent = _puzzle_history(db, student["id"])
+    lv = puzzles.levels(db.puzzle_history(student["id"]))
+    used: set[str] = set()
+    quiz: list[dict] = []
+    if sel.quiz_puzzles and sel.quiz_clue:
+        w = sel.quiz_clue["word"]
+        p = puzzles.clue_puzzle(w, cur.clues[w.lower()])
+        quiz.append(_quiz_puzzle_item(p, sel.quiz_clue["skill_id"], w))
+    n_other = sel.quiz_puzzles - len(quiz)
+    types = puzzles.next_types(recent, rng, n_other + WORKSHEET_PUZZLES - 1)
+    for t in types[:n_other]:
+        p = puzzles.pick(cur.puzzles, t, lv.get(t, 1), last, rng, used)
+        if p:
+            used.add(p.id)
+            quiz.append(_quiz_puzzle_item(p, f"wp.{t}"))
+    corner: list[dict] = []
+    for t in [
+        *types[n_other:],
+        "scale",
+    ]:  # the template drops from the end if space is short
+        p = puzzles.pick(cur.puzzles, t, lv.get(t, 1), last, rng, used)
+        if p:
+            used.add(p.id)
+            shown = rng.sample(p.words, len(p.words)) if p.type == "scale" else []
+            corner.append(
+                {
+                    "id": p.id,
+                    "type": p.type,
+                    "prompt": p.prompt,
+                    "answer": p.answer,
+                    "shuffled": shown,
+                }
+            )
+    return quiz, corner
+
+
 def _build_content(
     db: DB,
     cur: Curriculum,
@@ -183,6 +260,8 @@ def _build_content(
         "words": story_words,
     }
 
+    quiz_puzzles, corner = _choose_puzzles(db, cur, student, sel, rng)
+
     worksheet = {
         "student": student["name"],
         "date": on.isoformat(),
@@ -194,6 +273,7 @@ def _build_content(
         "math_tips": math_tips,
         "problems": problems,
         "story": story,
+        "puzzles": corner,
         "quiz_for": pretty(quiz_date),
         "load_note": sel.load_reason,
     }
@@ -270,7 +350,7 @@ def _build_content(
             )
 
     manifest = layout.build_manifest(
-        quiz_items,
+        quiz_items + quiz_puzzles,
         student["name"],
         quiz_date.isoformat(),
         f"Quiz {quiz_date.isoformat()}",
@@ -292,9 +372,20 @@ def _build_content(
 def parent_data(
     db: DB, cur: Curriculum, student, manifest: dict, quiz_date: date
 ) -> dict:
-    spelling, math = [], []
+    spelling, math, puzzle_rows = [], [], []
     for it in manifest["items"]:
-        if it["kind_group"] == "spelling":
+        if it["kind_group"] == "puzzle":
+            puzzle_rows.append(
+                {
+                    "n": it["n"],
+                    "prompt": it["prompt_text"],
+                    "answer": it["expected"],
+                    "also": it.get("accept", []),
+                    "note": "" if it["kind"] == "clue" else it.get("note", ""),
+                    "clue": it["kind"] == "clue",
+                }
+            )
+        elif it["kind_group"] == "spelling":
             spelling.append(
                 {
                     "n": it["n"],
@@ -318,6 +409,7 @@ def parent_data(
         "quiz_label": manifest["quiz_label"],
         "spelling": spelling,
         "math": math,
+        "puzzles": puzzle_rows,
     }
 
 

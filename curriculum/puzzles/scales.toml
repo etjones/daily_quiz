@@ -1,0 +1,102 @@
+# Word scales (worksheet only, not graded): put the words in order.
+# `words` is the right order; the worksheet shows them shuffled.
+
+[[scale]]
+prompt = "from coolest to hottest"
+words = ["cold", "warm", "hot", "boiling"]
+level = 1
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["tiny", "small", "big", "huge"]
+level = 1
+
+[[scale]]
+prompt = "from quietest to loudest"
+words = ["whisper", "talk", "shout", "scream"]
+level = 1
+
+[[scale]]
+prompt = "from slowest to fastest"
+words = ["crawl", "walk", "jog", "sprint"]
+level = 2
+
+[[scale]]
+prompt = "from shortest to longest time"
+words = ["second", "minute", "hour", "day"]
+level = 1
+
+[[scale]]
+prompt = "from youngest to oldest"
+words = ["baby", "child", "teenager", "grown-up"]
+level = 1
+
+[[scale]]
+prompt = "from a little happy to very happy"
+words = ["okay", "glad", "happy", "thrilled"]
+level = 3
+
+[[scale]]
+prompt = "from a little wet to very wet"
+words = ["damp", "wet", "soaked"]
+level = 2
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["ant", "mouse", "dog", "elephant"]
+level = 1
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["pebble", "rock", "boulder", "mountain"]
+level = 2
+
+[[scale]]
+prompt = "from first to last"
+words = ["seed", "sprout", "plant", "flower"]
+level = 1
+
+[[scale]]
+prompt = "from first to last"
+words = ["egg", "tadpole", "froglet", "frog"]
+level = 2
+
+[[scale]]
+prompt = "from first to last in a day"
+words = ["dawn", "noon", "dusk", "midnight"]
+level = 2
+
+[[scale]]
+prompt = "from a little scared to very scared"
+words = ["nervous", "scared", "terrified"]
+level = 3
+
+[[scale]]
+prompt = "from a little hungry to very hungry"
+words = ["peckish", "hungry", "starving"]
+level = 3
+
+[[scale]]
+prompt = "from a light rain to the strongest storm"
+words = ["drizzle", "rain", "downpour", "storm"]
+level = 2
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["puddle", "pond", "lake", "ocean"]
+level = 1
+
+[[scale]]
+prompt = "from least to most"
+words = ["none", "few", "some", "many", "all"]
+level = 2
+
+[[scale]]
+prompt = "from nearest to farthest"
+words = ["here", "nearby", "far", "faraway"]
+level = 3
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["house", "town", "city", "country"]
+level = 2

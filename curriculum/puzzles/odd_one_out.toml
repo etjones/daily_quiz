@@ -1,0 +1,218 @@
+# Odd one out: which word does not belong? The child writes that word.
+# answer must be one of the words. reason is shown to the grown-up, who can ask "why?".
+
+[[odd]]
+words = ["apple", "banana", "carrot", "grape"]
+answer = "carrot"
+reason = "the others are fruits"
+level = 1
+
+[[odd]]
+words = ["robin", "eagle", "bat", "sparrow"]
+answer = "bat"
+reason = "the others are birds; a bat is a mammal"
+level = 2
+
+[[odd]]
+words = ["red", "blue", "round", "green"]
+answer = "round"
+reason = "the others are colors"
+level = 1
+
+[[odd]]
+words = ["dog", "cat", "cow", "rose"]
+answer = "rose"
+reason = "the others are animals"
+level = 1
+
+[[odd]]
+words = ["chair", "table", "bed", "apple"]
+answer = "apple"
+reason = "the others are furniture"
+level = 1
+
+[[odd]]
+words = ["shark", "whale", "goldfish", "trout"]
+answer = "whale"
+reason = "the others are fish; a whale is a mammal"
+level = 3
+
+[[odd]]
+words = ["run", "jump", "skip", "sleep"]
+answer = "sleep"
+reason = "the others are ways to move"
+level = 1
+
+[[odd]]
+words = ["happy", "glad", "cheerful", "angry"]
+answer = "angry"
+reason = "the others mean pleased"
+level = 2
+
+[[odd]]
+words = ["hot", "warm", "cold", "boiling"]
+answer = "cold"
+reason = "the others are kinds of heat"
+level = 1
+
+[[odd]]
+words = ["car", "bus", "train", "house"]
+answer = "house"
+reason = "the others carry people from place to place"
+level = 1
+
+[[odd]]
+words = ["boat", "ship", "canoe", "plane"]
+answer = "plane"
+reason = "the others travel on water"
+level = 1
+
+[[odd]]
+words = ["square", "circle", "triangle", "seven"]
+answer = "seven"
+reason = "the others are shapes"
+level = 1
+
+[[odd]]
+words = ["two", "four", "six", "nine"]
+answer = "nine"
+reason = "the others are even numbers"
+level = 2
+
+[[odd]]
+words = ["spring", "summer", "Monday", "winter"]
+answer = "Monday"
+reason = "the others are seasons"
+level = 2
+
+[[odd]]
+words = ["piano", "drum", "guitar", "hammer"]
+answer = "hammer"
+reason = "the others are musical instruments"
+level = 1
+
+[[odd]]
+words = ["hammer", "saw", "drill", "spoon"]
+answer = "spoon"
+reason = "the others are tools for building"
+level = 2
+
+[[odd]]
+words = ["eye", "ear", "nose", "shoe"]
+answer = "shoe"
+reason = "the others are parts of the face"
+level = 1
+
+[[odd]]
+words = ["milk", "juice", "water", "bread"]
+answer = "bread"
+reason = "the others are drinks"
+level = 1
+
+[[odd]]
+words = ["oak", "maple", "pine", "tulip"]
+answer = "tulip"
+reason = "the others are trees"
+level = 2
+
+[[odd]]
+words = ["ant", "bee", "spider", "beetle"]
+answer = "spider"
+reason = "the others are insects with six legs; a spider has eight"
+level = 3
+
+[[odd]]
+words = ["sun", "moon", "star", "cloud"]
+answer = "cloud"
+reason = "the others are out in space; a cloud is in the sky near us"
+level = 3
+
+[[odd]]
+words = ["sad", "mad", "bad", "cat"]
+answer = "cat"
+reason = "the others describe a feeling or how something is"
+level = 2
+
+[[odd]]
+words = ["cup", "mug", "glass", "fork"]
+answer = "fork"
+reason = "the others hold drinks"
+level = 1
+
+[[odd]]
+words = ["whisper", "shout", "yell", "scream"]
+answer = "whisper"
+reason = "the others are loud"
+level = 2
+
+[[odd]]
+words = ["tiny", "small", "little", "huge"]
+answer = "huge"
+reason = "the others mean small"
+level = 1
+
+[[odd]]
+words = ["kitten", "puppy", "calf", "horse"]
+answer = "horse"
+reason = "the others are baby animals"
+level = 2
+
+[[odd]]
+words = ["jumped", "ran", "swim", "sat"]
+answer = "swim"
+reason = "the others already happened (past tense)"
+level = 3
+
+[[odd]]
+words = ["boat", "coat", "goat", "boot"]
+answer = "boot"
+reason = "the others rhyme"
+level = 2
+
+[[odd]]
+words = ["cake", "lake", "bike", "rake"]
+answer = "bike"
+reason = "the others rhyme"
+level = 1
+
+[[odd]]
+words = ["light", "night", "might", "late"]
+answer = "late"
+reason = "the others rhyme and are spelled with igh"
+level = 2
+
+[[odd]]
+words = ["rain", "snow", "hail", "sand"]
+answer = "sand"
+reason = "the others fall from the sky"
+level = 2
+
+[[odd]]
+words = ["lion", "tiger", "leopard", "zebra"]
+answer = "zebra"
+reason = "the others are big cats"
+level = 2
+
+[[odd]]
+words = ["penny", "nickel", "dime", "button"]
+answer = "button"
+reason = "the others are coins"
+level = 2
+
+[[odd]]
+words = ["January", "March", "Tuesday", "June"]
+answer = "Tuesday"
+reason = "the others are months"
+level = 2
+
+[[odd]]
+words = ["brave", "bold", "fearless", "timid"]
+answer = "timid"
+reason = "the others mean not afraid"
+level = 3
+
+[[odd]]
+words = ["river", "lake", "ocean", "desert"]
+answer = "desert"
+reason = "the others are water"
+level = 2

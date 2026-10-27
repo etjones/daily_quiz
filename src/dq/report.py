@@ -116,7 +116,8 @@ def build_report(db: DB, cur: Curriculum, student, on: date, days: int = 14) -> 
     # ---- 3. shaky ---------------------------------------------------------------------
     per_skill: dict[str, list[int]] = defaultdict(list)
     for r in results:
-        per_skill[r["skill_id"]].append(r["correct"])
+        if r["skill_id"] in cur.by_id and r["on_target"] != 0:
+            per_skill[r["skill_id"]].append(r["correct"])
     shaky = []
     for sk, flags in per_skill.items():
         if len(flags) >= 2 and sum(flags) / len(flags) < 0.7:

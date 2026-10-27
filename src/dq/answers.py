@@ -7,6 +7,7 @@ judges it.
 
 from __future__ import annotations
 
+import difflib
 import re
 from fractions import Fraction
 
@@ -52,7 +53,7 @@ def _clean(s: str | None) -> str:
 def normalize(kind: str, s: str | None) -> str:
     """Canonical form of an answer string for comparison."""
     s = _clean(s)
-    if kind == "spelling":
+    if kind in ("spelling", "clue"):
         return s.replace("’", "'").replace("`", "'")
     if kind == "int":
         s = s.replace(",", "").rstrip(".")
@@ -80,7 +81,7 @@ def match(kind: str, expected: str, got: str | None) -> bool:
     e = normalize(kind, expected)
     if not g:
         return False
-    if kind == "spelling":
+    if kind in ("spelling", "clue"):
         if g == e:
             return True
         # Case is ignored except for the pronoun I and its contractions,
@@ -136,6 +137,14 @@ def _single_edit(a: str, b: str) -> str | None:
     return None
 
 
+def near_miss(expected: str, got: str | None) -> bool:
+    """True if `got` looks like an attempt at `expected` (a misspelling), not another word."""
+    e, g = expected.lower(), _clean(got).lower()
+    if len(g) < 2:
+        return False
+    return difflib.SequenceMatcher(None, e, g, autojunk=False).ratio() >= 0.6
+
+
 def _consonant_skeleton(w: str) -> str:
     return re.sub(r"[aeiouy]", "", w.lower())
 
@@ -148,7 +157,7 @@ def classify_error(kind: str, expected: str, got: str | None) -> str | None:
     e = normalize(kind, expected)
     if not g:
         return "blank"
-    if kind == "spelling":
+    if kind in ("spelling", "clue"):
         if g.lower() == e.lower():
             return "capitalization"
         cat = _single_edit(e.lower(), g.lower())

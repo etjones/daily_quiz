@@ -20,6 +20,7 @@ import cv2
 import numpy as np
 
 from . import answers
+from .judge import ACCEPT_AT, DOUBT_ABOVE
 
 PPM = 8  # pixels per millimetre in the straightened page
 INSET_MM = 1.3  # crop inside the box border
@@ -214,7 +215,8 @@ def transcribe_all(
                 text="", blank=True, confidence=1.0, source="pixels"
             )
             continue
-        r = backend.transcribe_box(png_bytes(crop), it["kind"])
+        kind = "spelling" if it["kind"] in ("clue", "puzzle") else it["kind"]
+        r = backend.transcribe_box(png_bytes(crop), kind)
         out[it["id"]] = Transcription(
             text=r["text"],
             blank=bool(r.get("blank")),
@@ -257,7 +259,41 @@ class Scored:
         }
 
 
-def score(manifest: dict, got_by_id: dict[str, Transcription | str]) -> list[Scored]:
+def _puzzle_verdict(it: dict, text: str, judge) -> tuple[bool, bool, str]:
+    """(right, needs_review, reason) for a word puzzle. Listed answers are right; an
+    unlisted one goes to the answer checker if there is one."""
+    if text.strip().lower() in {
+        a.lower() for a in [it["expected"], *it.get("accept", [])]
+    }:
+        return True, False, ""
+    if judge is None or not text.strip():
+        return False, False, ""
+    try:
+        p = judge.p_yes(it, text)
+    except Exception as e:  # noqa: BLE001  (a checker outage must not block grading)
+        return False, True, f"answer checker unavailable ({e}); judge it yourself"
+    if p is None:
+        return False, False, ""
+    pct = f"{p:.0%} sure"
+    if p >= ACCEPT_AT:
+        return (
+            True,
+            True,
+            f"not in the answer list; the answer checker accepted it ({pct})",
+        )
+    if p > DOUBT_ABOVE:
+        return (
+            False,
+            True,
+            f"not in the answer list; the answer checker is unsure ({pct})",
+        )
+    return False, False, ""
+
+
+def score(
+    manifest: dict, got_by_id: dict[str, Transcription | str], judge=None
+) -> list[Scored]:
+    """`judge` (judge.CachedJudge) rules on puzzle answers that are not in the list."""
     rows: list[Scored] = []
     for it in manifest["items"]:
         g = got_by_id.get(it["id"], "")
@@ -267,12 +303,16 @@ def score(manifest: dict, got_by_id: dict[str, Transcription | str]) -> list[Sco
             else Transcription(text=str(g), source="manual")
         )
         kind = it["kind"]
-        ok = answers.match(kind, it["expected"], t.text)
-        cat = None if ok else answers.classify_error(kind, it["expected"], t.text)
-        # flag for a human glance: model unsure, or a wrong answer that looks like a mirrored/ambiguous glyph
         review = False
         reason = ""
-        if t.source == "vlm":
+        if kind == "puzzle":
+            ok, review, reason = _puzzle_verdict(it, t.text, judge)
+            cat = None if ok else ("blank" if not t.text.strip() else "other")
+        else:
+            ok = answers.match(kind, it["expected"], t.text)
+            cat = None if ok else answers.classify_error(kind, it["expected"], t.text)
+        # flag for a human glance: model unsure, or a wrong answer that looks like a mirrored/ambiguous glyph
+        if t.source == "vlm" and not review:
             if t.uncertain:
                 review, reason = True, "model unsure what was written"
             elif t.confidence < 0.6:

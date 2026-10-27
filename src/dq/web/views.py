@@ -31,6 +31,7 @@ from .. import (
     build,
     curriculum,
     grade,
+    judge,
     llm,
     placement,
     scheduler,
@@ -303,6 +304,8 @@ def _say(c: curriculum.Curriculum, db: DB, item: dict) -> str:
         w = item["expected"]
         has = c.sentences.get(w.lower()) or db.sentence(w.lower())
         return f'Say "{w}"' + (f": {build.dictation_sentence(c, db, w)}" if has else "")
+    if item["kind_group"] == "puzzle":
+        return f"Reads: {item['prompt_text']} (answer: {item['expected']})"
     return item.get("speech") or item["prompt_text"]
 
 
@@ -392,6 +395,7 @@ def grader_rows(manifest: dict, sheet: dict) -> dict[str, list[dict]]:
     ids = {it["n"]: it["id"] for it in manifest["items"]}
     return {
         "spelling": [{**w, "id": ids[w["n"]]} for w in sheet["spelling"]],
+        "puzzles": [{**p, "id": ids[p["n"]]} for p in sheet.get("puzzles", [])],
         "math": [{**m, "id": ids[m["n"]]} for m in sheet["math"]],
     }
 
@@ -444,7 +448,9 @@ def review_entry(request: HttpRequest, quiz_id: int) -> HttpResponse:
     student = require_student(request)
     q = _open_quiz(request.db, student, quiz_id)
     manifest = json.loads(q["manifest"])
-    rows = grade.score(manifest, entered_answers(manifest, request.POST))
+    rows = grade.score(
+        manifest, entered_answers(manifest, request.POST), judge.from_env(request.db)
+    )
     return _review(request, student, q, rows, "oral", {})
 
 
@@ -502,7 +508,7 @@ def grade_photo(request: HttpRequest, quiz_id: int) -> HttpResponse:
         msg = f"{problem} Enter the answers by hand; the photo crops are beside each item."
         return _entry_page(request, student, q, urls, msg)
     warn = None if info["ok"] else "The page may be badly warped; check every row."
-    rows = grade.score(manifest, trans)
+    rows = grade.score(manifest, trans, judge.from_env(request.db))
     return _review(request, student, q, rows, "vlm", urls, warn)
 
 

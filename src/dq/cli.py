@@ -23,6 +23,7 @@ from . import (
     curriculum,
     entry,
     grade,
+    judge,
     llm,
     placement,
     render,
@@ -268,6 +269,7 @@ def cmd_oral(args) -> int:
             if cur.sentences.get(w.lower()) or db.sentence(w.lower())
             else ""
         ),
+        judge=judge.from_env(db),
     )
     rows = entry.review_loop(rows)
     _finish(db, cur, home, student, q, rows, "oral", on)
@@ -307,11 +309,11 @@ def cmd_grade(args) -> int:
             "No vision model configured (use --backend lmstudio). Crops saved to", audit
         )
         print("Falling back to quick manual entry.\n")
-        rows = entry.run_entry(manifest)
+        rows = entry.run_entry(manifest, judge=judge.from_env(db))
         mode = "manual"
     else:
         trans = grade.transcribe_all(crops, manifest, backend)
-        rows = grade.score(manifest, trans)
+        rows = grade.score(manifest, trans, judge.from_env(db))
         mode = "vlm"
     if not args.yes or mode == "manual":
         rows = entry.review_loop(rows)

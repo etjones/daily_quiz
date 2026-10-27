@@ -1,0 +1,236 @@
+# Change one letter: start from a word, change exactly one letter, and match the clue.
+# The answer must differ from `start` in exactly one letter (checked by the tests).
+
+[[ladder]]
+start = "cold"
+answer = "cord"
+clue = "a thick string"
+level = 2
+
+[[ladder]]
+start = "cat"
+answer = "hat"
+clue = "you wear it on your head"
+level = 1
+
+[[ladder]]
+start = "dog"
+answer = "dig"
+clue = "what you do with a shovel"
+level = 1
+
+[[ladder]]
+start = "pig"
+answer = "wig"
+clue = "fake hair"
+level = 1
+
+[[ladder]]
+start = "sun"
+answer = "run"
+clue = "go very fast on your feet"
+level = 1
+
+[[ladder]]
+start = "bed"
+answer = "red"
+clue = "the color of a fire truck"
+level = 1
+
+[[ladder]]
+start = "cake"
+answer = "lake"
+clue = "water with land all around it"
+level = 1
+
+[[ladder]]
+start = "boat"
+answer = "coat"
+clue = "you wear it when it is cold outside"
+level = 1
+
+[[ladder]]
+start = "fish"
+answer = "dish"
+clue = "a plate or bowl"
+level = 1
+
+[[ladder]]
+start = "rain"
+answer = "rail"
+clue = "a train runs on it"
+level = 2
+
+[[ladder]]
+start = "mouse"
+answer = "house"
+clue = "a place where people live"
+level = 1
+
+[[ladder]]
+start = "moon"
+answer = "noon"
+clue = "twelve o'clock in the daytime"
+level = 2
+
+[[ladder]]
+start = "book"
+answer = "hook"
+clue = "you catch a fish with it"
+level = 1
+
+[[ladder]]
+start = "frog"
+answer = "from"
+clue = "the opposite of to"
+level = 3
+
+[[ladder]]
+start = "ring"
+answer = "king"
+clue = "he wears a crown"
+level = 1
+
+[[ladder]]
+start = "sock"
+answer = "rock"
+clue = "a stone"
+level = 1
+
+[[ladder]]
+start = "tree"
+answer = "free"
+clue = "it costs nothing"
+level = 2
+
+[[ladder]]
+start = "seed"
+answer = "feed"
+clue = "give food to"
+level = 1
+
+[[ladder]]
+start = "light"
+answer = "night"
+clue = "when the stars come out"
+level = 1
+
+[[ladder]]
+start = "cow"
+answer = "how"
+clue = "a question word: ___ are you?"
+level = 2
+
+[[ladder]]
+start = "hand"
+answer = "sand"
+clue = "you find it at the beach"
+level = 1
+
+[[ladder]]
+start = "lamp"
+answer = "camp"
+clue = "sleep in a tent outside"
+level = 1
+
+[[ladder]]
+start = "nest"
+answer = "vest"
+clue = "a jacket with no sleeves"
+level = 2
+
+[[ladder]]
+start = "bone"
+answer = "cone"
+clue = "ice cream goes on top of it"
+level = 1
+
+[[ladder]]
+start = "kite"
+answer = "bite"
+clue = "what you do with your teeth"
+level = 1
+
+[[ladder]]
+start = "rose"
+answer = "nose"
+clue = "you smell with it"
+level = 1
+
+[[ladder]]
+start = "goat"
+answer = "boat"
+clue = "it floats on water"
+level = 1
+
+[[ladder]]
+start = "snow"
+answer = "show"
+clue = "let someone see something"
+level = 2
+
+[[ladder]]
+start = "loud"
+answer = "load"
+clue = "a pile of things to carry"
+level = 2
+
+[[ladder]]
+start = "coin"
+answer = "join"
+clue = "put things together"
+level = 2
+
+[[ladder]]
+start = "boy"
+answer = "toy"
+clue = "something to play with"
+level = 1
+
+[[ladder]]
+start = "paw"
+answer = "saw"
+clue = "a tool that cuts wood"
+level = 1
+
+[[ladder]]
+start = "jaw"
+answer = "raw"
+clue = "not cooked"
+level = 2
+
+[[ladder]]
+start = "new"
+answer = "few"
+clue = "not many"
+level = 2
+
+[[ladder]]
+start = "farm"
+answer = "harm"
+clue = "to hurt"
+level = 2
+
+[[ladder]]
+start = "bird"
+answer = "bind"
+clue = "tie up tightly"
+level = 3
+
+[[ladder]]
+start = "hurt"
+answer = "hunt"
+clue = "look for an animal to catch"
+level = 2
+
+[[ladder]]
+start = "warm"
+answer = "worm"
+clue = "it wiggles in the dirt"
+level = 2
+
+[[ladder]]
+start = "late"
+answer = "gate"
+clue = "a door in a fence"
+level = 1

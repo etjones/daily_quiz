@@ -17,6 +17,7 @@ def run_entry(
     input_fn: Callable[[str], str] | None = None,
     print_fn: Callable[..., None] | None = None,
     sentence_fn: Callable[[str], str] | None = None,
+    judge=None,
 ) -> list[grade.Scored]:
     """Walk through the quiz items. For each:
     Enter        = correct
@@ -50,7 +51,7 @@ def run_entry(
             got[it["id"]] = "?"
         else:
             got[it["id"]] = raw
-    return grade.score(manifest, got)
+    return grade.score(manifest, got, judge)
 
 
 def review_loop(

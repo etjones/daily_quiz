@@ -36,7 +36,7 @@
 
 // column labels
 #place(top + left, dx: mm(m.cols.spelling.x), dy: mm(m.cols.label_y),
-  text(size: 9pt, weight: "bold", fill: accent)[Words (listen)])
+  text(size: 9pt, weight: "bold", fill: accent)[Words (listen) #h(1mm) #text(weight: "regular", fill: luma(110))[and puzzles (read)]])
 #place(top + left, dx: mm(m.cols.math.x), dy: mm(m.cols.label_y),
   text(size: 9pt, weight: "bold", fill: accent)[Math])
 
@@ -54,10 +54,11 @@
     place(top + left, dx: mm(it.box.x), dy: mm(it.box.y), guide(mm(it.box.w), mm(it.box.h)))
   } else {
     // prompt: shrunk only as far as needed to fit its box (word problems start smaller)
-    let sizes = if it.at("prose", default: false) { half-points(11, 8) } else if it.kind == "text" { (8pt,) } else { half-points(12, 7) }
+    let plain = it.at("plain", default: false)
+    let sizes = if plain or it.at("prose", default: false) { half-points(11, 7) } else if it.kind == "text" { (8pt,) } else { half-points(12, 7) }
     place(top + left, dx: mm(it.prompt_box.x), dy: mm(it.prompt_box.y),
       box(width: mm(it.prompt_box.w), height: mm(it.prompt_box.h),
-        align(left + horizon, fit(mm(it.prompt_box.w), mm(it.prompt_box.h), sizes, ev(it.prompt_text)))))
+        align(left + horizon, fit(mm(it.prompt_box.w), mm(it.prompt_box.h), sizes, if plain { it.prompt_text } else { ev(it.prompt_text) }))))
     // lead-in and answer box
     place(top + left, dx: mm(it.lead.x), dy: mm(it.lead.y),
       box(width: mm(it.lead.w), height: mm(it.lead.h), align(right + horizon, text(size: if it.kind == "symbol" { 9pt } else { 11pt })[#ev(it.lead_typ)])))

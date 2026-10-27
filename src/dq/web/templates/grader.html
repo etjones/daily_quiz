@@ -23,6 +23,24 @@
   </table>
   {% endif %}
 
+  {% if puzzles %}
+  <h2>Puzzles (child reads and writes)</h2>
+  <table>
+    <thead><tr><th class="num">#</th><th>Puzzle</th><th>Answer</th><th>Right?</th><th>If wrong, what they wrote</th></tr></thead>
+    <tbody>
+    {% for p in puzzles %}
+    <tr>
+      <td class="num">{{ p.n }}</td>
+      <td>{{ p.prompt }}{% if p.note %} <small>({{ p.note }})</small>{% endif %}</td>
+      <td><strong>{{ p.answer }}</strong>{% if p.also %} <small>also: {{ p.also|join(", ") }}</small>{% endif %}{% if p.clue %} <small>(spelling counts)</small>{% endif %}</td>
+      <td><label><input type="checkbox" name="right_{{ p.id }}" checked> right</label></td>
+      <td><input type="text" name="got_{{ p.id }}" aria-label="what they wrote for {{ p.n }}" autocomplete="off"></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+
   {% if math %}
   <h2>Math (child reads and writes)</h2>
   <table>

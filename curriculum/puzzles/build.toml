@@ -1,0 +1,154 @@
+# Word building: put two parts together. `prompt` is what the child sees; the blank is
+# the missing part, written in the box. Compound words and word endings.
+
+[[build]]
+prompt = "rain + ___ = the colored arc after a storm"
+answer = "bow"
+level = 1
+
+[[build]]
+prompt = "sun + ___ = a tall yellow flower"
+answer = "flower"
+level = 1
+
+[[build]]
+prompt = "fire + ___ = an insect that glows at night"
+answer = "fly"
+level = 1
+
+[[build]]
+prompt = "snow + ___ = a snowy figure with a carrot nose"
+answer = "man"
+level = 1
+
+[[build]]
+prompt = "star + ___ = an animal shaped like a star"
+answer = "fish"
+level = 1
+
+[[build]]
+prompt = "cup + ___ = a small cake"
+answer = "cake"
+level = 1
+
+[[build]]
+prompt = "foot + ___ = a game with a ball you kick"
+answer = "ball"
+level = 1
+
+[[build]]
+prompt = "pop + ___ = a snack that pops"
+answer = "corn"
+level = 1
+
+[[build]]
+prompt = "tooth + ___ = what you brush with"
+answer = "brush"
+accept = ["paste"]
+level = 1
+
+[[build]]
+prompt = "bed + ___ = the place you sleep in"
+answer = "room"
+level = 1
+
+[[build]]
+prompt = "___ + fly = a bug with big pretty wings"
+answer = "butter"
+level = 2
+
+[[build]]
+prompt = "___ + coat = a jacket for wet days"
+answer = "rain"
+level = 2
+
+[[build]]
+prompt = "___ + ball = a ball you throw in winter"
+answer = "snow"
+level = 1
+
+[[build]]
+prompt = "___ + house = a home for a dog"
+answer = "dog"
+level = 1
+
+[[build]]
+prompt = "help + ___ = full of help"
+answer = "ful"
+level = 2
+
+[[build]]
+prompt = "care + ___ = without care"
+answer = "less"
+level = 2
+
+[[build]]
+prompt = "___ + happy = not happy"
+answer = "un"
+level = 2
+
+[[build]]
+prompt = "___ + do = do it again"
+answer = "re"
+level = 2
+
+[[build]]
+prompt = "quick + ___ = in a quick way"
+answer = "ly"
+level = 2
+
+[[build]]
+prompt = "tall + ___ = more tall"
+answer = "er"
+level = 2
+
+[[build]]
+prompt = "big + ___ = the most big (watch the spelling)"
+answer = "gest"
+level = 3
+
+[[build]]
+prompt = "teach + ___ = a person who teaches"
+answer = "er"
+level = 2
+
+[[build]]
+prompt = "joy + ___ = full of joy"
+answer = "ful"
+level = 2
+
+[[build]]
+prompt = "fear + ___ = without fear"
+answer = "less"
+level = 2
+
+[[build]]
+prompt = "___ + lock = open a lock"
+answer = "un"
+level = 2
+
+[[build]]
+prompt = "play + ___ = a place with swings and slides"
+answer = "ground"
+level = 2
+
+[[build]]
+prompt = "home + ___ = school work you do at home"
+answer = "work"
+level = 2
+
+[[build]]
+prompt = "class + ___ = where your class meets"
+answer = "room"
+level = 2
+
+[[build]]
+prompt = "some + ___ = a person, but we don't know who"
+answer = "one"
+accept = ["body"]
+level = 3
+
+[[build]]
+prompt = "every + ___ = all the things"
+answer = "thing"
+level = 3

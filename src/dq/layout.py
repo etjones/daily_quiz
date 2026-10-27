@@ -16,7 +16,11 @@ MARGIN_X = 22.0
 ROW_TOP = 26.0
 ROW_PITCH = 19.5
 BOX_H = 15.0
-MAX_ROWS = 5
+MAX_ROWS = 5  # math column
+LEFT_ROWS = 6  # word column: dictated words and puzzles, on a tighter pitch
+LEFT_PITCH = 16.0
+LEFT_BOX_H = 12.5
+PUZZLE_BOX_W = 30.0
 
 SPELL_NUM_X = MARGIN_X
 SPELL_BOX_X = MARGIN_X + 7.0
@@ -47,28 +51,64 @@ def marks() -> list[dict]:
 def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) -> dict:
     """items: dicts with group ('spelling'|'math'), kind, skill_id, item_key, prompt, lead,
     expected, probe. Returns the manifest, with `items` carrying box geometry."""
-    spell = [i for i in items if i["group"] == "spelling"][:MAX_ROWS]
+    left = [i for i in items if i["group"] == "spelling"]
+    left += [i for i in items if i["group"] == "puzzle"]
+    left = left[:LEFT_ROWS]
     math = [i for i in items if i["group"] == "math"][:MAX_ROWS]
     out: list[dict] = []
     n = 0
-    for row, it in enumerate(spell):
+    for row, it in enumerate(left):
         n += 1
-        y = ROW_TOP + row * ROW_PITCH
+        y = ROW_TOP + row * LEFT_PITCH
+        base = {
+            "id": f"q{n}",
+            "n": n,
+            "skill_id": it["skill_id"],
+            "item_key": it.get("item_key", ""),
+            "expected": it["expected"],
+            "probe": bool(it.get("probe")),
+            "num_x": SPELL_NUM_X,
+            "num_w": SPELL_BOX_X - SPELL_NUM_X - NUM_GAP,
+        }
+        if it["group"] == "spelling":
+            out.append(
+                base
+                | {
+                    "kind_group": "spelling",
+                    "kind": "spelling",
+                    "prompt_text": it.get("prompt", it["expected"]),
+                    "lead_typ": "",
+                    "box": {
+                        "x": SPELL_BOX_X,
+                        "y": y,
+                        "w": SPELL_BOX_W,
+                        "h": LEFT_BOX_H,
+                    },
+                }
+            )
+            continue
+        bx = SPELL_BOX_X + SPELL_BOX_W - PUZZLE_BOX_W
         out.append(
-            {
-                "id": f"q{n}",
-                "n": n,
-                "kind_group": "spelling",
-                "kind": "spelling",
-                "skill_id": it["skill_id"],
-                "item_key": it["item_key"],
-                "expected": it["expected"],
-                "probe": bool(it.get("probe")),
-                "prompt_text": it.get("prompt", it["expected"]),
+            base
+            | {
+                "kind_group": "puzzle",
+                "kind": it["kind"],
+                "ptype": it["ptype"],
+                "puzzle_id": it["puzzle_id"],
+                "accept": it.get("accept", []),
+                "note": it.get("note", ""),
+                "start": it.get("start", ""),
+                "prompt_text": it["prompt"],
+                "plain": True,
                 "lead_typ": "",
-                "num_x": SPELL_NUM_X,
-                "num_w": SPELL_BOX_X - SPELL_NUM_X - NUM_GAP,
-                "box": {"x": SPELL_BOX_X, "y": y, "w": SPELL_BOX_W, "h": BOX_H},
+                "box": {"x": bx, "y": y, "w": PUZZLE_BOX_W, "h": LEFT_BOX_H},
+                "prompt_box": {
+                    "x": SPELL_BOX_X,
+                    "y": y,
+                    "w": bx - SPELL_BOX_X - 2.0,
+                    "h": LEFT_BOX_H,
+                },
+                "lead": {"x": bx, "y": y, "w": 0.0, "h": LEFT_BOX_H},
             }
         )
     for row, it in enumerate(math):

@@ -1,0 +1,394 @@
+# Analogies: a is to b as c is to ___. The child writes the missing word.
+# answer  the expected word; accept  other answers that are also right (graded as right).
+# relation  how a and b are linked, in plain words: shown to the grown-up and given to the
+#           answer checker, which judges answers that are not listed.
+# level  1 = everyday pairs, 2 = takes a moment, 3 = abstract or less common words.
+
+[[analogy]]
+a = "bee"
+b = "hive"
+c = "bear"
+answer = "den"
+accept = ["cave", "lair"]
+relation = "an animal and its home"
+level = 1
+
+[[analogy]]
+a = "bird"
+b = "nest"
+c = "spider"
+answer = "web"
+relation = "an animal and its home"
+level = 1
+
+[[analogy]]
+a = "dog"
+b = "puppy"
+c = "cat"
+answer = "kitten"
+accept = ["kitty"]
+relation = "an animal and its baby"
+level = 1
+
+[[analogy]]
+a = "cow"
+b = "calf"
+c = "sheep"
+answer = "lamb"
+relation = "an animal and its baby"
+level = 2
+
+[[analogy]]
+a = "frog"
+b = "tadpole"
+c = "butterfly"
+answer = "caterpillar"
+relation = "a grown animal and the young form it starts as"
+level = 3
+
+[[analogy]]
+a = "hot"
+b = "cold"
+c = "up"
+answer = "down"
+relation = "opposites"
+level = 1
+
+[[analogy]]
+a = "big"
+b = "small"
+c = "fast"
+answer = "slow"
+relation = "opposites"
+level = 1
+
+[[analogy]]
+a = "day"
+b = "night"
+c = "summer"
+answer = "winter"
+relation = "opposites in time"
+level = 1
+
+[[analogy]]
+a = "open"
+b = "close"
+c = "push"
+answer = "pull"
+accept = ["drag"]
+relation = "opposite actions"
+level = 1
+
+[[analogy]]
+a = "happy"
+b = "sad"
+c = "brave"
+answer = "scared"
+accept = ["afraid", "fearful", "frightened", "cowardly", "timid"]
+relation = "opposite feelings"
+level = 2
+
+[[analogy]]
+a = "glove"
+b = "hand"
+c = "sock"
+answer = "foot"
+accept = ["feet"]
+relation = "a thing you wear and the body part it goes on"
+level = 1
+
+[[analogy]]
+a = "hat"
+b = "head"
+c = "shoe"
+answer = "foot"
+accept = ["feet"]
+relation = "a thing you wear and the body part it goes on"
+level = 1
+
+[[analogy]]
+a = "eye"
+b = "see"
+c = "ear"
+answer = "hear"
+accept = ["listen"]
+relation = "a body part and what it does"
+level = 1
+
+[[analogy]]
+a = "nose"
+b = "smell"
+c = "tongue"
+answer = "taste"
+accept = ["lick", "talk"]
+relation = "a body part and what it does"
+level = 2
+
+[[analogy]]
+a = "fish"
+b = "swim"
+c = "bird"
+answer = "fly"
+accept = ["flies"]
+relation = "an animal and how it moves"
+level = 1
+
+[[analogy]]
+a = "kangaroo"
+b = "hop"
+c = "snake"
+answer = "slither"
+accept = ["slide", "crawl", "slink", "glide"]
+relation = "an animal and how it moves"
+level = 2
+
+[[analogy]]
+a = "dog"
+b = "bark"
+c = "cat"
+answer = "meow"
+accept = ["purr", "hiss", "mew"]
+relation = "an animal and the sound it makes"
+level = 1
+
+[[analogy]]
+a = "cow"
+b = "moo"
+c = "duck"
+answer = "quack"
+relation = "an animal and the sound it makes"
+level = 1
+
+[[analogy]]
+a = "lion"
+b = "roar"
+c = "snake"
+answer = "hiss"
+relation = "an animal and the sound it makes"
+level = 2
+
+[[analogy]]
+a = "pen"
+b = "write"
+c = "scissors"
+answer = "cut"
+accept = ["snip"]
+relation = "a tool and what you do with it"
+level = 1
+
+[[analogy]]
+a = "broom"
+b = "sweep"
+c = "shovel"
+answer = "dig"
+accept = ["scoop"]
+relation = "a tool and what you do with it"
+level = 2
+
+[[analogy]]
+a = "painter"
+b = "brush"
+c = "chef"
+answer = "pan"
+accept = ["pot", "spoon", "knife", "stove", "oven", "whisk", "spatula"]
+relation = "a worker and a tool they use"
+level = 2
+
+[[analogy]]
+a = "doctor"
+b = "hospital"
+c = "teacher"
+answer = "school"
+accept = ["classroom"]
+relation = "a worker and where they work"
+level = 1
+
+[[analogy]]
+a = "farmer"
+b = "farm"
+c = "pilot"
+answer = "plane"
+accept = ["airplane", "cockpit", "airport", "sky", "jet"]
+relation = "a worker and where they work"
+level = 2
+
+[[analogy]]
+a = "page"
+b = "book"
+c = "brick"
+answer = "wall"
+accept = ["house", "building", "chimney"]
+relation = "a part and the thing it is part of"
+level = 2
+
+[[analogy]]
+a = "petal"
+b = "flower"
+c = "leaf"
+answer = "tree"
+accept = ["plant", "bush"]
+relation = "a part and the thing it is part of"
+level = 2
+
+[[analogy]]
+a = "finger"
+b = "hand"
+c = "toe"
+answer = "foot"
+accept = ["feet"]
+relation = "a part and the thing it is part of"
+level = 1
+
+[[analogy]]
+a = "wheel"
+b = "car"
+c = "wing"
+answer = "plane"
+accept = ["airplane", "bird", "jet"]
+relation = "a part and the thing it is part of"
+level = 2
+
+[[analogy]]
+a = "apple"
+b = "fruit"
+c = "carrot"
+answer = "vegetable"
+accept = ["veggie", "root"]
+relation = "a thing and the group it belongs to"
+level = 2
+
+[[analogy]]
+a = "robin"
+b = "bird"
+c = "shark"
+answer = "fish"
+relation = "a thing and the group it belongs to"
+level = 2
+
+[[analogy]]
+a = "red"
+b = "color"
+c = "circle"
+answer = "shape"
+relation = "a thing and the group it belongs to"
+level = 2
+
+[[analogy]]
+a = "milk"
+b = "cow"
+c = "egg"
+answer = "chicken"
+accept = ["hen", "bird"]
+relation = "a food and the animal it comes from"
+level = 1
+
+[[analogy]]
+a = "wool"
+b = "sheep"
+c = "honey"
+answer = "bee"
+accept = ["bees"]
+relation = "something we use and the animal it comes from"
+level = 2
+
+[[analogy]]
+a = "ice"
+b = "cold"
+c = "fire"
+answer = "hot"
+accept = ["warm", "burning"]
+relation = "a thing and how it feels"
+level = 1
+
+[[analogy]]
+a = "sugar"
+b = "sweet"
+c = "lemon"
+answer = "sour"
+accept = ["tart"]
+relation = "a food and how it tastes"
+level = 2
+
+[[analogy]]
+a = "morning"
+b = "breakfast"
+c = "night"
+answer = "dinner"
+accept = ["supper"]
+relation = "a time of day and the meal eaten then"
+level = 2
+
+[[analogy]]
+a = "one"
+b = "two"
+c = "three"
+answer = "four"
+relation = "a number and the next number"
+level = 1
+
+[[analogy]]
+a = "Monday"
+b = "Tuesday"
+c = "Friday"
+answer = "Saturday"
+relation = "a day and the day after it"
+level = 2
+
+[[analogy]]
+a = "walk"
+b = "walked"
+c = "jump"
+answer = "jumped"
+relation = "an action and the same action in the past"
+level = 2
+
+[[analogy]]
+a = "run"
+b = "ran"
+c = "swim"
+answer = "swam"
+relation = "an action and the same action in the past"
+level = 3
+
+[[analogy]]
+a = "mouse"
+b = "mice"
+c = "foot"
+answer = "feet"
+relation = "one thing and more than one"
+level = 3
+
+[[analogy]]
+a = "tiny"
+b = "small"
+c = "huge"
+answer = "big"
+accept = ["large", "giant"]
+relation = "a word and a milder word that means nearly the same"
+level = 3
+
+[[analogy]]
+a = "whisper"
+b = "shout"
+c = "walk"
+answer = "run"
+accept = ["sprint", "race", "dash"]
+relation = "a quiet or slow action and a strong, fast one"
+level = 3
+
+[[analogy]]
+a = "key"
+b = "lock"
+c = "bat"
+answer = "ball"
+relation = "two things that are used together"
+level = 2
+
+[[analogy]]
+a = "bread"
+b = "baker"
+c = "flowers"
+answer = "gardener"
+accept = ["florist", "farmer"]
+relation = "a thing and the person who makes or grows it"
+level = 3

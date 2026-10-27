@@ -29,6 +29,15 @@ def make(tmp_path, cur, name="Sam", pace_cap=2):
     return db
 
 
+def _misspell(cur, it) -> str:
+    """Drop a letter of the taught pattern (the last letter if the word has none): a child
+    who has not learned the skill gets the skill's letters wrong."""
+    exp = it["expected"]
+    span = cur.pattern_span(cur.by_id[it["skill_id"]], exp.lower())
+    i = span[0] if span else len(exp) - 1
+    return exp[:i] + exp[i + 1 :] if len(exp) > 1 else "x"
+
+
 def answer_quiz(db, cur, student, quiz_row, on, skill_knowledge, rng, mood_after=None):
     """The child answers every item; `skill_knowledge(skill_id, is_spelling)` is P(correct)."""
     manifest = json.loads(quiz_row["manifest"])
@@ -38,9 +47,8 @@ def answer_quiz(db, cur, student, quiz_row, on, skill_knowledge, rng, mood_after
         if rng.random() < p:
             got[it["id"]] = it["expected"]
         else:
-            exp = it["expected"]
             got[it["id"]] = (
-                exp[:-1] if it["kind_group"] == "spelling" and len(exp) > 1 else "0"
+                _misspell(cur, it) if it["kind_group"] == "spelling" else "0"
             )
     rows = grade.score(manifest, got)
     return session.record_quiz(db, cur, student, quiz_row, rows, "manual", on), rows
@@ -104,8 +112,9 @@ def test_average_child_progresses_and_reviews(tmp_path, cur):
     db = make(tmp_path, cur)
     log = run_days(db, cur, tmp_path, 30, lambda sk, sp: 0.85)
     plans = [x[2] for x in log if x[0] == "plan"]
-    # every day has a full set of spelling words
-    assert all(len(p.spelling) == 5 for p in plans), [len(p.spelling) for p in plans]
+    # every day has as many spelling words as tomorrow's quiz can test
+    want = [scheduler.worksheet_words(p.load, p.probing) for p in plans]
+    assert [len(p.spelling) for p in plans] == want
     # review appears: by week 2, some worksheet words are reviews
     assert any(w["role"] == "review" for p in plans[7:] for w in p.spelling)
     # words come back more than once, with gaps (spaced repetition)
@@ -117,6 +126,14 @@ def test_average_child_progresses_and_reviews(tmp_path, cur):
     assert repeats, "no word was reviewed three times in 30 days"
     # no single word dominates
     assert max(len(d) for d in seen.values()) <= 12
+    # a review word never rides the worksheet for days without being quizzed
+    untested: dict[str, int] = {}
+    for p in plans:
+        quizzed = {w["word"] for w in p.quiz_spelling}
+        for w in p.spelling:
+            k = w["word"]
+            untested[k] = 0 if k in quizzed else untested.get(k, 0) + 1
+            assert untested[k] <= 2, (k, p.on)
     # math: new skills arrive, reviews fill the sheet
     math_roles = [m["role"] for p in plans[5:] for m in p.math]
     assert "review" in math_roles and "new" in math_roles

@@ -7,6 +7,14 @@
 - Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
+- Word puzzles (analogies, odd one out, change one letter, word building, sound-alikes) join the quiz, and a "puzzle corner" with a word scale fills spare room at the bottom of the worksheet; banks live in `curriculum/puzzles/`, each type levels up after three right in a row and down after two wrong, and recently used puzzles are not repeated.
+- Some quiz words are asked for by a clue ("The sound you make when you talk") instead of dictated; the answer counts as a spelling test of that word only if the child came up with the word.
+- A misspelling outside the pattern the word was quizzed for ("loyl" for loyal, quizzed for "oy") brings the word back tomorrow without demoting it or counting against the pace, and the "tricky yesterday" note goes to the skill that covers the wrong letters. Results gain `on_target` and `blame_skill` columns, added to existing databases on first open.
+- Review words take every quiz slot but one, so a word can no longer sit on the worksheet for days without being tested.
+- Puzzle answers that are not in the answer list can be checked by a model through OpenRouter (`OPENROUTER_API_KEY`, optional `DQ_JUDGE_MODEL`) during oral entry and photo grading; answers are cached per puzzle, doubtful ones are flagged for the grown-up, and without a key they are simply marked wrong.
+- The parent script's "Right?" column is wide enough for "☐ yes ☐ no" on one line, so a quiz with puzzles still fits on one page.
+- The worksheet story and puzzle corner share the space left above the footer: puzzles are dropped first, then story lines, so a day with long tips and word problems no longer spills onto a second page.
+- Quiz accuracy in `dq status` and the report leaves out puzzles, clue items and off-target misspellings.
 - Word problems on the quiz no longer spill over neighbouring rows and off the page: generators mark them `prose`, which gives them a wider prompt box with a short lead-in and 3.5mm clear between rows, and every quiz prompt now shrinks to fit its box (word problems 11pt down to 8pt), including days rebuilt from older stored manifests.
 - Quiz and worksheet item numbers now read "1." and are right-aligned in their gutter, so there is always a visible gap before the word box or the math prompt (two-digit numbers used to crowd it). Days already in the database re-render from their stored manifest, which predates the new gutter width, so the template measures the gutter back from the item in that case.
 - Added a web grading sheet (`/quiz/<id>/grade`): the parent script with a live “right” checkbox per item and a running tally; saving records the quiz directly. The dashboard's “Grade it” opens it.

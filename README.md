@@ -52,9 +52,17 @@ Each day D:
 4. `dq report Ben --pdf` — on demand; same seven questions every time.
 Other: `dq status`, `dq skills`, `dq sentences --fill` (optional model-written dictation sentences).
 
+## Word puzzles
+The quiz carries a couple of word puzzles and sometimes a spelling word asked for by its clue; the worksheet
+ends with a puzzle corner when there is room. Banks are TOML files in `curriculum/puzzles/` (checked by
+`just validate`). A puzzle answer that is not in the list can be checked by a decision model through
+OpenRouter if `OPENROUTER_API_KEY` is set (an `op://` reference in `.env`); otherwise it is marked wrong and
+you can flip it.
+
 ## Optional model use
 Three touchpoints, all optional, prompts in `prompts/`: transcribe_box (read one handwriting box literally),
-dictation_sentence, report_narrative. The model never judges correctness; `answers.match` does.
+dictation_sentence, report_narrative. The model never judges spelling or math; `answers.match` does. The one
+exception is the optional puzzle-answer check above, for open-ended puzzles only.
 Default backend: any OpenAI-compatible server (LM Studio at localhost:1234/v1). The live-model path has only
 been tested against a mock server, not a real model.
 

@@ -39,7 +39,8 @@ PREREQ_BOX = (
 
 WORDS_PER_DAY = 5
 MATH_PRACTICE = 8  # problems on the worksheet
-QUIZ_WORDS = 5
+QUIZ_WORDS = 6  # left-hand quiz rows: dictated words, probe words and word puzzles
+QUIZ_PUZZLES = 2  # of those rows, word puzzles; one is a clue for a review word
 QUIZ_MATH = 5
 NEW_WORDS_BY_PACE = {
     1: (3, 1),
@@ -226,6 +227,10 @@ class Selection:
     math_probe: dict | None = None  # {skill_id, n}
     quiz_spelling: list[dict] = field(default_factory=list)
     quiz_math: list[dict] = field(default_factory=list)
+    quiz_puzzles: int = 0
+    quiz_clue: dict | None = (
+        None  # {skill_id, word}: a review word asked for by its meaning
+    )
     reteach: list[dict] = field(default_factory=list)
     story_stage: int = 1
 
@@ -334,7 +339,7 @@ def plan_day(
     )
 
     # ---- spelling ----------------------------------------------------------
-    n_words = max(3, round(WORDS_PER_DAY * load))
+    n_words = worksheet_words(load, probing)
     due_words = sorted(
         [
             u
@@ -422,10 +427,14 @@ def plan_day(
             and taught_ids
         ):
             targets = targets[1:]
-        if targets and len(targets[0].core_words) >= 2:
-            t = targets[0]
-            pw = rng.sample([w for w in t.core_words if w.lower() not in wu], 2)
-            sel.spell_probe = {"skill_id": t.id, "words": pw}
+        unseen = (
+            [w for w in targets[0].core_words if w.lower() not in wu] if targets else []
+        )
+        if len(unseen) >= 2:
+            sel.spell_probe = {
+                "skill_id": targets[0].id,
+                "words": rng.sample(unseen, 2),
+            }
 
     # ---- math ----------------------------------------------------------------
     math_units = {sk: u for (sk, key), u in units.items() if sk.startswith("m.")}
@@ -478,11 +487,13 @@ def plan_day(
             sel.math_probe = {"skill_id": later[0].id, "n": 2}
 
     # ---- quiz composition (tomorrow morning) --------------------------------------
-    n_quiz_w = max(3, round(QUIZ_WORDS * load))
+    n_quiz_w, _, sel.quiz_puzzles = quiz_rows(load, probing)
     n_quiz_m = max(3, round(QUIZ_MATH * load))
     probe_w = 2 if sel.spell_probe else 0
     probe_m = 2 if sel.math_probe else 0
-    sel.quiz_spelling = spelling[: max(1, n_quiz_w - probe_w)]
+    sel.quiz_spelling = _quiz_words(spelling, n_quiz_w - probe_w - sel.quiz_puzzles)
+    if sel.quiz_puzzles:
+        sel.quiz_clue = _clue_word(cur, spelling, sel.quiz_spelling, review_pool, wu)
     quiz_math: list[dict] = []
     for m in math_slots:
         if len(quiz_math) >= max(1, n_quiz_m - probe_m):
@@ -531,6 +542,64 @@ def plan_day(
     return sel, True
 
 
+def quiz_rows(load: float, probing: bool) -> tuple[int, int, int]:
+    """(left-hand quiz rows, probe words, puzzles) for a day."""
+    rows = max(3, round(QUIZ_WORDS * load))
+    probe = 2 if probing else 0
+    return rows, probe, max(0, min(QUIZ_PUZZLES, rows - probe - 2))
+
+
+def worksheet_words(load: float, probing: bool) -> int:
+    """Words on tonight's sheet = words tomorrow's quiz can test: the dictated slots plus
+    the clue puzzle. A word taught but never tested can never move on."""
+    rows, probe, puzzles = quiz_rows(load, probing)
+    return min(WORDS_PER_DAY, rows - probe - puzzles + (1 if puzzles else 0))
+
+
+def _quiz_words(spelling: list[dict], n: int) -> list[dict]:
+    """Review words (already in priority order) take every quiz slot but one, which goes to
+    a new word. A word on the worksheet but never on the quiz can never move on, so reviews
+    must not be crowded out; a new word left off becomes tomorrow's top review."""
+    reviews = [x for x in spelling if x["role"] == "review"]
+    fresh = [x for x in spelling if x["role"] != "review"]
+    r = min(len(reviews), max(1, n - 1))
+    picked = fresh[: n - r]
+    picked += reviews[: n - len(picked)]
+    return [x for x in spelling if x in picked]
+
+
+def _clue_word(
+    cur: Curriculum,
+    spelling: list[dict],
+    quizzed: list[dict],
+    review_pool: list[Unit],
+    wu: dict[str, Unit],
+) -> dict | None:
+    """A word to ask for by its meaning, in this order: a review word on today's sheet that
+    is not being dictated; a word due for review; the known word with a clue that is most
+    overdue. Either way the answer counts as a spelling test of that word."""
+    taken = {x["word"].lower() for x in quizzed} | {x["word"].lower() for x in spelling}
+    for x in spelling:
+        if (
+            x["role"] == "review"
+            and x not in quizzed
+            and x["word"].lower() in cur.clues
+        ):
+            return {"skill_id": x["skill_id"], "word": x["word"]}
+    for u in review_pool:
+        if u.item_key.lower() in cur.clues and u.item_key.lower() not in taken:
+            return {"skill_id": u.skill_id, "word": u.item_key}
+    known = [
+        u
+        for w, u in wu.items()
+        if w in cur.clues and w not in taken and u.box >= PREREQ_BOX
+    ]
+    if not known:
+        return None
+    u = min(known, key=lambda u: (u.due_on, u.box, u.item_key))
+    return {"skill_id": u.skill_id, "word": u.item_key}
+
+
 def _reteach(db: DB, cur: Curriculum, sid: int, on: date) -> list[dict]:
     q = db.conn.execute(
         "SELECT on_date FROM result WHERE student_id = ? AND probe = 0 ORDER BY on_date DESC LIMIT 1",
@@ -539,8 +608,12 @@ def _reteach(db: DB, cur: Curriculum, sid: int, on: date) -> list[dict]:
     if not q:
         return []
     rows = db.conn.execute(
-        "SELECT skill_id, item_key, COUNT(*) n FROM result WHERE student_id = ? AND on_date = ?"
-        " AND probe = 0 AND correct = 0 GROUP BY skill_id ORDER BY n DESC, skill_id LIMIT 2",
+        "SELECT CASE WHEN on_target = 0 THEN blame_skill ELSE skill_id END AS skill_id,"
+        " item_key, COUNT(*) n FROM result WHERE student_id = ? AND on_date = ?"
+        " AND probe = 0 AND correct = 0 AND kind != 'puzzle'"
+        " AND NOT (kind = 'clue' AND on_target IS NULL)"
+        " AND COALESCE(CASE WHEN on_target = 0 THEN blame_skill ELSE skill_id END, '') != ''"
+        " GROUP BY 1 ORDER BY n DESC, 1 LIMIT 2",
         (sid, q["on_date"]),
     ).fetchall()
     return [{"skill_id": r["skill_id"], "word": r["item_key"]} for r in rows]
@@ -560,6 +633,14 @@ def advance(u: Unit, correct: bool, on: date) -> Unit:
     u.last_correct = 1 if correct else 0
     u.last_seen = on.isoformat()
     u.due_on = (on + timedelta(days=1 if not correct else INTERVALS[u.box])).isoformat()
+    return u
+
+
+def soft_miss(u: Unit, on: date) -> Unit:
+    """An off-target misspelling: bring the word back tomorrow, keep its box and record."""
+    u.last_correct = 0
+    u.last_seen = on.isoformat()
+    u.due_on = (on + timedelta(days=1)).isoformat()
     return u
 
 
@@ -635,12 +716,22 @@ def apply_results(
 
     # ordinary items: aggregate per unit (a math skill with 2 problems succeeds only if both are right)
     per_unit: dict[tuple[str, str], list[bool]] = {}
+    off_target: set[tuple[str, str]] = set()
     for r in rows:
-        if r.get("probe"):
+        if r.get("probe") or r.get("kind") == "puzzle":
             continue
-        per_unit.setdefault((r["skill_id"], r.get("item_key", "")), []).append(
-            bool(r["correct"])
-        )
+        if r.get("kind") == "clue" and not r.get("retrieved"):
+            continue  # did not come up with the word: says nothing about its spelling
+        k = (r["skill_id"], r.get("item_key", ""))
+        if not r["correct"] and r.get("on_target") is False:
+            off_target.add(k)
+            continue
+        per_unit.setdefault(k, []).append(bool(r["correct"]))
+    for k in off_target - set(per_unit):
+        u = units.get(k) or (wu.get(k[1].lower()) if k[0].startswith("sp.") else None)
+        if u is not None:
+            db.upsert_unit(sid, soft_miss(u, on))
+            summary["updated"] += 1
     for (skill_id, key), flags in per_unit.items():
         u = units.get((skill_id, key))
         if u is None and skill_id.startswith("sp."):

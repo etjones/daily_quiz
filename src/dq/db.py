@@ -70,7 +70,9 @@ CREATE TABLE IF NOT EXISTS result (
     correct INTEGER NOT NULL,
     error_cat TEXT,
     probe INTEGER NOT NULL DEFAULT 0,
-    mode TEXT NOT NULL DEFAULT 'manual'    -- vlm | oral | manual
+    mode TEXT NOT NULL DEFAULT 'manual',   -- vlm | oral | manual
+    on_target INTEGER,             -- wrong spellings: 1 if the taught pattern was the error
+    blame_skill TEXT               -- wrong spellings: skill that covers the error ('' = none)
 );
 
 CREATE TABLE IF NOT EXISTS day_log (
@@ -88,6 +90,15 @@ CREATE TABLE IF NOT EXISTS probe_state (
     outcome TEXT NOT NULL,     -- passed | failed
     on_date TEXT NOT NULL,
     PRIMARY KEY (student_id, skill_id)
+);
+
+-- A model's yes/no on whether a puzzle answer not in the accepted list is still right.
+CREATE TABLE IF NOT EXISTS judgment_cache (
+    puzzle_id TEXT NOT NULL,
+    answer TEXT NOT NULL,
+    p_yes REAL NOT NULL,
+    model TEXT NOT NULL,
+    PRIMARY KEY (puzzle_id, answer)
 );
 
 CREATE TABLE IF NOT EXISTS sentence_cache (
@@ -120,6 +131,15 @@ class DB:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.executescript(SCHEMA)
+        self._migrate()
+
+    def _migrate(self) -> None:
+        """Add columns that older databases lack (CREATE TABLE IF NOT EXISTS skips them)."""
+        have = {r[1] for r in self.conn.execute("PRAGMA table_info(result)")}
+        for col, typ in (("on_target", "INTEGER"), ("blame_skill", "TEXT")):
+            if col not in have:
+                self.conn.execute(f"ALTER TABLE result ADD COLUMN {col} {typ}")
+        self.conn.commit()
 
     def close(self):
         self.conn.close()
@@ -223,6 +243,20 @@ class DB:
             )
             return cur.lastrowid
 
+    def plans(self, student_id: int) -> list[sqlite3.Row]:
+        return self.conn.execute(
+            "SELECT * FROM plan WHERE student_id = ? ORDER BY for_date", (student_id,)
+        ).fetchall()
+
+    def puzzle_history(self, student_id: int) -> list[tuple[str, bool]]:
+        """(puzzle type, correct) for graded quiz puzzles, oldest first."""
+        rows = self.conn.execute(
+            "SELECT skill_id, correct FROM result WHERE student_id = ? AND kind = 'puzzle'"
+            " ORDER BY on_date, id",
+            (student_id,),
+        ).fetchall()
+        return [(r["skill_id"].removeprefix("wp."), bool(r["correct"])) for r in rows]
+
     def plan_count(self, student_id: int) -> int:
         return self.conn.execute(
             "SELECT COUNT(*) FROM plan WHERE student_id = ?", (student_id,)
@@ -290,7 +324,8 @@ class DB:
             for r in rows:
                 c.execute(
                     "INSERT INTO result(student_id, quiz_id, on_date, skill_id, item_key, kind, prompt,"
-                    " expected, got, correct, error_cat, probe, mode) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    " expected, got, correct, error_cat, probe, mode, on_target, blame_skill)"
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (
                         student_id,
                         quiz_id,
@@ -305,6 +340,8 @@ class DB:
                         r.get("error_cat"),
                         1 if r.get("probe") else 0,
                         mode,
+                        None if r.get("on_target") is None else int(r["on_target"]),
+                        r.get("blame_skill"),
                     ),
                 )
 
@@ -336,10 +373,12 @@ class DB:
         ).fetchall()
 
     def quiz_days(self, student_id: int) -> list[tuple[str, float, int]]:
-        """(date, accuracy over non-probe items, item count), oldest first."""
+        """(date, accuracy, item count), oldest first. Probes, puzzles and off-target
+        misspellings are left out: none of them says whether the taught material stuck."""
         rows = self.conn.execute(
             "SELECT on_date, AVG(correct) AS acc, COUNT(*) AS n FROM result"
-            " WHERE student_id = ? AND probe = 0 GROUP BY on_date ORDER BY on_date",
+            " WHERE student_id = ? AND probe = 0 AND kind NOT IN ('puzzle', 'clue')"
+            " AND COALESCE(on_target, 1) = 1 GROUP BY on_date ORDER BY on_date",
             (student_id,),
         ).fetchall()
         return [(r["on_date"], r["acc"], r["n"]) for r in rows]
@@ -399,6 +438,26 @@ class DB:
                 " ON CONFLICT(student_id, skill_id) DO UPDATE SET outcome=excluded.outcome,"
                 " on_date=excluded.on_date",
                 (student_id, skill_id, outcome, on),
+            )
+
+    # -- puzzle judgments ---------------------------------------------------
+
+    def judgment(self, puzzle_id: str, answer: str) -> float | None:
+        r = self.conn.execute(
+            "SELECT p_yes FROM judgment_cache WHERE puzzle_id = ? AND answer = ?",
+            (puzzle_id, answer),
+        ).fetchone()
+        return r["p_yes"] if r else None
+
+    def set_judgment(
+        self, puzzle_id: str, answer: str, p_yes: float, model: str
+    ) -> None:
+        with self.tx() as c:
+            c.execute(
+                "INSERT INTO judgment_cache(puzzle_id, answer, p_yes, model) VALUES (?,?,?,?)"
+                " ON CONFLICT(puzzle_id, answer) DO UPDATE SET p_yes=excluded.p_yes,"
+                " model=excluded.model",
+                (puzzle_id, answer, p_yes, model),
             )
 
     # -- sentences ----------------------------------------------------------

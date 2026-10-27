@@ -12,7 +12,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import generators
+from . import generators, puzzles
 
 CORE_DEFAULT = 10
 
@@ -74,6 +74,8 @@ class Curriculum:
     sentences: dict[str, str] = field(
         default_factory=dict
     )  # lowercase word -> dictation sentence
+    puzzles: list[puzzles.Puzzle] = field(default_factory=list)
+    clues: dict[str, str] = field(default_factory=dict)  # lowercase word -> clue
 
     def __post_init__(self):
         self.by_id = {s.id: s for s in self.skills}
@@ -146,7 +148,8 @@ def load(directory: str | Path) -> Curriculum:
     for sk in skills:
         for w, sent in sk.sentences.items():
             sentences.setdefault(w.lower(), sent)
-    return Curriculum(skills, strands, meta, sentences)
+    bank, clues = puzzles.load(directory / "puzzles")
+    return Curriculum(skills, strands, meta, sentences, bank, clues)
 
 
 def validate(cur: Curriculum, smoke_seeds: int = 40) -> list[str]:
@@ -175,6 +178,8 @@ def validate(cur: Curriculum, smoke_seeds: int = 40) -> list[str]:
             errs.extend(_validate_spelling(s))
         elif s.subject == "math":
             errs.extend(_validate_math(s, smoke_seeds))
+    words = {w.lower() for s in cur.subject("spelling") for w in s.words}
+    errs.extend(puzzles.validate(cur.puzzles, cur.clues, words))
     return errs
 
 
