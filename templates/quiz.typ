@@ -13,6 +13,17 @@
   let size = sizes.find(s => measure(block(width: w, text(size: s, body))).height <= h)
   text(size: if size == none { sizes.last() } else { size }, body)
 }
+// For one-line prompts (sums, drawings): never wraps. Largest of `sizes` at which `body`
+// fits on one line; if none does, the smallest size scaled down to fit (drawings have a
+// fixed size, so only scaling can shrink them).
+#let fit-line(w, h, sizes, body) = context {
+  let dims(s) = measure(text(size: s, body))
+  let size = sizes.find(s => { let d = dims(s); d.width <= w and d.height <= h })
+  if size != none { text(size: size, body) } else {
+    let d = dims(sizes.last())
+    scale(calc.min(1, w / d.width, h / d.height) * 100%, reflow: true, text(size: sizes.last(), body))
+  }
+}
 #let half-points(hi, lo) = range(int(hi * 2), int(lo * 2) - 1, step: -1).map(x => x * 0.5pt)
 
 #set page(width: mm(m.page.w), height: mm(m.page.h), margin: 0pt)
@@ -55,10 +66,12 @@
   } else {
     // prompt: shrunk only as far as needed to fit its box (word problems start smaller)
     let plain = it.at("plain", default: false)
+    let wraps = plain or it.at("prose", default: false) or it.kind == "text"
     let sizes = if plain or it.at("prose", default: false) { half-points(11, 7) } else if it.kind == "text" { (8pt,) } else { half-points(12, 7) }
+    let fitter = if wraps { fit } else { fit-line }
     place(top + left, dx: mm(it.prompt_box.x), dy: mm(it.prompt_box.y),
       box(width: mm(it.prompt_box.w), height: mm(it.prompt_box.h),
-        align(left + horizon, fit(mm(it.prompt_box.w), mm(it.prompt_box.h), sizes, if plain { it.prompt_text } else { ev(it.prompt_text) }))))
+        align(left + horizon, fitter(mm(it.prompt_box.w), mm(it.prompt_box.h), sizes, if plain { it.prompt_text } else { ev(it.prompt_text) }))))
     // lead-in and answer box
     place(top + left, dx: mm(it.lead.x), dy: mm(it.lead.y),
       box(width: mm(it.lead.w), height: mm(it.lead.h), align(right + horizon, text(size: if it.kind == "symbol" { 9pt } else { 11pt })[#ev(it.lead_typ)])))

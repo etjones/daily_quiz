@@ -34,6 +34,10 @@ NUM_GAP = 1.8  # blank space between "7." and whatever follows it
 
 BOX_W = {"int": 18.0, "int_rem": 26.0, "frac": 20.0, "symbol": 14.0, "text": 18.0}
 LEAD_W = {"symbol": 33.0}
+LEAD_W_BY_TEXT = {
+    "$=$": 7.0,
+    "$? =$": 11.0,
+}  # just wide enough, so the prompt gets the room
 LEAD_W_DEFAULT = 22.0
 PROSE_LEAD_W = 6.0  # word problems get a short lead-in, leaving room for the text
 PROSE_PAD = 0.5  # word-problem prompts grow this far above and below the answer box
@@ -118,7 +122,11 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
         prose = bool(it.get("prose"))
         bw = BOX_W.get(kind, 18.0)
         bx = MATH_RIGHT - bw
-        lw = PROSE_LEAD_W if prose else LEAD_W.get(kind, LEAD_W_DEFAULT)
+        lw = (
+            PROSE_LEAD_W
+            if prose
+            else LEAD_W.get(kind) or LEAD_W_BY_TEXT.get(it["lead"], LEAD_W_DEFAULT)
+        )
         lx = bx - lw - 1.0
         px = MATH_X + MATH_PROMPT_DX
         pw = max(18.0, lx - px - 1.0)

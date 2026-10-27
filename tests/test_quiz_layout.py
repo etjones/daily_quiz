@@ -5,7 +5,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-from dq import generators, layout, render
+from dq import curriculum, generators, layout, render
 
 PPI = 200.0
 PX_MM = PPI / 25.4
@@ -103,3 +103,63 @@ def test_longest_word_problems_stay_inside_their_prompt_boxes(tmp_path: Path) ->
             _px(b["x"] + b["w"]) + 1 : _px(lead["x"]) - 1,
         ]
         assert (gap > 200).all(), f"{it['id']} prompt runs into its lead-in"
+
+
+def _widest_prompt_per_skill() -> list[generators.Problem]:
+    cur = curriculum.load(Path(__file__).resolve().parents[1] / "curriculum")
+    out = []
+    for s in cur.subject("math"):
+        ps = [
+            generators.generate_one(s.generator, s.params, random.Random(i))
+            for i in range(25)
+        ]
+        out.append(max(ps, key=lambda p: len(p.prompt)))
+    return out
+
+
+def _ink_rows(page: np.ndarray, b: dict) -> np.ndarray:
+    crop = page[_px(b["y"]) : _px(b["y"] + b["h"]), _px(b["x"]) : _px(b["x"] + b["w"])]
+    return np.flatnonzero((crop < 128).any(axis=1))
+
+
+def test_no_math_prompt_runs_into_its_lead_in(tmp_path: Path) -> None:
+    problems = _widest_prompt_per_skill()
+    for i in range(0, len(problems), layout.MAX_ROWS):
+        m = _manifest(problems[i : i + layout.MAX_ROWS])
+        page = _render(tmp_path, m)
+        for it in m["items"]:
+            b, lead = it["prompt_box"], it["lead"]
+            gap = page[
+                _px(b["y"]) : _px(b["y"] + b["h"]),
+                _px(b["x"] + b["w"]) + 1 : _px(lead["x"]) - 1,
+            ]
+            assert (gap > 200).all(), (
+                f"{it['prompt_text']!r} runs into {it['lead_typ']!r}"
+            )
+
+
+def test_number_line_leaves_room_for_the_equals_sign(tmp_path: Path) -> None:
+    p = generators.gen_frac_numberline(random.Random(0), [8])
+    m = _manifest([p])
+    (it,) = m["items"]
+    page = _render(tmp_path, m)
+    b, lead = it["prompt_box"], it["lead"]
+    gap = page[
+        _px(b["y"]) : _px(b["y"] + b["h"]),
+        _px(b["x"] + b["w"]) + 1 : _px(lead["x"]) - 1,
+    ]
+    assert (gap > 200).all()
+    assert _ink_rows(page, b).size, "number line not drawn"
+
+
+def test_fraction_sum_stays_on_one_line(tmp_path: Path) -> None:
+    rng = random.Random(0)
+    ps = [generators.gen_frac_decompose(rng, [6, 8]) for _ in range(50)]
+    p = max(ps, key=lambda p: len(p.prompt))
+    assert p.prompt.count("+") == 4
+    m = _manifest([p])
+    (it,) = m["items"]
+    rows = _ink_rows(_render(tmp_path, m), it["prompt_box"])
+    assert (rows.max() - rows.min()) / PX_MM < 9.0, (
+        "fraction sum wrapped onto a second line"
+    )

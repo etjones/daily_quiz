@@ -104,3 +104,23 @@ Open issues
 - Local live check (through `op run` with just that line, since the full local `.env` still fails on `op://dev/dq-web`): cave 0.79, banana 0.02.
 - Redeployed to restart the service with the new env (all ✓, live on `7c46cde`). A server check under the service's `op run` and token: cave 0.80, banana 0.02. The checker is on in production.
 - Scores vary slightly between calls (cave 0.79–0.80, right at the 0.8 cut-off). Each (puzzle, answer) verdict is cached after the first check, so it stays stable from then on.
+
+## 2026-10-27 — Example quizzes and worksheets
+
+**User:** Show 5 daily quizzes and 5 daily worksheets as examples.
+
+**Claude:**
+- Built Oct 27–31 on a scratch copy of the real data (not `~/.dq`). Each day the open quiz was graded with one misspelling and sometimes one math miss, the mood logged "ok", then `dq next --date`. All 10 PDFs are one page; sent as two combined PDFs.
+- What the run shows: reviews come back after a miss (cause, launch); the worksheet drops to 3 words after misses; puzzle corners appear on 4 of 5 days; quizzes carry a clue item plus one other puzzle.
+- Layout bugs found on the Oct 31 quiz: the number line's "1" runs into the "=" (item 7), and in "4/8 = 1/8 + 1/8 + 1/8 + ?" the final "?" wraps onto its own line (items 10–11). Not fixed yet.
+
+## 2026-10-27 — Quiz number-line collision and wrapping fraction sums
+
+**User:** Fix the number-line/"=" collision and the wrapping "?" in fraction sums on the quiz, with a regression test.
+
+**Claude:**
+- Cause: math prompts got ~32 mm because the lead-in reserved 22 mm even for a bare "=". The number line (62 mm) and fraction bar (42 mm) are fixed-size drawings that font shrinking can't touch, and long inline sums wrapped instead of shrinking.
+- `layout.py`: the lead-in is sized to its text (7 mm for "=", 11 mm for "? ="); answer boxes don't move, so photo cropping is unchanged.
+- `quiz.typ`: one-line prompts use a new `fit-line`, which picks the largest size that fits on one line, else scales the smallest size (drawings included) to fit. This also repairs quizzes re-rendered from older stored manifests.
+- Tests in `tests/test_quiz_layout.py`: the widest prompt from every math skill must not reach its lead-in (this also caught the fraction bar); an 8-jump number line leaves room for "="; a four-term fraction sum stays on one line. Red before the fix, green after.
+- 102 tests pass, ruff clean. On branch `feature/quiz-prompt-fit`, uncommitted, not deployed. Remaining cosmetic issue: tight spacing in "+?" and "2 ×?".

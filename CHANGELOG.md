@@ -7,6 +7,7 @@
 - Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
+- Quiz math prompts no longer run into the "=" or wrap: the lead-in before each answer box is only as wide as its text, and one-line prompts (number lines, fraction bars, fraction sums) shrink to fit on one line, including on days rebuilt from older stored layouts.
 - Word puzzles (analogies, odd one out, change one letter, word building, sound-alikes) join the quiz, and a "puzzle corner" with a word scale fills spare room at the bottom of the worksheet; banks live in `curriculum/puzzles/`, each type levels up after three right in a row and down after two wrong, and recently used puzzles are not repeated.
 - Some quiz words are asked for by a clue ("The sound you make when you talk") instead of dictated; the answer counts as a spelling test of that word only if the child came up with the word.
 - A misspelling outside the pattern the word was quizzed for ("loyl" for loyal, quizzed for "oy") brings the word back tomorrow without demoting it or counting against the pace, and the "tricky yesterday" note goes to the skill that covers the wrong letters. Results gain `on_target` and `blame_skill` columns, added to existing databases on first open.
