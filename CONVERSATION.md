@@ -83,3 +83,14 @@ Open issues
 | | snow | 0.07 | wrong |
 
 - To turn it on for the app, uncomment line 20 of `.env`. The server's `.env` needs the same line for the web app to use it.
+
+## 2026-10-27 — Commit, merge, deploy
+
+**User:** Commit, merge to main, and deploy to dayonetools.
+
+**Claude:**
+- Before committing, replaced the student's name in CONVERSATION.md with "the student" (the repo is public and the name wasn't in it).
+- Committed `075e21b` on `feature/spelling-fixes-and-puzzles`, fast-forwarded `main`, pushed to `origin/main`.
+- Backed up the server DB to `data/dq.db.bak-2026-10-27-predeploy` (98 results).
+- `deploy-site quizzes daily_quiz`: all checks ✓, live at https://quizzes.dayonetools.com on `075e21b`. The server DB migrated (`on_target`, `blame_skill` present, 98 results intact).
+- The server `.env` has no `OPENROUTER_API_KEY` line, so the puzzle-answer checker is off there; unlisted answers are marked wrong for the grown-up to flip.
