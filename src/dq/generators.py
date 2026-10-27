@@ -24,6 +24,7 @@ class Problem:
     lead: str = "$=$"  # Typst markup printed just before the answer box
     speech: str = ""  # what a parent reads aloud for an oral quiz
     key: str = ""  # identity for de-duplication
+    prose: bool = False  # a sentence, not an expression: needs a bigger prompt box
     meta: dict = field(default_factory=dict)
 
     def to_dict(self) -> dict:
@@ -34,6 +35,7 @@ class Problem:
             "lead": self.lead,
             "speech": self.speech,
             "key": self.key,
+            "prose": self.prose,
         }
 
 
@@ -427,6 +429,7 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
         lead="$=$",
         speech=text,
         key=f"wd:{text}",
+        prose=True,
     )
 
 
@@ -450,6 +453,7 @@ def gen_share(rng, divisors, quotient, mode="share") -> Problem:
         lead="$=$",
         speech=text,
         key=f"share:{text}",
+        prose=True,
     )
 
 

@@ -243,6 +243,7 @@ def _build_content(
                     "expected": p.answer,
                     "prompt": p.prompt,
                     "lead": p.lead,
+                    "prose": p.prose,
                     "probe": False,
                     "speech": p.speech,
                 }
@@ -262,6 +263,7 @@ def _build_content(
                     "expected": p.answer,
                     "prompt": p.prompt,
                     "lead": p.lead,
+                    "prose": p.prose,
                     "probe": True,
                     "speech": p.speech,
                 }

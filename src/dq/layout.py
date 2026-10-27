@@ -31,6 +31,8 @@ NUM_GAP = 1.8  # blank space between "7." and whatever follows it
 BOX_W = {"int": 18.0, "int_rem": 26.0, "frac": 20.0, "symbol": 14.0, "text": 18.0}
 LEAD_W = {"symbol": 33.0}
 LEAD_W_DEFAULT = 22.0
+PROSE_LEAD_W = 6.0  # word problems get a short lead-in, leaving room for the text
+PROSE_PAD = 1.5  # word-problem prompts grow this far above and below the answer box
 
 
 def marks() -> list[dict]:
@@ -73,12 +75,14 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
         n += 1
         y = ROW_TOP + row * ROW_PITCH
         kind = it["kind"]
+        prose = bool(it.get("prose"))
         bw = BOX_W.get(kind, 18.0)
         bx = MATH_RIGHT - bw
-        lw = LEAD_W.get(kind, LEAD_W_DEFAULT)
+        lw = PROSE_LEAD_W if prose else LEAD_W.get(kind, LEAD_W_DEFAULT)
         lx = bx - lw - 1.0
         px = MATH_X + MATH_PROMPT_DX
         pw = max(18.0, lx - px - 1.0)
+        pad = PROSE_PAD if prose else 0.0
         out.append(
             {
                 "id": f"q{n}",
@@ -91,10 +95,11 @@ def build_manifest(items: list[dict], student: str, on: str, quiz_label: str) ->
                 "probe": bool(it.get("probe")),
                 "prompt_text": it["prompt"],
                 "lead_typ": it["lead"],
+                "prose": prose,
                 "num_x": MATH_X,
                 "num_w": MATH_PROMPT_DX - NUM_GAP,
                 "box": {"x": bx, "y": y, "w": bw, "h": BOX_H},
-                "prompt_box": {"x": px, "y": y, "w": pw, "h": BOX_H},
+                "prompt_box": {"x": px, "y": y - pad, "w": pw, "h": BOX_H + 2 * pad},
                 "lead": {"x": lx, "y": y, "w": lw, "h": BOX_H},
             }
         )

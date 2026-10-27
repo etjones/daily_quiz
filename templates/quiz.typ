@@ -8,6 +8,13 @@
 #let m = d.manifest
 #let mm(x) = x * 1mm
 
+// Largest of `sizes` at which `body` fits in a w x h box; the smallest if none does.
+#let fit(w, h, sizes, body) = context {
+  let size = sizes.find(s => measure(block(width: w, text(size: s, body))).height <= h)
+  text(size: if size == none { sizes.last() } else { size }, body)
+}
+#let half-points(hi, lo) = range(int(hi * 2), int(lo * 2) - 1, step: -1).map(x => x * 0.5pt)
+
 #set page(width: mm(m.page.w), height: mm(m.page.h), margin: 0pt)
 #set text(font: sans, size: 10pt, fill: ink)
 
@@ -46,10 +53,11 @@
   if it.kind_group == "spelling" {
     place(top + left, dx: mm(it.box.x), dy: mm(it.box.y), guide(mm(it.box.w), mm(it.box.h)))
   } else {
-    // prompt
+    // prompt: shrunk only as far as needed to fit its box (word problems start smaller)
+    let sizes = if it.at("prose", default: false) { half-points(11, 8) } else if it.kind == "text" { (8pt,) } else { half-points(12, 7) }
     place(top + left, dx: mm(it.prompt_box.x), dy: mm(it.prompt_box.y),
       box(width: mm(it.prompt_box.w), height: mm(it.prompt_box.h),
-        align(left + horizon, text(size: if it.kind == "text" { 8pt } else { 12pt })[#ev(it.prompt_text)])))
+        align(left + horizon, fit(mm(it.prompt_box.w), mm(it.prompt_box.h), sizes, ev(it.prompt_text)))))
     // lead-in and answer box
     place(top + left, dx: mm(it.lead.x), dy: mm(it.lead.y),
       box(width: mm(it.lead.w), height: mm(it.lead.h), align(right + horizon, text(size: if it.kind == "symbol" { 9pt } else { 11pt })[#ev(it.lead_typ)])))
