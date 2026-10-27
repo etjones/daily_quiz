@@ -124,3 +124,9 @@ Open issues
 - `quiz.typ`: one-line prompts use a new `fit-line`, which picks the largest size that fits on one line, else scales the smallest size (drawings included) to fit. This also repairs quizzes re-rendered from older stored manifests.
 - Tests in `tests/test_quiz_layout.py`: the widest prompt from every math skill must not reach its lead-in (this also caught the fraction bar); an 8-jump number line leaves room for "="; a four-term fraction sum stays on one line. Red before the fix, green after.
 - 102 tests pass, ruff clean. On branch `feature/quiz-prompt-fit`, uncommitted, not deployed. Remaining cosmetic issue: tight spacing in "+?" and "2 ×?".
+
+## 2026-10-27 — Ship the quiz layout fix
+
+**User:** Commit, merge to main, and deploy to dayonetools.
+
+**Claude:** Committed `a198d4e` on `feature/quiz-prompt-fit`, fast-forwarded `main`, pushed, and redeployed: all checks ✓, live at https://quizzes.dayonetools.com on `a198d4e`.
