@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS student (
     created TEXT NOT NULL,
     composition_stage INTEGER NOT NULL DEFAULT 1,
     pace_cap INTEGER NOT NULL DEFAULT 2,
-    probe_days INTEGER NOT NULL DEFAULT 10
+    probe_days INTEGER NOT NULL DEFAULT 10,
+    grade INTEGER                  -- school grade, 0 = kindergarten; NULL = not given
 );
 
 -- One row per (student, skill, item). Spelling: item_key is the word.
@@ -139,6 +140,10 @@ class DB:
         for col, typ in (("on_target", "INTEGER"), ("blame_skill", "TEXT")):
             if col not in have:
                 self.conn.execute(f"ALTER TABLE result ADD COLUMN {col} {typ}")
+        if "grade" not in {
+            r[1] for r in self.conn.execute("PRAGMA table_info(student)")
+        }:
+            self.conn.execute("ALTER TABLE student ADD COLUMN grade INTEGER")
         self.conn.commit()
 
     def close(self):
@@ -155,11 +160,13 @@ class DB:
 
     # -- students -----------------------------------------------------------
 
-    def add_student(self, name: str, today: date, pace_cap: int = 2) -> int:
+    def add_student(
+        self, name: str, today: date, pace_cap: int = 2, grade: int | None = None
+    ) -> int:
         with self.tx() as c:
             cur = c.execute(
-                "INSERT INTO student(name, created, pace_cap) VALUES (?,?,?)",
-                (name, today.isoformat(), pace_cap),
+                "INSERT INTO student(name, created, pace_cap, grade) VALUES (?,?,?,?)",
+                (name, today.isoformat(), pace_cap, grade),
             )
             return cur.lastrowid
 
@@ -175,7 +182,7 @@ class DB:
         return self.conn.execute("SELECT * FROM student ORDER BY name").fetchall()
 
     def set_student_field(self, student_id: int, field: str, value) -> None:
-        assert field in {"composition_stage", "pace_cap", "probe_days"}
+        assert field in {"composition_stage", "pace_cap", "probe_days", "grade"}
         with self.tx() as c:
             c.execute(
                 f"UPDATE student SET {field} = ? WHERE id = ?", (value, student_id)
@@ -362,7 +369,7 @@ class DB:
     def graded_quizzes(self, student_id: int) -> list[sqlite3.Row]:
         """Graded quizzes, newest first, with counts over non-probe items."""
         return self.conn.execute(
-            "SELECT q.id, q.for_date, q.graded_on,"
+            "SELECT q.id, q.plan_id, q.for_date, q.graded_on,"
             " SUM(CASE WHEN r.probe = 0 THEN 1 ELSE 0 END) AS n,"
             " SUM(CASE WHEN r.probe = 0 THEN r.correct ELSE 0 END) AS n_right,"
             " MAX(r.mode) AS mode"

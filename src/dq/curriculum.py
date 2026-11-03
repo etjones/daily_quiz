@@ -15,6 +15,19 @@ from pathlib import Path
 from . import generators, puzzles
 
 CORE_DEFAULT = 10
+GRADES = range(6)  # kindergarten (0) through grade 5
+
+
+def parse_grade(s: str) -> int:
+    """'K' or '0' for kindergarten, '1'..'5' for a school grade."""
+    g = 0 if s.strip().upper() in ("K", "KG") else int(s)
+    if g not in GRADES:
+        raise ValueError(f"grade must be K or 1-5, not {s!r}")
+    return g
+
+
+def grade_label(g: int | None) -> str:
+    return "not set" if g is None else ("K" if g == 0 else str(g))
 
 
 @dataclass
@@ -132,7 +145,7 @@ def load(directory: str | Path) -> Curriculum:
                 st = strands.get(f"{subject}:{sk.strand}")
                 sk.track = st.track if st else "phonics"
             st = strands.get(f"{subject}:{sk.strand}")
-            if st and not sk.grade:
+            if st and "grade" not in s:
                 sk.grade = st.grade
             skills.append(sk)
     sentences: dict[str, str] = {}

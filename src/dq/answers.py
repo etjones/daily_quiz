@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import difflib
 import re
+from decimal import Decimal, InvalidOperation
 from fractions import Fraction
 
 # Error categories recorded in the database and shown in reports.
@@ -66,9 +67,20 @@ def normalize(kind: str, s: str | None) -> str:
         q, r = m.group(1), m.group(2) or "0"
         return f"{int(q)} R {int(r)}"
     if kind == "frac":
-        t = re.sub(r"\s+", "", s).replace("\\", "/").replace("⁄", "/").replace("∕", "/")
-        m = re.fullmatch(r"(\d+)/(\d+)", t)
-        return f"{int(m.group(1))}/{int(m.group(2))}" if m else t
+        t = s.replace("\\", "/").replace("⁄", "/").replace("∕", "/")
+        t = re.sub(r"\s*/\s*", "/", t)
+        m = re.fullmatch(r"(?:(\d+)\s+)?(\d+)/(\d+)", t)
+        if m:
+            whole, n, d = int(m.group(1) or 0), int(m.group(2)), int(m.group(3))
+            return f"{whole * d + n}/{d}"
+        return f"{int(t)}/1" if t.isdigit() else re.sub(r"\s+", "", t)
+    if kind == "dec":
+        t = re.sub(r"[\s,$]", "", s).rstrip(".")
+        try:
+            v = Decimal(t)
+        except InvalidOperation:
+            return t
+        return format(v.normalize(), "f") if v else "0"
     if kind == "symbol":
         key = s.lower().strip()
         return _SYMBOL_MAP.get(key, key)

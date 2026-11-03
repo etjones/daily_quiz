@@ -1,4 +1,4 @@
-# Math curriculum — Texas-aligned scope and sequence, grade 1 through early grade 4 (draft v0.1)
+# Math curriculum — Texas-aligned scope and sequence, kindergarten through grade 5 (draft v0.2)
 #
 # Each [[skill]] names a `generator` (see src/dq/generators.py) and its `params`, so the
 # program can produce unlimited fresh problems. `demo` holds hand-written examples with
@@ -12,8 +12,8 @@
 
 [meta]
 subject = "math"
-version = "0.1"
-teks_ref = "Mathematics §111.3 (grade 1), §111.4 (grade 2), §111.5 (grade 3), §111.6 (grade 4)"
+version = "0.2"
+teks_ref = "Mathematics §111.2 (kindergarten), §111.3 (grade 1), §111.4 (grade 2), §111.5 (grade 3), §111.6 (grade 4), §111.7 (grade 5)"
 teks_numbering_verified = false
 
 # ---------------------------------------------------------------------------
@@ -59,6 +59,166 @@ grade = 1
 rationale = "TEKS asks children to apply math in everyday situations. The hard part is choosing the operation from the story, not the arithmetic."
 teach = "Read the problem twice. Ask: is something joining, leaving, or being compared? Draw a quick picture."
 watch_for = "Children who add every pair of numbers they see. Ask them to say what the answer will measure."
+
+[[strand]]
+id = "counting"
+title = "Counting and numbers to 20"
+grade = 0
+teks = "§111.2(b)(2)-(3)"
+rationale = "Kindergarten math is counting: saying the number words in order, matching one word to one object, knowing the last number said is how many, and seeing that one more makes the next number. Everything in first grade rests on these."
+teach = "Count real things: spoons, steps, toys. Touch each one as you say its number. Ask 'how many?' after counting so the child says the last number again."
+watch_for = "Skipping or double-counting an object, and teen numbers (writing 31 for 13). Count slowly with a finger on each dot."
+
+[[strand]]
+id = "place"
+title = "Place value, rounding and large numbers"
+grade = 3
+teks = "§111.5(b)(2), §111.6(b)(2), §111.7(b)(2)"
+rationale = "Grades 3 to 5 stretch place value to the millions and then down to thousandths. Rounding is place value used for estimating: 'about how much?' before working it out."
+teach = "Write the number in a place-value chart (thousands, hundreds, tens, ones). For rounding, find the two tens (or hundreds) it sits between and ask which is closer."
+watch_for = "Reading 40,506 as 4,056 (losing the zeros). For rounding, a 5 in the next place rounds up."
+
+[[strand]]
+id = "measure"
+title = "Money, area, perimeter and volume"
+grade = 2
+teks = "§111.4(b)(5), §111.5(b)(6)-(7), §111.6(b)(5), §111.7(b)(4)"
+rationale = "Coins come first (grade 2), then perimeter and area of rectangles (grades 3 and 4), then volume of boxes (grade 5). Each one is multiplication or addition with a picture behind it."
+teach = "Sketch the rectangle and label its sides. Perimeter walks around the edge (add all four sides); area fills the inside (rows times columns). Volume stacks layers of area."
+watch_for = "Mixing up area and perimeter. Ask: are we going around it, or covering it?"
+
+[[strand]]
+id = "decimals"
+title = "Decimals"
+grade = 4
+teks = "§111.6(b)(2)(E)-(G), §111.7(b)(2)-(3)"
+rationale = "Decimals are fractions with 10, 100 or 1000 on the bottom. Grade 4 reads, writes and compares tenths and hundredths; grade 5 rounds, adds, subtracts, multiplies and divides them."
+teach = "Use money: 0.35 is 35 cents of a dollar. Line up the decimal points when adding or comparing, and fill empty places with zeros (0.5 = 0.50)."
+watch_for = "Thinking 0.45 is bigger than 0.5 because 45 is bigger than 5. Write 0.5 as 0.50 and compare again."
+
+[[strand]]
+id = "expressions"
+title = "Expressions and order of operations"
+grade = 5
+teks = "§111.7(b)(4)(E)-(F)"
+rationale = "Grade 5 asks children to simplify expressions with more than one operation, which needs an agreed order: brackets, then multiply and divide, then add and subtract."
+teach = "Underline the part to do first, work it out, rewrite the shorter expression, repeat."
+watch_for = "Working left to right regardless of the operation (3 + 4 × 2 = 14)."
+
+# ---------------------------------------------------------------------------
+# SKILLS — kindergarten counting
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.k.count-10"
+strand = "counting"
+title = "Count dots to 10"
+grade = 0
+teks = "§111.2(b)(2)(C)"
+generator = "count_dots"
+params = { count = [1, 10] }
+min_distinct = 8
+tip = "Touch each dot once and say the next number. The last number is how many."
+demo = [{ q = "● ● ● ● ●  ● ●", a = "7" }]
+
+[[skill]]
+id = "m.k.after-10"
+strand = "counting"
+title = "What comes after (to 10)"
+grade = 0
+teks = "§111.2(b)(2)(A)"
+generator = "neighbor"
+params = { range = [0, 10], mode = "after" }
+min_distinct = 8
+prereqs = ["m.k.count-10"]
+tip = "Count up to the number, then say one more."
+demo = [{ q = "Just after 6", a = "7" }]
+
+[[skill]]
+id = "m.k.compare-10"
+strand = "counting"
+title = "Compare numbers to 10"
+grade = 0
+teks = "§111.2(b)(2)(G)"
+generator = "compare"
+params = { range = [0, 10], allow_equal = false }
+prereqs = ["m.k.after-10"]
+tip = "The number you say later when you count is bigger."
+demo = [{ q = "3 ? 8", a = "<" }]
+
+[[skill]]
+id = "m.k.count-20"
+strand = "counting"
+title = "Count dots to 20"
+grade = 0
+teks = "§111.2(b)(2)(C)"
+generator = "count_dots"
+params = { count = [8, 20] }
+min_distinct = 10
+prereqs = ["m.k.count-10"]
+tip = "Count each row of five: 5, 10, 15, then count on by ones."
+demo = [{ q = "three rows of five and 2 more", a = "17" }]
+
+[[skill]]
+id = "m.k.before-after-20"
+strand = "counting"
+title = "Before and after (to 20)"
+grade = 0
+teks = "§111.2(b)(2)(F)"
+generator = "neighbor"
+params = { range = [0, 20], mode = "mix" }
+prereqs = ["m.k.after-10", "m.k.count-20"]
+tip = "After is one more. Before is one less."
+demo = [{ q = "Just before 14", a = "13" }, { q = "Just after 19", a = "20" }]
+
+[[skill]]
+id = "m.k.count-on-100"
+strand = "counting"
+title = "Count by ones to 100"
+grade = 0
+teks = "§111.2(b)(2)(A)"
+generator = "skip_count"
+params = { steps = [1], start_max = 94, length = 5 }
+prereqs = ["m.k.before-after-20"]
+tip = "After 9 ones comes a new ten: 38, 39, 40."
+demo = [{ q = "46, 47, ?, 49, 50", a = "48" }]
+
+[[skill]]
+id = "m.k.add-5"
+strand = "counting"
+title = "Add within 5"
+grade = 0
+teks = "§111.2(b)(3)(A)"
+generator = "add"
+params = { a = [0, 5], b = [0, 5], max_sum = 5 }
+prereqs = ["m.k.count-10"]
+tip = "Hold up fingers for each number, then count them all."
+demo = [{ q = "2 + 3", a = "5" }]
+
+[[skill]]
+id = "m.k.sub-5"
+strand = "counting"
+title = "Take away within 5"
+grade = 0
+teks = "§111.2(b)(3)(A)"
+generator = "sub"
+params = { a = [1, 5], b = [0, 5] }
+prereqs = ["m.k.add-5"]
+tip = "Hold up the first number of fingers, put some down, count what is left."
+demo = [{ q = "5 - 2", a = "3" }]
+
+[[skill]]
+id = "m.k.make-5"
+strand = "counting"
+title = "Ways to make 5"
+grade = 0
+teks = "§111.2(b)(2)(I)"
+generator = "missing_addend"
+params = { total = [5, 5], addend = [1, 4] }
+min_distinct = 5
+prereqs = ["m.k.add-5"]
+tip = "Five fingers on one hand: some up, the rest down. Up and down make 5."
+demo = [{ q = "3 + ? = 5", a = "2" }]
 
 # ---------------------------------------------------------------------------
 # SKILLS — number sense
@@ -771,3 +931,423 @@ params = { dens = [3, 4, 5, 6, 8, 10], op = "sub" }
 prereqs = ["m.frac.add-like"]
 tip = "Same size pieces. Subtract the tops. The bottom stays."
 demo = [{ q = "4/5 - 1/5", a = "3/5" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — money, place value and rounding (grades 2 to 3)
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.money.coins"
+strand = "measure"
+title = "Count coins (cents)"
+grade = 2
+teks = "§111.4(b)(5)(A)"
+generator = "coins"
+params = { coins = ["penny", "nickel", "dime", "quarter"], max_each = 4 }
+prereqs = ["m.num.skip-count", "m.add.2d-1d"]
+tip = "Start with the biggest coins and count on: 25, 35, 40, 41."
+demo = [{ q = "1 quarter, 2 dimes, 1 penny", a = "46" }]
+
+[[skill]]
+id = "m.num.round-10-100"
+strand = "place"
+title = "Round to the nearest 10 or 100"
+grade = 3
+teks = "§111.5(b)(4)(B)"
+generator = "round"
+params = { places = [10, 100], range = [12, 999] }
+prereqs = ["m.num.compare-1000"]
+tip = "Which ten is it closer to? Look at the ones. 5 or more rounds up."
+demo = [{ q = "Round 47 to the nearest ten", a = "50" }, { q = "Round 349 to the nearest hundred", a = "300" }]
+
+[[skill]]
+id = "m.num.value-100k"
+strand = "place"
+title = "Value of a digit (to 100,000)"
+grade = 3
+teks = "§111.5(b)(2)(A)-(B)"
+generator = "digit_value"
+params = { digits = [4, 6] }
+prereqs = ["m.num.place-value-1000"]
+tip = "Say the place, then the value: the 4 in 2,435 is in the hundreds, so it is worth 400."
+demo = [{ q = "In 52,316, the value of the 2", a = "2000" }]
+
+[[skill]]
+id = "m.measure.perimeter"
+strand = "measure"
+title = "Perimeter of a rectangle"
+grade = 3
+teks = "§111.5(b)(7)(B)"
+generator = "rect_measure"
+params = { side = [2, 15], mode = "perimeter" }
+prereqs = ["m.add.2d-2d-regroup"]
+tip = "Walk around the edge: add all four sides."
+demo = [{ q = "A rectangle 6 cm by 4 cm: perimeter?", a = "20" }]
+
+[[skill]]
+id = "m.measure.area"
+strand = "measure"
+title = "Area of a rectangle"
+grade = 3
+teks = "§111.5(b)(6)(C)"
+generator = "rect_measure"
+params = { side = [2, 10], mode = "area" }
+prereqs = ["m.mul.mixed", "m.measure.perimeter"]
+tip = "Area covers the inside: rows times columns of squares."
+demo = [{ q = "A rectangle 6 cm by 4 cm: area?", a = "24" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — grade 4
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.num.value-million"
+strand = "place"
+title = "Value of a digit (to millions)"
+grade = 4
+teks = "§111.6(b)(2)(A)-(B)"
+generator = "digit_value"
+params = { digits = [6, 7] }
+prereqs = ["m.num.value-100k"]
+tip = "Each place is ten times the place to its right. Count the places from the ones."
+demo = [{ q = "In 4,706,215, the value of the 7", a = "700000" }]
+
+[[skill]]
+id = "m.num.round-1000"
+strand = "place"
+title = "Round to the nearest 10, 100 or 1,000"
+grade = 4
+teks = "§111.6(b)(2)(D)"
+generator = "round"
+params = { places = [10, 100, 1000], range = [1001, 99999] }
+prereqs = ["m.num.round-10-100", "m.num.value-100k"]
+tip = "Underline the place you round to and look one place to its right."
+demo = [{ q = "Round 6,482 to the nearest thousand", a = "6000" }]
+
+[[skill]]
+id = "m.add.big"
+strand = "addsub"
+title = "Add numbers to 1,000,000"
+grade = 4
+teks = "§111.6(b)(4)(A)"
+generator = "add"
+params = { a = [1000, 600000], b = [1000, 400000], regroup = "yes" }
+prereqs = ["m.add.3d", "m.num.value-100k"]
+tip = "Line up the ones. Add each column right to left and carry the tens."
+demo = [{ q = "34,508 + 12,794", a = "47302" }]
+
+[[skill]]
+id = "m.sub.big"
+strand = "addsub"
+title = "Subtract numbers to 1,000,000"
+grade = 4
+teks = "§111.6(b)(4)(A)"
+generator = "sub"
+params = { a = [10000, 999999], b = [1000, 500000], regroup = "yes" }
+prereqs = ["m.sub.3d", "m.add.big"]
+tip = "Line up the places. If the top digit is smaller, borrow from the next place."
+demo = [{ q = "60,203 - 18,457", a = "41746" }]
+
+[[skill]]
+id = "m.mul.by-10-100"
+strand = "multdiv"
+title = "Multiply by 10 and 100"
+grade = 4
+teks = "§111.6(b)(4)(B)"
+generator = "mul_multi"
+params = { a = [2, 99], b = [10, 10] }
+prereqs = ["m.mul.x10"]
+tip = "Times 10 moves every digit one place to the left: write a zero in the ones."
+demo = [{ q = "47 × 10", a = "470" }]
+
+[[skill]]
+id = "m.mul.3d-1d"
+strand = "multdiv"
+title = "Multiply up to 4 digits by 1 digit"
+grade = 4
+teks = "§111.6(b)(4)(D)"
+generator = "mul_multi"
+params = { a = [12, 4999], b = [2, 9] }
+prereqs = ["m.mul.mixed", "m.mul.by-10-100"]
+tip = "Multiply each place, starting with the ones, and carry."
+demo = [{ q = "326 × 4", a = "1304" }]
+
+[[skill]]
+id = "m.mul.2d-2d"
+strand = "multdiv"
+title = "Multiply 2 digits by 2 digits"
+grade = 4
+teks = "§111.6(b)(4)(D)"
+generator = "mul_multi"
+params = { a = [11, 99], b = [11, 99] }
+prereqs = ["m.mul.3d-1d"]
+tip = "Split one number into tens and ones: 34 × 26 = 34 × 20 + 34 × 6."
+demo = [{ q = "34 × 26", a = "884" }]
+
+[[skill]]
+id = "m.div.long-1d"
+strand = "multdiv"
+title = "Divide up to 4 digits by 1 digit"
+grade = 4
+teks = "§111.6(b)(4)(F)"
+generator = "div_multi"
+params = { divisor = [2, 9], quotient = [12, 999], remainder = false }
+prereqs = ["m.div.mixed", "m.mul.3d-1d"]
+tip = "Divide, multiply, subtract, bring down. Repeat for each digit."
+demo = [{ q = "852 ÷ 4", a = "213" }]
+
+[[skill]]
+id = "m.div.long-1d-rem"
+strand = "multdiv"
+title = "Long division with remainders"
+grade = 4
+teks = "§111.6(b)(4)(F)"
+generator = "div_multi"
+params = { divisor = [3, 9], quotient = [12, 999], remainder = true }
+prereqs = ["m.div.long-1d", "m.div.remainder"]
+tip = "When nothing is left to bring down, what is left over is the remainder."
+demo = [{ q = "755 ÷ 6", a = "125 R 5" }]
+
+[[skill]]
+id = "m.frac.compare-any"
+strand = "fractions"
+title = "Compare fractions with different bottoms"
+grade = 4
+teks = "§111.6(b)(3)(D)"
+generator = "frac_compare"
+params = { dens = [2, 3, 4, 5, 6, 8, 10, 12], same = "none" }
+prereqs = ["m.frac.compare-num", "m.frac.equivalent"]
+tip = "Compare each to one half, or rename both with the same bottom."
+demo = [{ q = "2/3 ? 3/8", a = ">" }]
+
+[[skill]]
+id = "m.frac.mixed-addsub"
+strand = "fractions"
+title = "Add and subtract mixed numbers (same bottom)"
+grade = 4
+teks = "§111.6(b)(3)(E)"
+generator = "frac_mixed_addsub"
+params = { dens = [2, 3, 4, 5, 6, 8, 10, 12], whole = [1, 6], op = "mix" }
+prereqs = ["m.frac.sub-like"]
+tip = "Add the wholes, add the parts. If the parts make more than one whole, carry it."
+demo = [{ q = "2 3/4 + 1 2/4", a = "4 1/4" }]
+
+[[skill]]
+id = "m.dec.tenths-hundredths"
+strand = "decimals"
+title = "Tenths and hundredths as decimals"
+grade = 4
+teks = "§111.6(b)(2)(E), (G)"
+generator = "dec_frac"
+params = { dens = [10, 100], mode = "mix" }
+prereqs = ["m.frac.equivalent", "m.num.value-100k"]
+tip = "One place after the point is tenths, two places is hundredths: 0.07 is 7/100."
+demo = [{ q = "37/100 as a decimal", a = "0.37" }, { q = "0.6 as a fraction", a = "6/10" }]
+
+[[skill]]
+id = "m.dec.compare"
+strand = "decimals"
+title = "Compare decimals (to hundredths)"
+grade = 4
+teks = "§111.6(b)(2)(F)"
+generator = "dec_compare"
+params = { places = [1, 2], whole = [0, 9] }
+prereqs = ["m.dec.tenths-hundredths"]
+tip = "Give both the same number of places: 0.5 is 0.50, and 0.50 > 0.45."
+demo = [{ q = "0.5 ? 0.45", a = ">" }]
+
+[[skill]]
+id = "m.dec.addsub-4"
+strand = "decimals"
+title = "Add and subtract decimals (to hundredths)"
+grade = 4
+teks = "§111.6(b)(4)(A)"
+generator = "dec_addsub"
+params = { places = [1, 2], whole = [0, 20], op = "mix" }
+prereqs = ["m.dec.compare", "m.add.3d", "m.sub.3d"]
+tip = "Line up the decimal points. Fill empty places with zeros."
+demo = [{ q = "3.4 + 1.75", a = "5.15" }]
+
+[[skill]]
+id = "m.measure.area-perimeter"
+strand = "measure"
+title = "Area and perimeter (missing sides)"
+grade = 4
+teks = "§111.6(b)(5)(D)"
+generator = "rect_measure"
+params = { side = [3, 25], mode = "mix" }
+prereqs = ["m.measure.area", "m.mul.2d-2d"]
+tip = "Area = length × width. Perimeter = 2 × (length + width). Work backwards for a missing side."
+demo = [{ q = "Area 48 square cm, 8 cm long: how wide?", a = "6" }]
+
+# ---------------------------------------------------------------------------
+# SKILLS — grade 5
+# ---------------------------------------------------------------------------
+
+[[skill]]
+id = "m.mul.3d-2d"
+strand = "multdiv"
+title = "Multiply 3 digits by 2 digits"
+grade = 5
+teks = "§111.7(b)(3)(B)"
+generator = "mul_multi"
+params = { a = [101, 999], b = [11, 99] }
+prereqs = ["m.mul.2d-2d"]
+tip = "Two rows: times the ones, then times the tens (start that row with a zero). Add the rows."
+demo = [{ q = "243 × 36", a = "8748" }]
+
+[[skill]]
+id = "m.div.long-2d"
+strand = "multdiv"
+title = "Divide by a 2-digit number"
+grade = 5
+teks = "§111.7(b)(3)(C)"
+generator = "div_multi"
+params = { divisor = [11, 45], quotient = [12, 199], remainder = false }
+prereqs = ["m.div.long-1d-rem", "m.mul.2d-2d"]
+tip = "Estimate with a rounded divisor: 23 is about 20. Then check by multiplying."
+demo = [{ q = "1,104 ÷ 24", a = "46" }]
+
+[[skill]]
+id = "m.dec.thousandths"
+strand = "decimals"
+title = "Compare decimals (to thousandths)"
+grade = 5
+teks = "§111.7(b)(2)(B)"
+generator = "dec_compare"
+params = { places = [1, 2, 3], whole = [0, 9] }
+prereqs = ["m.dec.compare"]
+tip = "Fill with zeros so both have three places, then compare like whole numbers."
+demo = [{ q = "0.307 ? 0.37", a = "<" }]
+
+[[skill]]
+id = "m.dec.round"
+strand = "decimals"
+title = "Round decimals"
+grade = 5
+teks = "§111.7(b)(2)(C)"
+generator = "dec_round"
+params = { places = 2, to = 1, whole = [0, 99] }
+prereqs = ["m.dec.thousandths", "m.num.round-10-100"]
+tip = "Look one place to the right of the place you round to. 5 or more rounds up."
+demo = [{ q = "Round 4.67 to the nearest tenth", a = "4.7" }]
+
+[[skill]]
+id = "m.dec.addsub-5"
+strand = "decimals"
+title = "Add and subtract decimals (to thousandths)"
+grade = 5
+teks = "§111.7(b)(3)(K)"
+generator = "dec_addsub"
+params = { places = [1, 2, 3], whole = [0, 50], op = "mix" }
+prereqs = ["m.dec.addsub-4", "m.dec.thousandths"]
+tip = "Line up the points, write zeros in empty places, then add or subtract as usual."
+demo = [{ q = "12.5 - 3.275", a = "9.225" }]
+
+[[skill]]
+id = "m.dec.mul-whole"
+strand = "decimals"
+title = "Multiply a decimal by a whole number"
+grade = 5
+teks = "§111.7(b)(3)(E)"
+generator = "dec_mul"
+params = { places = [1, 2], whole = [0, 20], by = "whole" }
+prereqs = ["m.dec.addsub-4", "m.mul.3d-1d"]
+tip = "Multiply as if there were no point, then put back as many decimal places as the decimal had."
+demo = [{ q = "3.25 × 4", a = "13" }]
+
+[[skill]]
+id = "m.dec.mul-dec"
+strand = "decimals"
+title = "Multiply decimals (to hundredths)"
+grade = 5
+teks = "§111.7(b)(3)(E)"
+generator = "dec_mul"
+params = { places = [1], whole = [0, 9], by = "dec" }
+prereqs = ["m.dec.mul-whole"]
+tip = "Count the decimal places in both numbers together; the answer has that many."
+demo = [{ q = "2.4 × 0.3", a = "0.72" }]
+
+[[skill]]
+id = "m.dec.div-whole"
+strand = "decimals"
+title = "Divide a decimal by a whole number"
+grade = 5
+teks = "§111.7(b)(3)(G)"
+generator = "dec_div"
+params = { divisor = [2, 9], quotient = [1, 20], places = 1 }
+prereqs = ["m.dec.mul-whole", "m.div.long-1d"]
+tip = "Put the point in the answer straight above the point in the number you divide."
+demo = [{ q = "8.4 ÷ 4", a = "2.1" }]
+
+[[skill]]
+id = "m.frac.add-unlike"
+strand = "fractions"
+title = "Add and subtract fractions with different bottoms"
+grade = 5
+teks = "§111.7(b)(3)(H)"
+generator = "frac_add_unlike"
+params = { dens = [2, 3, 4, 5, 6, 8, 10, 12], op = "mix" }
+prereqs = ["m.frac.compare-any", "m.frac.mixed-addsub"]
+tip = "Rename both fractions with the same bottom first, then add or subtract the tops."
+demo = [{ q = "1/2 + 1/3", a = "5/6" }]
+
+[[skill]]
+id = "m.frac.times-whole"
+strand = "fractions"
+title = "Multiply a whole number by a fraction"
+grade = 5
+teks = "§111.7(b)(3)(I)"
+generator = "frac_times_whole"
+params = { dens = [2, 3, 4, 5, 6, 8, 10], whole = [2, 12] }
+prereqs = ["m.frac.add-like", "m.mul.mixed"]
+tip = "3 × 2/5 is three groups of 2/5: multiply the top by 3, keep the bottom."
+demo = [{ q = "3 × 2/5", a = "6/5" }]
+
+[[skill]]
+id = "m.frac.div-unit"
+strand = "fractions"
+title = "Divide with unit fractions"
+grade = 5
+teks = "§111.7(b)(3)(J), (L)"
+generator = "frac_div_unit"
+params = { dens = [2, 3, 4, 5, 6, 8], whole = [2, 9] }
+prereqs = ["m.frac.times-whole"]
+tip = "4 ÷ 1/3: how many thirds fit in 4? 1/3 ÷ 4: cut a third into 4 equal parts."
+demo = [{ q = "4 ÷ 1/3", a = "12" }, { q = "1/3 ÷ 4", a = "1/12" }]
+
+[[skill]]
+id = "m.expr.order-ops"
+strand = "expressions"
+title = "Order of operations"
+grade = 5
+teks = "§111.7(b)(4)(F)"
+generator = "order_ops"
+params = { parens = false }
+prereqs = ["m.mul.mixed", "m.div.mixed"]
+tip = "Multiply and divide first, then add and subtract."
+demo = [{ q = "3 + 4 × 2", a = "11" }]
+
+[[skill]]
+id = "m.expr.brackets"
+strand = "expressions"
+title = "Order of operations with brackets"
+grade = 5
+teks = "§111.7(b)(4)(E)-(F)"
+generator = "order_ops"
+params = { parens = true }
+prereqs = ["m.expr.order-ops"]
+tip = "Brackets first, then multiply and divide, then add and subtract."
+demo = [{ q = "(3 + 4) × 2", a = "14" }]
+
+[[skill]]
+id = "m.measure.volume"
+strand = "measure"
+title = "Volume of a box"
+grade = 5
+teks = "§111.7(b)(4)(G)-(H)"
+generator = "volume"
+params = { side = [2, 12] }
+prereqs = ["m.measure.area"]
+tip = "Find the area of the bottom, then multiply by the height."
+demo = [{ q = "A box 4 by 3 by 5 cm: volume?", a = "60" }]

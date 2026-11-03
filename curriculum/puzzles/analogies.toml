@@ -2,7 +2,9 @@
 # answer  the expected word; accept  other answers that are also right (graded as right).
 # relation  how a and b are linked, in plain words: shown to the grown-up and given to the
 #           answer checker, which judges answers that are not listed.
-# level  1 = everyday pairs, 2 = takes a moment, 3 = abstract or less common words.
+# level  1-5, roughly the school grade: 1 = everyday pairs, 2 = takes a moment,
+#        3 = abstract or less common words, 4-5 = part/whole, cause/effect and degree
+#        with grade 4-5 vocabulary.
 
 [[analogy]]
 a = "bee"
@@ -392,3 +394,145 @@ answer = "gardener"
 accept = ["florist", "farmer"]
 relation = "a thing and the person who makes or grows it"
 level = 3
+
+[[analogy]]
+a = "verse"
+b = "poem"
+c = "scene"
+answer = "play"
+accept = ["movie", "film", "act"]
+relation = "a part and the whole it belongs to"
+level = 4
+
+[[analogy]]
+a = "minute"
+b = "hour"
+c = "month"
+answer = "year"
+relation = "a part and the whole it belongs to"
+level = 4
+
+[[analogy]]
+a = "heat"
+b = "melt"
+c = "cold"
+answer = "freeze"
+accept = ["freezes", "harden"]
+relation = "a cause and what it makes happen"
+level = 4
+
+[[analogy]]
+a = "practice"
+b = "skill"
+c = "exercise"
+answer = "strength"
+accept = ["fitness", "muscle", "muscles", "health"]
+relation = "a cause and what it leads to"
+level = 4
+
+[[analogy]]
+a = "warm"
+b = "hot"
+c = "cool"
+answer = "cold"
+accept = ["freezing", "icy", "frigid"]
+relation = "a mild word and a stronger word for the same thing"
+level = 4
+
+[[analogy]]
+a = "glad"
+b = "overjoyed"
+c = "sad"
+answer = "miserable"
+accept = ["heartbroken", "devastated", "gloomy", "depressed", "crushed"]
+relation = "a mild feeling and a much stronger one"
+level = 4
+
+[[analogy]]
+a = "author"
+b = "novel"
+c = "composer"
+answer = "symphony"
+accept = ["music", "song", "opera", "concerto"]
+relation = "a maker and the thing they create"
+level = 4
+
+[[analogy]]
+a = "carpenter"
+b = "wood"
+c = "sculptor"
+answer = "stone"
+accept = ["clay", "marble", "bronze", "metal", "rock"]
+relation = "a worker and the material they shape"
+level = 4
+
+[[analogy]]
+a = "thermometer"
+b = "temperature"
+c = "scale"
+answer = "weight"
+accept = ["mass"]
+relation = "a tool and what it measures"
+level = 4
+
+[[analogy]]
+a = "hungry"
+b = "famished"
+c = "tired"
+answer = "exhausted"
+accept = ["weary", "worn out", "drained", "spent"]
+relation = "a word and a much stronger word for the same thing"
+level = 5
+
+[[analogy]]
+a = "drizzle"
+b = "downpour"
+c = "breeze"
+answer = "gale"
+accept = ["hurricane", "storm", "tornado", "windstorm", "gust"]
+relation = "a mild form of weather and a much stronger one"
+level = 5
+
+[[analogy]]
+a = "ancient"
+b = "modern"
+c = "scarce"
+answer = "plentiful"
+accept = ["abundant", "common", "plenty", "ample"]
+relation = "opposites"
+level = 5
+
+[[analogy]]
+a = "island"
+b = "archipelago"
+c = "star"
+answer = "galaxy"
+accept = ["constellation", "cluster"]
+relation = "one thing and a large group of them"
+level = 5
+
+[[analogy]]
+a = "sun"
+b = "sunburn"
+c = "frost"
+answer = "frostbite"
+relation = "a cause and the harm it does to skin"
+level = 5
+
+[[analogy]]
+a = "geologist"
+b = "rocks"
+c = "astronomer"
+answer = "stars"
+accept = ["star", "planets", "space", "sky", "universe"]
+relation = "a scientist and what they study"
+level = 5
+
+[[analogy]]
+a = "drought"
+b = "thirst"
+c = "flood"
+answer = "damage"
+accept = ["destruction", "ruin", "erosion"]
+relation = "a cause and what it leads to"
+level = 5

@@ -1,5 +1,6 @@
 # Word scales (worksheet only, not graded): put the words in order.
 # `words` is the right order; the worksheet shows them shuffled.
+# level  1-5, roughly the school grade; 4-5 use richer, finer-grained words.
 
 [[scale]]
 prompt = "from coolest to hottest"
@@ -100,3 +101,68 @@ level = 3
 prompt = "from smallest to biggest"
 words = ["house", "town", "city", "country"]
 level = 2
+
+[[scale]]
+prompt = "from a little angry to very angry"
+words = ["annoyed", "angry", "furious", "livid"]
+level = 4
+
+[[scale]]
+prompt = "from a little cold to very cold"
+words = ["chilly", "cold", "frigid"]
+level = 4
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["city", "state", "country", "continent"]
+level = 4
+
+[[scale]]
+prompt = "from least often to most often"
+words = ["never", "rarely", "sometimes", "often", "always"]
+level = 4
+
+[[scale]]
+prompt = "from worst to best"
+words = ["poor", "fair", "good", "excellent"]
+level = 4
+
+[[scale]]
+prompt = "from shortest to longest time"
+words = ["year", "decade", "century", "millennium"]
+level = 4
+
+[[scale]]
+prompt = "from least sure to most sure"
+words = ["impossible", "unlikely", "likely", "certain"]
+level = 4
+
+[[scale]]
+prompt = "from quietest to loudest"
+words = ["silent", "hushed", "noisy", "deafening"]
+level = 5
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["cell", "tissue", "organ", "organism"]
+level = 5
+
+[[scale]]
+prompt = "from smallest to biggest"
+words = ["planet", "solar system", "galaxy", "universe"]
+level = 5
+
+[[scale]]
+prompt = "from calm to very upset"
+words = ["calm", "uneasy", "anxious", "panicked"]
+level = 5
+
+[[scale]]
+prompt = "from a little surprised to very surprised"
+words = ["surprised", "astonished", "flabbergasted"]
+level = 5
+
+[[scale]]
+prompt = "from slowest to fastest"
+words = ["amble", "walk", "jog", "sprint"]
+level = 5

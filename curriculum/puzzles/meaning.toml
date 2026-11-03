@@ -1,0 +1,986 @@
+# Word meanings: the child reads the prompt and writes one of the choices.
+# prompt   what the child reads; the choices are shown after it in brackets.
+# choices  three short options (one or two words each); answer must be one of them.
+# skill    the vocabulary skill being practiced, in plain words for the grown-up.
+# level    1-5, roughly the school grade (TEKS vocabulary):
+#          1 = everyday synonyms and opposites
+#          2 = un-, re-, -ful, -less, -er, -est and more synonyms and opposites
+#          3 = dis-, pre-, non-, im-/in-, -ness, -y, context clues, multiple meanings
+#          4 = mis-, sub-, -ment, -able/-ible, -ity, roots auto graph meter tele phon port bio
+#          5 = trans-, super-, -ive, -logy, roots geo photo struct rupt dict spect aqua
+
+# ---- level 1: everyday synonyms and opposites
+
+[[meaning]]
+prompt = "BIG means"
+choices = ["large", "tiny", "slow"]
+answer = "large"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "HAPPY means"
+choices = ["glad", "mad", "sleepy"]
+answer = "glad"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "FAST means"
+choices = ["quick", "slow", "loud"]
+answer = "quick"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "SMALL means"
+choices = ["little", "huge", "tall"]
+answer = "little"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "START means"
+choices = ["begin", "stop", "end"]
+answer = "begin"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "SHUT means"
+choices = ["close", "open", "push"]
+answer = "close"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "JUMP means"
+choices = ["hop", "sit", "walk"]
+answer = "hop"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "SICK means"
+choices = ["ill", "well", "tall"]
+answer = "ill"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "YELL means"
+choices = ["shout", "whisper", "sing"]
+answer = "shout"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "MAD means"
+choices = ["angry", "happy", "sleepy"]
+answer = "angry"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "PRETTY means"
+choices = ["lovely", "ugly", "loud"]
+answer = "lovely"
+skill = "synonyms"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of HOT is"
+choices = ["cold", "warm", "wet"]
+answer = "cold"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of UP is"
+choices = ["down", "over", "top"]
+answer = "down"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of DAY is"
+choices = ["night", "sun", "morning"]
+answer = "night"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of OPEN is"
+choices = ["closed", "wide", "door"]
+answer = "closed"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of WET is"
+choices = ["dry", "damp", "cold"]
+answer = "dry"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of OLD is"
+choices = ["new", "tall", "slow"]
+answer = "new"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of FULL is"
+choices = ["empty", "big", "heavy"]
+answer = "empty"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of LOUD is"
+choices = ["quiet", "noisy", "fast"]
+answer = "quiet"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of IN is"
+choices = ["out", "on", "under"]
+answer = "out"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of LOST is"
+choices = ["found", "gone", "sad"]
+answer = "found"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of HARD is"
+choices = ["soft", "rough", "heavy"]
+answer = "soft"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of DARK is"
+choices = ["light", "black", "night"]
+answer = "light"
+skill = "antonyms (opposites)"
+level = 1
+
+[[meaning]]
+prompt = "The opposite of WIN is"
+choices = ["lose", "play", "run"]
+answer = "lose"
+skill = "antonyms (opposites)"
+level = 1
+
+# ---- level 2: un-, re-, -ful, -less, -er, -est; more synonyms and opposites
+
+[[meaning]]
+prompt = "UN- in UNHAPPY means"
+choices = ["not", "again", "very"]
+answer = "not"
+skill = "prefix un- = not"
+level = 2
+
+[[meaning]]
+prompt = "UNSAFE means"
+choices = ["not safe", "very safe", "safe again"]
+answer = "not safe"
+skill = "prefix un- = not"
+level = 2
+
+[[meaning]]
+prompt = "UNTRUE means"
+choices = ["false", "real", "honest"]
+answer = "false"
+skill = "prefix un- = not"
+level = 2
+
+[[meaning]]
+prompt = "RE- in REDO means"
+choices = ["again", "not", "before"]
+answer = "again"
+skill = "prefix re- = again"
+level = 2
+
+[[meaning]]
+prompt = "REFILL means"
+choices = ["fill again", "not fill", "fill before"]
+answer = "fill again"
+skill = "prefix re- = again"
+level = 2
+
+[[meaning]]
+prompt = "REPLAY means"
+choices = ["play again", "never play", "play first"]
+answer = "play again"
+skill = "prefix re- = again"
+level = 2
+
+[[meaning]]
+prompt = "-FUL in HELPFUL means"
+choices = ["full of", "without", "again"]
+answer = "full of"
+skill = "suffix -ful = full of"
+level = 2
+
+[[meaning]]
+prompt = "CAREFUL means"
+choices = ["with care", "no care", "care again"]
+answer = "with care"
+skill = "suffix -ful = full of"
+level = 2
+
+[[meaning]]
+prompt = "JOYFUL means"
+choices = ["happy", "sad", "tired"]
+answer = "happy"
+skill = "suffix -ful = full of"
+level = 2
+
+[[meaning]]
+prompt = "-LESS in FEARLESS means"
+choices = ["without", "full of", "again"]
+answer = "without"
+skill = "suffix -less = without"
+level = 2
+
+[[meaning]]
+prompt = "CARELESS means"
+choices = ["without care", "with care", "care again"]
+answer = "without care"
+skill = "suffix -less = without"
+level = 2
+
+[[meaning]]
+prompt = "PAINLESS means"
+choices = ["no pain", "much pain", "pain again"]
+answer = "no pain"
+skill = "suffix -less = without"
+level = 2
+
+[[meaning]]
+prompt = "-ER in PAINTER means"
+choices = ["one who", "without", "again"]
+answer = "one who"
+skill = "suffix -er = a person who"
+level = 2
+
+[[meaning]]
+prompt = "-EST in TALLEST means"
+choices = ["most", "less", "not"]
+answer = "most"
+skill = "suffix -est = the most"
+level = 2
+
+[[meaning]]
+prompt = "SCARED means"
+choices = ["afraid", "brave", "sleepy"]
+answer = "afraid"
+skill = "synonyms"
+level = 2
+
+[[meaning]]
+prompt = "SILLY means"
+choices = ["goofy", "serious", "sad"]
+answer = "goofy"
+skill = "synonyms"
+level = 2
+
+[[meaning]]
+prompt = "TIRED means"
+choices = ["sleepy", "awake", "hungry"]
+answer = "sleepy"
+skill = "synonyms"
+level = 2
+
+[[meaning]]
+prompt = "SMART means"
+choices = ["clever", "tall", "noisy"]
+answer = "clever"
+skill = "synonyms"
+level = 2
+
+[[meaning]]
+prompt = "GRAB means"
+choices = ["snatch", "drop", "throw"]
+answer = "snatch"
+skill = "synonyms"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of BRAVE is"
+choices = ["scared", "bold", "strong"]
+answer = "scared"
+skill = "antonyms (opposites)"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of ARRIVE is"
+choices = ["leave", "come", "stay"]
+answer = "leave"
+skill = "antonyms (opposites)"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of EARLY is"
+choices = ["late", "soon", "first"]
+answer = "late"
+skill = "antonyms (opposites)"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of ALWAYS is"
+choices = ["never", "often", "today"]
+answer = "never"
+skill = "antonyms (opposites)"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of SHARP is"
+choices = ["dull", "pointy", "thin"]
+answer = "dull"
+skill = "antonyms (opposites)"
+level = 2
+
+[[meaning]]
+prompt = "The opposite of SHALLOW is"
+choices = ["deep", "wet", "wide"]
+answer = "deep"
+skill = "antonyms (opposites)"
+level = 2
+
+# ---- level 3: dis-, pre-, non-, im-/in-, -ness, -y; context clues; multiple meanings
+
+[[meaning]]
+prompt = "PRE- in PREVIEW means"
+choices = ["before", "again", "not"]
+answer = "before"
+skill = "prefix pre- = before"
+level = 3
+
+[[meaning]]
+prompt = "PREHEAT the oven means"
+choices = ["heat before", "heat again", "not heat"]
+answer = "heat before"
+skill = "prefix pre- = before"
+level = 3
+
+[[meaning]]
+prompt = "DIS- in DISLIKE means"
+choices = ["not", "again", "before"]
+answer = "not"
+skill = "prefix dis- = not, opposite of"
+level = 3
+
+[[meaning]]
+prompt = "DISAGREE means"
+choices = ["not agree", "agree again", "agree first"]
+answer = "not agree"
+skill = "prefix dis- = not, opposite of"
+level = 3
+
+[[meaning]]
+prompt = "NONSTOP means"
+choices = ["no stops", "many stops", "stop again"]
+answer = "no stops"
+skill = "prefix non- = not, without"
+level = 3
+
+[[meaning]]
+prompt = "A NONFICTION book is"
+choices = ["true", "made-up", "funny"]
+answer = "true"
+skill = "prefix non- = not (not fiction, so true)"
+level = 3
+
+[[meaning]]
+prompt = "IM- in IMPOSSIBLE means"
+choices = ["not", "very", "again"]
+answer = "not"
+skill = "prefix im- = not"
+level = 3
+
+[[meaning]]
+prompt = "IMPATIENT means"
+choices = ["not patient", "very patient", "patient again"]
+answer = "not patient"
+skill = "prefix im- = not"
+level = 3
+
+[[meaning]]
+prompt = "IN- in INCORRECT means"
+choices = ["not", "inside", "again"]
+answer = "not"
+skill = "prefix in- = not"
+level = 3
+
+[[meaning]]
+prompt = "INVISIBLE means"
+choices = ["unseen", "bright", "inside"]
+answer = "unseen"
+skill = "prefix in- = not (not visible)"
+level = 3
+
+[[meaning]]
+prompt = "KINDNESS means"
+choices = ["being kind", "not kind", "kind again"]
+answer = "being kind"
+skill = "suffix -ness = the state of being"
+level = 3
+
+[[meaning]]
+prompt = "DARKNESS is the state of being"
+choices = ["dark", "light", "late"]
+answer = "dark"
+skill = "suffix -ness = the state of being"
+level = 3
+
+[[meaning]]
+prompt = "-Y in DUSTY means"
+choices = ["full of", "without", "again"]
+answer = "full of"
+skill = "suffix -y = full of, having"
+level = 3
+
+[[meaning]]
+prompt = "A RAINY day has"
+choices = ["lots of rain", "no rain", "sunshine"]
+answer = "lots of rain"
+skill = "suffix -y = full of, having"
+level = 3
+
+[[meaning]]
+prompt = "ENORMOUS means"
+choices = ["huge", "tiny", "heavy"]
+answer = "huge"
+skill = "synonyms"
+level = 3
+
+[[meaning]]
+prompt = "FURIOUS means"
+choices = ["very angry", "very happy", "very tired"]
+answer = "very angry"
+skill = "synonyms"
+level = 3
+
+[[meaning]]
+prompt = "The opposite of ANCIENT is"
+choices = ["modern", "old", "broken"]
+answer = "modern"
+skill = "antonyms (opposites)"
+level = 3
+
+[[meaning]]
+prompt = "The opposite of GENEROUS is"
+choices = ["selfish", "kind", "rich"]
+answer = "selfish"
+skill = "antonyms (opposites)"
+level = 3
+
+[[meaning]]
+prompt = "The opposite of VICTORY is"
+choices = ["defeat", "win", "game"]
+answer = "defeat"
+skill = "antonyms (opposites)"
+level = 3
+
+[[meaning]]
+prompt = "Mia was EXHAUSTED and fell asleep at once. In this sentence, EXHAUSTED means"
+choices = ["very tired", "very hungry", "very happy"]
+answer = "very tired"
+skill = "context clues"
+level = 3
+
+[[meaning]]
+prompt = "The vase is FRAGILE, so hold it gently. In this sentence, FRAGILE means"
+choices = ["easy to break", "very heavy", "very old"]
+answer = "easy to break"
+skill = "context clues"
+level = 3
+
+[[meaning]]
+prompt = "The TIMID puppy hid under the bed. In this sentence, TIMID means"
+choices = ["shy", "brave", "hungry"]
+answer = "shy"
+skill = "context clues"
+level = 3
+
+[[meaning]]
+prompt = "Sam hit the ball with a BAT. In this sentence, BAT means"
+choices = ["club", "animal", "glove"]
+answer = "club"
+skill = "multiple-meaning words: bat"
+level = 3
+
+[[meaning]]
+prompt = "She wore a gold RING. In this sentence, RING means"
+choices = ["jewelry", "sound", "circle"]
+answer = "jewelry"
+skill = "multiple-meaning words: ring"
+level = 3
+
+[[meaning]]
+prompt = "The bell will RING at noon. In this sentence, RING means"
+choices = ["chime", "jewelry", "circle"]
+answer = "chime"
+skill = "multiple-meaning words: ring"
+level = 3
+
+[[meaning]]
+prompt = "The empty box is LIGHT. In this sentence, LIGHT means"
+choices = ["not heavy", "a lamp", "bright"]
+answer = "not heavy"
+skill = "multiple-meaning words: light"
+level = 3
+
+# ---- level 4: mis-, sub-, -ment, -able/-ible, -ity; roots auto graph meter tele phon port bio
+
+[[meaning]]
+prompt = "MIS- in MISSPELL means"
+choices = ["wrongly", "again", "before"]
+answer = "wrongly"
+skill = "prefix mis- = wrongly, badly"
+level = 4
+
+[[meaning]]
+prompt = "To MISPLACE your keys is to"
+choices = ["lose them", "find them", "buy them"]
+answer = "lose them"
+skill = "prefix mis- = wrongly (put in the wrong place)"
+level = 4
+
+[[meaning]]
+prompt = "SUB- in SUBMARINE means"
+choices = ["under", "over", "across"]
+answer = "under"
+skill = "prefix sub- = under, below"
+level = 4
+
+[[meaning]]
+prompt = "A SUBWAY train runs"
+choices = ["underground", "overhead", "on water"]
+answer = "underground"
+skill = "prefix sub- = under, below"
+level = 4
+
+[[meaning]]
+prompt = "-MENT in AGREEMENT means"
+choices = ["act of", "not", "again"]
+answer = "act of"
+skill = "suffix -ment = the act or result of"
+level = 4
+
+[[meaning]]
+prompt = "Adding -MENT to PAY makes a"
+choices = ["noun", "verb", "adjective"]
+answer = "noun"
+skill = "suffix -ment turns a verb into a noun (payment)"
+level = 4
+
+[[meaning]]
+prompt = "-ABLE in WASHABLE means"
+choices = ["can be", "cannot be", "was"]
+answer = "can be"
+skill = "suffix -able = can be"
+level = 4
+
+[[meaning]]
+prompt = "BREAKABLE means"
+choices = ["can break", "never breaks", "broke"]
+answer = "can break"
+skill = "suffix -able = can be"
+level = 4
+
+[[meaning]]
+prompt = "FLEXIBLE means"
+choices = ["bendable", "stiff", "broken"]
+answer = "bendable"
+skill = "suffix -ible = able to (able to flex)"
+level = 4
+
+[[meaning]]
+prompt = "VISIBLE means"
+choices = ["in sight", "hidden", "shiny"]
+answer = "in sight"
+skill = "suffix -ible = can be (can be seen)"
+level = 4
+
+[[meaning]]
+prompt = "HUMIDITY is the state of being"
+choices = ["humid", "human", "hot"]
+answer = "humid"
+skill = "suffix -ity = the state of being"
+level = 4
+
+[[meaning]]
+prompt = "SIMILARITY means"
+choices = ["likeness", "difference", "size"]
+answer = "likeness"
+skill = "suffix -ity = the state of being (being similar)"
+level = 4
+
+[[meaning]]
+prompt = "AUTO in AUTOGRAPH means"
+choices = ["self", "far", "sound"]
+answer = "self"
+skill = "Greek root auto = self"
+level = 4
+
+[[meaning]]
+prompt = "An AUTOMATIC door opens"
+choices = ["by itself", "by hand", "slowly"]
+answer = "by itself"
+skill = "Greek root auto = self"
+level = 4
+
+[[meaning]]
+prompt = "GRAPH in BIOGRAPHY means"
+choices = ["write", "life", "sound"]
+answer = "write"
+skill = "Greek root graph = write"
+level = 4
+
+[[meaning]]
+prompt = "METER in THERMOMETER means"
+choices = ["measure", "heat", "far"]
+answer = "measure"
+skill = "Greek root meter = measure"
+level = 4
+
+[[meaning]]
+prompt = "TELE in TELESCOPE means"
+choices = ["far", "small", "see"]
+answer = "far"
+skill = "Greek root tele = far"
+level = 4
+
+[[meaning]]
+prompt = "PHON in TELEPHONE means"
+choices = ["sound", "far", "write"]
+answer = "sound"
+skill = "Greek root phon = sound"
+level = 4
+
+[[meaning]]
+prompt = "A PHONICS lesson is about"
+choices = ["sounds", "numbers", "maps"]
+answer = "sounds"
+skill = "Greek root phon = sound"
+level = 4
+
+[[meaning]]
+prompt = "PORT in PORTABLE means"
+choices = ["carry", "door", "ship"]
+answer = "carry"
+skill = "Latin root port = carry"
+level = 4
+
+[[meaning]]
+prompt = "To IMPORT goods is to"
+choices = ["carry in", "carry out", "make"]
+answer = "carry in"
+skill = "Latin root port = carry; im- = in"
+level = 4
+
+[[meaning]]
+prompt = "BIO in BIOGRAPHY means"
+choices = ["life", "book", "write"]
+answer = "life"
+skill = "Greek root bio = life"
+level = 4
+
+[[meaning]]
+prompt = "CAUTIOUS means"
+choices = ["careful", "reckless", "quick"]
+answer = "careful"
+skill = "synonyms"
+level = 4
+
+[[meaning]]
+prompt = "DREADFUL means"
+choices = ["terrible", "wonderful", "fearless"]
+answer = "terrible"
+skill = "synonyms"
+level = 4
+
+[[meaning]]
+prompt = "ASSIST means"
+choices = ["help", "stop", "follow"]
+answer = "help"
+skill = "synonyms"
+level = 4
+
+[[meaning]]
+prompt = "The opposite of ABUNDANT is"
+choices = ["scarce", "plenty", "large"]
+answer = "scarce"
+skill = "antonyms (opposites)"
+level = 4
+
+[[meaning]]
+prompt = "The opposite of EXPAND is"
+choices = ["shrink", "grow", "stretch"]
+answer = "shrink"
+skill = "antonyms (opposites)"
+level = 4
+
+[[meaning]]
+prompt = "The desert is so ARID that few plants grow. In this sentence, ARID means"
+choices = ["very dry", "very hot", "very big"]
+answer = "very dry"
+skill = "context clues"
+level = 4
+
+[[meaning]]
+prompt = "Sam was RELUCTANT to jump in the cold lake. In this sentence, RELUCTANT means"
+choices = ["unwilling", "eager", "able"]
+answer = "unwilling"
+skill = "context clues"
+level = 4
+
+[[meaning]]
+prompt = "Draw a straight line with a RULER. In this sentence, RULER means"
+choices = ["measuring stick", "king", "eraser"]
+answer = "measuring stick"
+skill = "multiple-meaning words: ruler"
+level = 4
+
+[[meaning]]
+prompt = "Plug in the tablet to CHARGE it. In this sentence, CHARGE means"
+choices = ["power up", "set a price", "rush at"]
+answer = "power up"
+skill = "multiple-meaning words: charge"
+level = 4
+
+[[meaning]]
+prompt = "The team will TRAIN for the big race. In this sentence, TRAIN means"
+choices = ["practice", "railway", "rest"]
+answer = "practice"
+skill = "multiple-meaning words: train"
+level = 4
+
+# ---- level 5: trans-, super-, -ive, -logy; roots geo photo struct rupt dict spect aqua
+
+[[meaning]]
+prompt = "TRANS- in TRANSPORT means"
+choices = ["across", "under", "again"]
+answer = "across"
+skill = "prefix trans- = across"
+level = 5
+
+[[meaning]]
+prompt = "To TRANSPLANT a tree is to"
+choices = ["move it", "cut it", "water it"]
+answer = "move it"
+skill = "prefix trans- = across (plant somewhere else)"
+level = 5
+
+[[meaning]]
+prompt = "SUPER- in SUPERHUMAN means"
+choices = ["above", "below", "without"]
+answer = "above"
+skill = "prefix super- = above, beyond"
+level = 5
+
+[[meaning]]
+prompt = "SUPERVISE means"
+choices = ["watch over", "work under", "ignore"]
+answer = "watch over"
+skill = "prefix super- = above, over"
+level = 5
+
+[[meaning]]
+prompt = "Adding -IVE to CREATE makes an"
+choices = ["adjective", "noun", "verb"]
+answer = "adjective"
+skill = "suffix -ive turns a verb into an adjective (creative)"
+level = 5
+
+[[meaning]]
+prompt = "DESTRUCTIVE means"
+choices = ["harmful", "helpful", "gentle"]
+answer = "harmful"
+skill = "suffix -ive = tending to (tending to destroy)"
+level = 5
+
+[[meaning]]
+prompt = "-LOGY in GEOLOGY means"
+choices = ["study of", "love of", "fear of"]
+answer = "study of"
+skill = "suffix -logy = the study of"
+level = 5
+
+[[meaning]]
+prompt = "BIOLOGY is the study of"
+choices = ["living things", "rocks", "stars"]
+answer = "living things"
+skill = "bio = life, -logy = study of"
+level = 5
+
+[[meaning]]
+prompt = "GEO in GEOGRAPHY means"
+choices = ["earth", "write", "life"]
+answer = "earth"
+skill = "Greek root geo = earth"
+level = 5
+
+[[meaning]]
+prompt = "PHOTO in PHOTOGRAPH means"
+choices = ["light", "sound", "far"]
+answer = "light"
+skill = "Greek root photo = light"
+level = 5
+
+[[meaning]]
+prompt = "STRUCT in CONSTRUCT means"
+choices = ["build", "break", "carry"]
+answer = "build"
+skill = "Latin root struct = build"
+level = 5
+
+[[meaning]]
+prompt = "RUPT in ERUPT means"
+choices = ["break", "build", "say"]
+answer = "break"
+skill = "Latin root rupt = break"
+level = 5
+
+[[meaning]]
+prompt = "To INTERRUPT someone is to"
+choices = ["break in", "wait", "agree"]
+answer = "break in"
+skill = "Latin root rupt = break"
+level = 5
+
+[[meaning]]
+prompt = "DICT in PREDICT means"
+choices = ["say", "see", "build"]
+answer = "say"
+skill = "Latin root dict = say"
+level = 5
+
+[[meaning]]
+prompt = "SPECT in INSPECT means"
+choices = ["look", "speak", "carry"]
+answer = "look"
+skill = "Latin root spect = look"
+level = 5
+
+[[meaning]]
+prompt = "A SPECTATOR is someone who"
+choices = ["watches", "plays", "coaches"]
+answer = "watches"
+skill = "Latin root spect = look"
+level = 5
+
+[[meaning]]
+prompt = "AQUA in AQUARIUM means"
+choices = ["water", "fish", "glass"]
+answer = "water"
+skill = "Latin root aqua = water"
+level = 5
+
+[[meaning]]
+prompt = "An AQUATIC animal lives in"
+choices = ["water", "trees", "deserts"]
+answer = "water"
+skill = "Latin root aqua = water"
+level = 5
+
+[[meaning]]
+prompt = "METICULOUS means"
+choices = ["very careful", "very messy", "very fast"]
+answer = "very careful"
+skill = "synonyms"
+level = 5
+
+[[meaning]]
+prompt = "OBSTINATE means"
+choices = ["stubborn", "gentle", "eager"]
+answer = "stubborn"
+skill = "synonyms"
+level = 5
+
+[[meaning]]
+prompt = "CANDID means"
+choices = ["honest", "sneaky", "sweet"]
+answer = "honest"
+skill = "synonyms"
+level = 5
+
+[[meaning]]
+prompt = "The opposite of TRANQUIL is"
+choices = ["chaotic", "calm", "quiet"]
+answer = "chaotic"
+skill = "antonyms (opposites)"
+level = 5
+
+[[meaning]]
+prompt = "The opposite of FRUGAL is"
+choices = ["wasteful", "thrifty", "poor"]
+answer = "wasteful"
+skill = "antonyms (opposites)"
+level = 5
+
+[[meaning]]
+prompt = "The opposite of VAGUE is"
+choices = ["clear", "foggy", "short"]
+answer = "clear"
+skill = "antonyms (opposites)"
+level = 5
+
+[[meaning]]
+prompt = "The coach was ELATED when her team won. In this sentence, ELATED means"
+choices = ["overjoyed", "upset", "bored"]
+answer = "overjoyed"
+skill = "context clues"
+level = 5
+
+[[meaning]]
+prompt = "The old bridge was OBSOLETE, so it was replaced. In this sentence, OBSOLETE means"
+choices = ["out of date", "brand new", "very long"]
+answer = "out of date"
+skill = "context clues"
+level = 5
+
+[[meaning]]
+prompt = "Ella was FAMISHED and ate three plates. In this sentence, FAMISHED means"
+choices = ["very hungry", "very full", "very tired"]
+answer = "very hungry"
+skill = "context clues"
+level = 5
+
+[[meaning]]
+prompt = "The PITCH of her voice was high. In this sentence, PITCH means"
+choices = ["tone", "throw", "field"]
+answer = "tone"
+skill = "multiple-meaning words: pitch"
+level = 5
+
+[[meaning]]
+prompt = "He threw a fast PITCH to the batter. In this sentence, PITCH means"
+choices = ["throw", "tone", "tar"]
+answer = "throw"
+skill = "multiple-meaning words: pitch"
+level = 5
+
+[[meaning]]
+prompt = "Please RECORD the score in your notebook. In this sentence, RECORD means"
+choices = ["write down", "music disc", "best ever"]
+answer = "write down"
+skill = "multiple-meaning words: record"
+level = 5
+
+[[meaning]]
+prompt = "She set a new RECORD in the race. In this sentence, RECORD means"
+choices = ["best ever", "write down", "music disc"]
+answer = "best ever"
+skill = "multiple-meaning words: record"
+level = 5

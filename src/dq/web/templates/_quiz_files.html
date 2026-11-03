@@ -1,0 +1,1 @@
+{% for label, rel, exists in quiz_files %}{% if exists %} <a href="/files/{{ rel }}" target="_blank" rel="noopener">{{ label }}</a>{% else %} <span>{{ label }}: missing</span>{% endif %}{% endfor %}

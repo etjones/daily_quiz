@@ -293,6 +293,36 @@ def _math_candidates(cur: Curriculum, units) -> list[Skill]:
     ]
 
 
+BACKFILL_STAGGER = 45  # days over which assumed-known skills come up for review
+
+
+def _track_of(skill: Skill) -> str:
+    return "math" if skill.subject == "math" else skill.track
+
+
+def backfill_below(db: DB, cur: Curriculum, sid: int, on: date) -> int:
+    """Unseen skills two or more grades below the highest grade a student has made solid in
+    the same track (say, kindergarten skills added after a second grader started) are assumed
+    known, the way placement treats skills below the frontier: they enter review at the solid
+    box, spread over weeks, so a real hole still shows up as a quiz error. Skills one grade
+    below are still taught; the order of a track is not strictly by grade. Returns the number
+    of units added."""
+    units = db.units(sid)
+    wu = word_units(units)
+    progress = {s.id: skill_progress(cur, units, s, wu) for s in cur.skills}
+    top: dict[str, int] = {}
+    for s in cur.skills:
+        if progress[s.id].label in ("solid", "mastered"):
+            top[_track_of(s)] = max(top.get(_track_of(s), -1), s.grade)
+    n = 0
+    for s in cur.skills:
+        if progress[s.id].introduced == 0 and s.grade <= top.get(_track_of(s), -1) - 2:
+            n += fast_track(
+                db, cur, sid, s, on, SOLID_BOX, stagger=BACKFILL_STAGGER, offset=n
+            )
+    return n
+
+
 def plan_day(
     db: DB, cur: Curriculum, student, on: date, force: bool = False
 ) -> tuple[Selection, bool]:
@@ -309,6 +339,7 @@ def plan_day(
         db.delete_units_introduced_on(sid, on.isoformat())
 
     rng = random.Random(stable_seed(student["name"], on.isoformat()))
+    backfill_below(db, cur, sid, on)
     units = db.units(sid)
     wu = word_units(units)
     probes = db.probes(sid)
@@ -339,7 +370,8 @@ def plan_day(
     )
 
     # ---- spelling ----------------------------------------------------------
-    n_words = worksheet_words(load, probing)
+    reads = student["grade"] != 0  # kindergartners get no read-it-yourself puzzles
+    n_words = worksheet_words(load, probing, reads)
     due_words = sorted(
         [
             u
@@ -487,7 +519,7 @@ def plan_day(
             sel.math_probe = {"skill_id": later[0].id, "n": 2}
 
     # ---- quiz composition (tomorrow morning) --------------------------------------
-    n_quiz_w, _, sel.quiz_puzzles = quiz_rows(load, probing)
+    n_quiz_w, _, sel.quiz_puzzles = quiz_rows(load, probing, reads)
     n_quiz_m = max(3, round(QUIZ_MATH * load))
     probe_w = 2 if sel.spell_probe else 0
     probe_m = 2 if sel.math_probe else 0
@@ -542,17 +574,19 @@ def plan_day(
     return sel, True
 
 
-def quiz_rows(load: float, probing: bool) -> tuple[int, int, int]:
-    """(left-hand quiz rows, probe words, puzzles) for a day."""
+def quiz_rows(load: float, probing: bool, reads: bool = True) -> tuple[int, int, int]:
+    """(left-hand quiz rows, probe words, puzzles) for a day. No puzzles for a child who
+    cannot read them yet."""
     rows = max(3, round(QUIZ_WORDS * load))
     probe = 2 if probing else 0
-    return rows, probe, max(0, min(QUIZ_PUZZLES, rows - probe - 2))
+    puzzles = max(0, min(QUIZ_PUZZLES, rows - probe - 2)) if reads else 0
+    return rows, probe, puzzles
 
 
-def worksheet_words(load: float, probing: bool) -> int:
+def worksheet_words(load: float, probing: bool, reads: bool = True) -> int:
     """Words on tonight's sheet = words tomorrow's quiz can test: the dictated slots plus
     the clue puzzle. A word taught but never tested can never move on."""
-    rows, probe, puzzles = quiz_rows(load, probing)
+    rows, probe, puzzles = quiz_rows(load, probing, reads)
     return min(WORDS_PER_DAY, rows - probe - puzzles + (1 if puzzles else 0))
 
 

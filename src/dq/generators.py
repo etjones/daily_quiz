@@ -10,6 +10,8 @@ from __future__ import annotations
 import random
 from collections.abc import Callable
 from dataclasses import dataclass, field
+from decimal import Decimal
+from fractions import Fraction
 
 # ---------------------------------------------------------------------------
 # data type
@@ -91,7 +93,11 @@ _TENS = [
 
 
 def say(n: int) -> str:
-    """English words for 0..999 (for parent read-aloud scripts)."""
+    """English words for 0..999,999,999 (for parent read-aloud scripts)."""
+    for size, name in ((1_000_000, "million"), (1000, "thousand")):
+        if n >= size:
+            big, r = divmod(n, size)
+            return f"{say(big)} {name}" + (f" {say(r)}" if r else "")
     if n < 20:
         return _ONES[n]
     if n < 100:
@@ -110,6 +116,16 @@ _FRAC_NAMES = {
     8: "eighth",
     10: "tenth",
 }
+
+
+def say_dec(x: str) -> str:
+    """'3.25' -> 'three and twenty-five hundredths'."""
+    whole, _, part = x.partition(".")
+    if not part:
+        return say(int(whole))
+    name = {1: "tenth", 2: "hundredth", 3: "thousandth"}[len(part)]
+    frac = say(int(part)) + f" {name}" + ("" if int(part) == 1 else "s")
+    return frac if int(whole) == 0 else f"{say(int(whole))} and {frac}"
 
 
 def say_frac(n: int, d: int) -> str:
@@ -582,7 +598,7 @@ def gen_frac_compare(rng, dens, same="den") -> Problem:
                 return None
             n1, n2 = rng.sample(range(1, d), 2)
             return d, n1, d, n2
-    else:
+    elif same == "num":
 
         def attempt():
             if len(dens) < 2:
@@ -590,6 +606,14 @@ def gen_frac_compare(rng, dens, same="den") -> Problem:
             d1, d2 = rng.sample(list(dens), 2)
             top = rng.randint(1, min(d1, d2) - 1)
             return d1, top, d2, top
+    else:
+
+        def attempt():
+            d1, d2 = rng.sample(list(dens), 2)
+            n1, n2 = rng.randint(1, d1 - 1), rng.randint(1, d2 - 1)
+            if n1 == n2 or n1 * d2 == n2 * d1:
+                return None
+            return d1, n1, d2, n2
 
     d1, n1, d2, n2 = _try(rng, attempt)
     ans = "<" if n1 * d2 < n2 * d1 else ">"
@@ -701,6 +725,516 @@ def gen_frac_add_like(rng, dens, op="add") -> Problem:
         lead="$=$",
         speech=f"{say_frac(n1, d)} minus {say_frac(n2, d)}",
         key=f"fa:{n1}-{n2}/{d}",
+    )
+
+
+# ---------------------------------------------------------------------------
+# kindergarten counting
+# ---------------------------------------------------------------------------
+
+
+@register("count_dots")
+def gen_count_dots(rng, count) -> Problem:
+    n = rng.randint(*count)
+    return Problem(
+        prompt=f"#grid(columns: 2, column-gutter: 3mm, align: horizon, countdots({n}), [How many?])",
+        answer=str(n),
+        kind="int",
+        lead="$=$",
+        speech=f"Point to each dot and count. How many dots? (There are {say(n)}.)",
+        key=f"cnt:{n}",
+    )
+
+
+@register("neighbor")
+def gen_neighbor(rng, range, mode="after") -> Problem:
+    m = rng.choice(["after", "before"]) if mode == "mix" else mode
+    lo, hi = range
+    n = rng.randint(lo + (1 if m == "before" else 0), hi - (1 if m == "after" else 0))
+    ans = n + 1 if m == "after" else n - 1
+    return Problem(
+        prompt=f"Just {m} ${n}$",
+        answer=str(ans),
+        kind="int",
+        lead="$=$",
+        speech=f"What number comes just {m} {say(n)}?",
+        key=f"nb:{m}:{n}",
+    )
+
+
+# ---------------------------------------------------------------------------
+# place value, rounding, money
+# ---------------------------------------------------------------------------
+
+
+def _n(x: int) -> str:
+    """A whole number for a Typst math prompt, with thousands commas from 10,000 up."""
+    return f'"{x:,}"' if x >= 10_000 else str(x)
+
+
+_PLACES = [
+    "ones",
+    "tens",
+    "hundreds",
+    "thousands",
+    "ten thousands",
+    "hundred thousands",
+    "millions",
+    "ten millions",
+    "hundred millions",
+]
+
+
+@register("digit_value")
+def gen_digit_value(rng, digits) -> Problem:
+    def attempt():
+        k = rng.randint(*digits)
+        n = rng.randint(10 ** (k - 1), 10**k - 1)
+        s = str(n)
+        pos = rng.randrange(len(s) - 1)
+        d = s[pos]
+        if d == "0" or s.count(d) > 1:
+            return None
+        return n, d, len(s) - 1 - pos
+
+    n, d, place = _try(rng, attempt)
+    value = int(d) * 10**place
+    return Problem(
+        prompt=f"In ${_n(n)}$, the value of the ${d}$",
+        answer=str(value),
+        kind="int",
+        lead="$=$",
+        speech=f"In the number {say(n)}, what is the {say(int(d))} worth? (It is in the {_PLACES[place]} place.)",
+        key=f"dv:{n}:{d}",
+    )
+
+
+@register("round")
+def gen_round(rng, places, range) -> Problem:
+    def attempt():
+        p = rng.choice(places)
+        n = rng.randint(*range)
+        if n % p == 0 or n < p:
+            return None
+        return p, n
+
+    p, n = _try(rng, attempt)
+    ans = (n + p // 2) // p * p
+    name = {10: "ten", 100: "hundred", 1000: "thousand", 10_000: "ten thousand"}[p]
+    return Problem(
+        prompt=f"Round ${_n(n)}$ to the nearest {name}",
+        answer=str(ans),
+        kind="int",
+        lead="$=$",
+        speech=f"Round {say(n)} to the nearest {name}.",
+        key=f"rnd:{n}:{p}",
+    )
+
+
+_COINS = {"penny": 1, "nickel": 5, "dime": 10, "quarter": 25}
+_COIN_PLURAL = {
+    "penny": "pennies",
+    "nickel": "nickels",
+    "dime": "dimes",
+    "quarter": "quarters",
+}
+
+
+@register("coins")
+def gen_coins(rng, coins, max_each=4) -> Problem:
+    def attempt():
+        kinds = rng.sample(coins, rng.randint(2, min(3, len(coins))))
+        counts = {c: rng.randint(1, max_each) for c in kinds}
+        total = sum(_COINS[c] * k for c, k in counts.items())
+        return (counts, total) if total < 100 else None
+
+    counts, total = _try(rng, attempt)
+    order = sorted(counts, key=lambda c: -_COINS[c])
+    parts = [f"{counts[c]} {c if counts[c] == 1 else _COIN_PLURAL[c]}" for c in order]
+    text = ", ".join(parts)
+    return Problem(
+        prompt=f"{text}: how many cents?",
+        answer=str(total),
+        kind="int",
+        lead="$=$",
+        speech=f"{text}. How many cents is that?",
+        key=f"coin:{text}",
+        prose=True,
+    )
+
+
+# ---------------------------------------------------------------------------
+# multi-digit operations, order of operations
+# ---------------------------------------------------------------------------
+
+
+@register("mul_multi")
+def gen_mul_multi(rng, a, b) -> Problem:
+    x, y = rng.randint(*a), rng.randint(*b)
+    return Problem(
+        prompt=f"${_n(x)} times {_n(y)}$",
+        answer=str(x * y),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(x)} times {say(y)}",
+        key=f"mm:{x}:{y}",
+    )
+
+
+@register("div_multi")
+def gen_div_multi(rng, divisor, quotient, remainder=False) -> Problem:
+    d, q = rng.randint(*divisor), rng.randint(*quotient)
+    r = rng.randint(1, d - 1) if remainder else 0
+    n = d * q + r
+    return Problem(
+        prompt=f"${_n(n)} div {d}$",
+        answer=f"{q} R {r}" if remainder else str(q),
+        kind="int_rem" if remainder else "int",
+        lead="$=$",
+        speech=f"{say(n)} divided by {say(d)}"
+        + (". Say the answer with a remainder." if remainder else ""),
+        key=f"dm:{n}:{d}",
+    )
+
+
+_OPS_FORMS = {
+    "a+b*c": lambda a, b, c: a + b * c,
+    "a-b*c": lambda a, b, c: a - b * c,
+    "b*c+a": lambda a, b, c: b * c + a,
+    "a+c/b": lambda a, b, c: a + c // b,
+    "(a+b)*c": lambda a, b, c: (a + b) * c,
+    "(a-b)*c": lambda a, b, c: (a - b) * c,
+}
+
+
+@register("order_ops")
+def gen_order_ops(rng, parens=False) -> Problem:
+    forms = list(_OPS_FORMS) if parens else ["a+b*c", "a-b*c", "b*c+a", "a+c/b"]
+
+    def attempt():
+        a, b, c = rng.randint(2, 12), rng.randint(2, 9), rng.randint(2, 9)
+        form = rng.choice(forms)
+        if form == "a+c/b":
+            c = b * rng.randint(1, 9)
+        val = _OPS_FORMS[form](a, b, c)
+        if val < 0:
+            return None
+        expr = form.replace("a", str(a)).replace("b", str(b)).replace("c", str(c))
+        return expr, val
+
+    expr, val = _try(rng, attempt)
+    shown = (
+        expr.replace("*", " times ")
+        .replace("/", " div ")
+        .replace("+", " + ")
+        .replace("-", " - ")
+    )
+    spoken = (
+        expr.replace("*", " times ")
+        .replace("/", " divided by ")
+        .replace("+", " plus ")
+        .replace("-", " minus ")
+    )
+    spoken = spoken.replace("(", "open bracket ").replace(")", " close bracket")
+    return Problem(
+        prompt=f"${shown}$",
+        answer=str(val),
+        kind="int",
+        lead="$=$",
+        speech=f"Write this down and work it out: {spoken}. Multiply and divide before adding and subtracting.",
+        key=f"oo:{expr}",
+    )
+
+
+# ---------------------------------------------------------------------------
+# measurement: area, perimeter, volume
+# ---------------------------------------------------------------------------
+
+_UNITS = ["cm", "m", "in", "ft"]
+
+
+@register("rect_measure")
+def gen_rect_measure(rng, side, mode="area") -> Problem:
+    m = rng.choice(["area", "perimeter", "missing"]) if mode == "mix" else mode
+    l, w = rng.randint(*side), rng.randint(*side)
+    u = rng.choice(_UNITS)
+    if m == "area":
+        text = f"A rectangle is {l} {u} long and {w} {u} wide. What is its area in square {u}?"
+        ans = l * w
+    elif m == "perimeter":
+        text = f"A rectangle is {l} {u} long and {w} {u} wide. What is its perimeter in {u}?"
+        ans = 2 * (l + w)
+    else:
+        text = f"A rectangle has an area of {l * w} square {u}. It is {l} {u} long. How wide is it?"
+        ans = w
+    return Problem(
+        prompt=text,
+        answer=str(ans),
+        kind="int",
+        lead="$=$",
+        speech=text,
+        key=f"rect:{text}",
+        prose=True,
+    )
+
+
+@register("volume")
+def gen_volume(rng, side) -> Problem:
+    l, w, h = (rng.randint(*side) for _ in range(3))
+    u = rng.choice(_UNITS)
+    text = f"A box is {l} {u} long, {w} {u} wide and {h} {u} tall. What is its volume in cubic {u}?"
+    return Problem(
+        prompt=text,
+        answer=str(l * w * h),
+        kind="int",
+        lead="$=$",
+        speech=text,
+        key=f"vol:{l}:{w}:{h}:{u}",
+        prose=True,
+    )
+
+
+# ---------------------------------------------------------------------------
+# decimals
+# ---------------------------------------------------------------------------
+
+
+def _dec(units: int, places: int) -> str:
+    """An integer count of 10^-places as a decimal string: (325, 2) -> '3.25', (230, 2) -> '2.3'."""
+    v = Decimal(units).scaleb(-places).normalize()
+    return format(v, "f") if v else "0"
+
+
+@register("dec_frac")
+def gen_dec_frac(rng, dens, mode="to_dec") -> Problem:
+    m = rng.choice(["to_dec", "to_frac"]) if mode == "mix" else mode
+    d = rng.choice(dens)
+    n = rng.randint(1, d - 1)
+    if n % 10 == 0 and d == 100:
+        n += 1
+    places = len(str(d)) - 1
+    x = _dec(n, places)
+    if m == "to_dec":
+        return Problem(
+            prompt=f"${n}/{d}$ as a decimal",
+            answer=x,
+            kind="dec",
+            lead="$=$",
+            speech=f"Write {say_frac(n, d) if d == 10 else say(n) + ' hundredths'} as a decimal.",
+            key=f"df:{n}/{d}",
+        )
+    return Problem(
+        prompt=f"${x}$ as a fraction",
+        answer=f"{n}/{d}",
+        kind="frac",
+        lead="$=$",
+        speech=f"Write {say_dec(x)} as a fraction.",
+        key=f"fd:{x}",
+    )
+
+
+@register("dec_compare")
+def gen_dec_compare(rng, places, whole=(0, 9)) -> Problem:
+    def attempt():
+        p1, p2 = rng.choice(places), rng.choice(places)
+        w = rng.randint(*whole)
+        a = _dec(w * 10**p1 + rng.randint(1, 10**p1 - 1), p1)
+        b = _dec(w * 10**p2 + rng.randint(1, 10**p2 - 1), p2)
+        return (a, b) if Decimal(a) != Decimal(b) else None
+
+    a, b = _try(rng, attempt)
+    return Problem(
+        prompt=f"#box[${a}$] #h(2.2em) #box[${b}$]",
+        answer="<" if Decimal(a) < Decimal(b) else ">",
+        kind="symbol",
+        lead="Write < or >",
+        speech=f"Which is bigger, {say_dec(a)} or {say_dec(b)}?",
+        key=f"dc:{a}:{b}",
+    )
+
+
+@register("dec_round")
+def gen_dec_round(rng, places, to, whole=(0, 99)) -> Problem:
+    def attempt():
+        n = rng.randint(whole[0] * 10**places + 1, (whole[1] + 1) * 10**places - 1)
+        if n % 10 ** (places - to) == 0:
+            return None
+        return n
+
+    n = _try(rng, attempt)
+    step = 10 ** (places - to)
+    q, r = divmod(n, step)
+    rounded = (q + (1 if r * 2 >= step else 0)) * step
+    x, ans = _dec(n, places), _dec(rounded // step, to)
+    name = {0: "whole number", 1: "tenth", 2: "hundredth"}[to]
+    return Problem(
+        prompt=f"Round ${x}$ to the nearest {name}",
+        answer=ans,
+        kind="dec",
+        lead="$=$",
+        speech=f"Round {say_dec(x)} to the nearest {name}.",
+        key=f"dr:{x}:{to}",
+    )
+
+
+@register("dec_addsub")
+def gen_dec_addsub(rng, places, whole, op="add") -> Problem:
+    o = rng.choice(["add", "sub"]) if op == "mix" else op
+    p1, p2 = rng.choice(places), rng.choice(places)
+    a = rng.randint(whole[0] * 10**p1 + 1, (whole[1] + 1) * 10**p1 - 1)
+    b = rng.randint(whole[0] * 10**p2 + 1, (whole[1] + 1) * 10**p2 - 1)
+    x, y = Decimal(_dec(a, p1)), Decimal(_dec(b, p2))
+    if o == "sub" and y > x:
+        x, y = y, x
+    val = x + y if o == "add" else x - y
+    sym, word = ("+", "plus") if o == "add" else ("-", "minus")
+    return Problem(
+        prompt=f"${x} {sym} {y}$",
+        answer=format(val.normalize(), "f") if val else "0",
+        kind="dec",
+        lead="$=$",
+        speech=f"{say_dec(str(x))} {word} {say_dec(str(y))}. Line up the decimal points.",
+        key=f"da:{x}{sym}{y}",
+    )
+
+
+@register("dec_mul")
+def gen_dec_mul(rng, places, whole, by="whole") -> Problem:
+    p = rng.choice(places)
+    x = Decimal(_dec(rng.randint(whole[0] * 10**p + 1, (whole[1] + 1) * 10**p - 1), p))
+    if by == "whole":
+        y = Decimal(rng.randint(2, 9))
+    else:
+        y = Decimal(_dec(rng.randint(1, 9), 1))
+    val = (x * y).normalize()
+    return Problem(
+        prompt=f"${x} times {y}$",
+        answer=format(val, "f"),
+        kind="dec",
+        lead="$=$",
+        speech=f"{say_dec(str(x))} times {say_dec(str(y))}",
+        key=f"dmu:{x}:{y}",
+    )
+
+
+@register("dec_div")
+def gen_dec_div(rng, divisor, quotient, places=1) -> Problem:
+    d = rng.randint(*divisor)
+    q = Decimal(
+        _dec(
+            rng.randint(quotient[0] * 10**places + 1, quotient[1] * 10**places), places
+        )
+    )
+    n = q * d
+    return Problem(
+        prompt=f"${n} div {d}$",
+        answer=format(q.normalize(), "f"),
+        kind="dec",
+        lead="$=$",
+        speech=f"{say_dec(str(n))} divided by {say(d)}",
+        key=f"ddv:{n}:{d}",
+    )
+
+
+# ---------------------------------------------------------------------------
+# fractions, grades 4 and 5
+# ---------------------------------------------------------------------------
+
+
+def _frac_str(f: Fraction) -> str:
+    return str(f.numerator) if f.denominator == 1 else f"{f.numerator}/{f.denominator}"
+
+
+@register("frac_mixed_addsub")
+def gen_frac_mixed_addsub(rng, dens, whole=(1, 5), op="add") -> Problem:
+    o = rng.choice(["add", "sub"]) if op == "mix" else op
+    d = rng.choice(dens)
+    a = rng.randint(*whole) * d + rng.randint(1, d - 1)  # in d-ths, so 6/4 stays 1 2/4
+    b = rng.randint(*whole) * d + rng.randint(1, d - 1)
+    if o == "sub" and b > a:
+        a, b = b, a
+    if a == b:
+        b -= 1
+    val = a + b if o == "add" else a - b
+
+    def mixed(n: int) -> str:
+        w, r = divmod(n, d)
+        return f"{w} {r}/{d}" if r and w else (f"{r}/{d}" if r else str(w))
+
+    def spoken(n: int) -> str:
+        w, r = divmod(n, d)
+        part = say_frac(r, d) if r else ""
+        return f"{say(w)} and {part}" if w and r else (part or say(w))
+
+    sym, word = ("+", "plus") if o == "add" else ("-", "minus")
+    return Problem(
+        prompt=f"${mixed(a)} {sym} {mixed(b)}$",
+        answer=mixed(val),
+        kind="frac",
+        lead="$=$",
+        speech=f"{spoken(a)} {word} {spoken(b)}. A mixed number or a fraction is fine.",
+        key=f"fm:{a}{sym}{b}/{d}",
+    )
+
+
+@register("frac_add_unlike")
+def gen_frac_add_unlike(rng, dens, op="add") -> Problem:
+    def attempt():
+        d1, d2 = rng.sample(list(dens), 2)
+        a = Fraction(rng.randint(1, d1 - 1), d1)
+        b = Fraction(rng.randint(1, d2 - 1), d2)
+        o = rng.choice(["add", "sub"]) if op == "mix" else op
+        if o == "sub" and b >= a:
+            return None
+        return a, b, o
+
+    a, b, o = _try(rng, attempt)
+    val = a + b if o == "add" else a - b
+    sym, word = ("+", "plus") if o == "add" else ("-", "minus")
+    return Problem(
+        prompt=f"${_frac_str(a)} {sym} {_frac_str(b)}$",
+        answer=_frac_str(val),
+        kind="frac",
+        lead="$=$",
+        speech=f"{say_frac(a.numerator, a.denominator)} {word} {say_frac(b.numerator, b.denominator)}",
+        key=f"fu:{a}{sym}{b}",
+    )
+
+
+@register("frac_times_whole")
+def gen_frac_times_whole(rng, dens, whole) -> Problem:
+    d = rng.choice(dens)
+    f = Fraction(rng.randint(1, d - 1), d)
+    w = rng.randint(*whole)
+    return Problem(
+        prompt=f"${w} times {f.numerator}/{f.denominator}$",
+        answer=_frac_str(f * w),
+        kind="frac",
+        lead="$=$",
+        speech=f"{say(w)} times {say_frac(f.numerator, f.denominator)}",
+        key=f"ftw:{w}:{f}",
+    )
+
+
+@register("frac_div_unit")
+def gen_frac_div_unit(rng, dens, whole) -> Problem:
+    d, w = rng.choice(dens), rng.randint(*whole)
+    if rng.random() < 0.5:
+        return Problem(
+            prompt=f"$1/{d} div {w}$",
+            answer=f"1/{d * w}",
+            kind="frac",
+            lead="$=$",
+            speech=f"{say_frac(1, d)} divided by {say(w)}",
+            key=f"fdu:1/{d}:{w}",
+        )
+    return Problem(
+        prompt=f"${w} div 1/{d}$",
+        answer=str(w * d),
+        kind="int",
+        lead="$=$",
+        speech=f"{say(w)} divided by {say_frac(1, d)}. How many {say_frac(1, d)}s fit in {say(w)}?",
+        key=f"fdu:{w}:1/{d}",
     )
 
 

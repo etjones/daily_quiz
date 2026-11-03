@@ -3,15 +3,16 @@
 <h2>Graded quizzes</h2>
 {% if quizzes %}
 <table>
-  <thead><tr><th>Quiz for</th><th>Graded</th><th class="num">Right</th><th class="num">Score</th><th>How</th></tr></thead>
+  <thead><tr><th>Quiz for</th><th>Graded</th><th class="num">Right</th><th class="num">Score</th><th>How</th><th>PDFs</th></tr></thead>
   <tbody>
-  {% for q in quizzes %}
+  {% for q, quiz_files in quizzes %}
   <tr>
     <td><a href="/quiz/{{ q.id }}">{{ q.for_date }}</a></td>
     <td>{{ q.graded_on }}</td>
     <td class="num">{{ q.n_right or 0 }} / {{ q.n or 0 }}</td>
     <td class="num">{% if q.n %}{{ (100 * q.n_right / q.n)|round|int }}%{% else %}—{% endif %}</td>
     <td>{{ q.mode or '' }}</td>
+    <td>{% include "_quiz_files.html" %}</td>
   </tr>
   {% endfor %}
   </tbody>

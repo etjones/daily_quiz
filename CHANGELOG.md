@@ -3,10 +3,19 @@
 ## Unreleased
 
 **Breaking**
+- The curriculum now starts at kindergarten, so placement on an existing student reports more skills per track, and a student who has not been placed starts at kindergarten skills.
 - The web app is now Django instead of FastAPI, and every page except `/health` needs a login; production needs `DJANGO_SECRET_KEY` and `DQ_ALLOWED_HOSTS`, and a user created with `just adduser`.
 - Dev dependencies moved to a uv dependency group: `uv sync` replaces `uv sync --extra dev`.
 - `just run` now starts the web app; the old dq pass-through recipe is `just dq`.
 
+- The dashboard, quiz entry page, grading sheet, quiz results and History link to each quiz's printable quiz and parent-script PDFs.
+- The curriculum covers kindergarten through grade 5: kindergarten counting, comparing and adding within 5; coins, rounding, area and perimeter; grade 4 large numbers, multi-digit multiplication, long division, decimals to hundredths and mixed numbers; grade 5 decimal operations, unlike fractions, fraction multiplication and division, order of operations and volume.
+- Spelling runs from kindergarten VC words through grade 5 syllable types, prefixes, suffixes, Greek and Latin roots and sound changes (decide → decision), and sight words through Fry 300.
+- A new "word meaning" puzzle type (synonyms, antonyms, affixes, roots, context clues, multiple meanings) and puzzle levels 4–5 for grades 4 and 5.
+- Students have an optional school grade (`dq init --grade`, `dq grade-level`, the Students page); placement starts at that grade and puzzles start at its level, and `dq status` shows it. Existing databases gain the column on first open.
+- Kindergartners get no read-it-yourself puzzles or clue items.
+- Skills two or more grades below what a student has made solid are put into review as already known instead of being taught.
+- Answers accept decimals (0.5 = .50) and mixed numbers (1 1/2 = 3/2), and the parent script reads numbers into the millions and decimals aloud.
 - Quiz math prompts no longer run into the "=" or wrap: the lead-in before each answer box is only as wide as its text, and one-line prompts (number lines, fraction bars, fraction sums) shrink to fit on one line, including on days rebuilt from older stored layouts.
 - Word puzzles (analogies, odd one out, change one letter, word building, sound-alikes) join the quiz, and a "puzzle corner" with a word scale fills spare room at the bottom of the worksheet; banks live in `curriculum/puzzles/`, each type levels up after three right in a row and down after two wrong, and recently used puzzles are not repeated.
 - Some quiz words are asked for by a clue ("The sound you make when you talk") instead of dictated; the answer counts as a spelling test of that word only if the child came up with the word.

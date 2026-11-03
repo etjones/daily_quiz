@@ -1,5 +1,6 @@
 # Sound-alikes: pick the right spelling for the sentence. `answer` must be one of `choices`.
 # The sentence has ___ where the word goes.
+# level  1-5, roughly the school grade; 4-5 add its/it's, who's/whose, principal/principle.
 
 [[homophone]]
 sentence = "The wind ___ the leaves away."
@@ -216,3 +217,87 @@ sentence = "The toy store is having a big ___."
 choices = ["sail", "sale"]
 answer = "sale"
 level = 2
+
+[[homophone]]
+sentence = "The dog wagged ___ tail."
+choices = ["its", "it's"]
+answer = "its"
+level = 4
+
+[[homophone]]
+sentence = "___ going to rain today."
+choices = ["Its", "It's"]
+answer = "It's"
+level = 4
+
+[[homophone]]
+sentence = "___ going to the zoo today."
+choices = ["There", "Their", "They're"]
+answer = "They're"
+level = 4
+
+[[homophone]]
+sentence = "The runner ___ the finish line first."
+choices = ["past", "passed"]
+answer = "passed"
+level = 4
+
+[[homophone]]
+sentence = "We drove ___ the old farm."
+choices = ["past", "passed"]
+answer = "past"
+level = 4
+
+[[homophone]]
+sentence = "Snow covered the ___ of the mountain."
+choices = ["peak", "peek"]
+answer = "peak"
+level = 4
+
+[[homophone]]
+sentence = "Do not ___ at your presents!"
+choices = ["peak", "peek"]
+answer = "peek"
+level = 4
+
+[[homophone]]
+sentence = "Squeeze the ___ to stop the bike."
+choices = ["break", "brake"]
+answer = "brake"
+level = 4
+
+[[homophone]]
+sentence = "The ___ of our school read the news."
+choices = ["principal", "principle"]
+answer = "principal"
+level = 5
+
+[[homophone]]
+sentence = "Honesty is an important ___."
+choices = ["principal", "principle"]
+answer = "principle"
+level = 5
+
+[[homophone]]
+sentence = "Hold the horse's ___ tightly."
+choices = ["reign", "rain", "rein"]
+answer = "rein"
+level = 5
+
+[[homophone]]
+sentence = "The queen's ___ lasted forty years."
+choices = ["reign", "rain", "rein"]
+answer = "reign"
+level = 5
+
+[[homophone]]
+sentence = "___ backpack is this?"
+choices = ["Who's", "Whose"]
+answer = "Whose"
+level = 5
+
+[[homophone]]
+sentence = "___ coming to the party?"
+choices = ["Who's", "Whose"]
+answer = "Who's"
+level = 5

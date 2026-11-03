@@ -144,9 +144,12 @@ def _quiz_puzzle_item(p: puzzles.Puzzle, skill_id: str, item_key: str = "") -> d
 def _choose_puzzles(
     db: DB, cur: Curriculum, student, sel: scheduler.Selection, rng: random.Random
 ) -> tuple[list[dict], list[dict]]:
-    """(quiz puzzle items, worksheet puzzle corner)."""
+    """(quiz puzzle items, worksheet puzzle corner). None for a kindergartner."""
+    if student["grade"] == 0:
+        return [], []
     last, recent = _puzzle_history(db, student["id"])
-    lv = puzzles.levels(db.puzzle_history(student["id"]))
+    start = puzzles.start_level(student["grade"])
+    lv = puzzles.levels(db.puzzle_history(student["id"]), start)
     used: set[str] = set()
     quiz: list[dict] = []
     if sel.quiz_puzzles and sel.quiz_clue:
@@ -156,7 +159,7 @@ def _choose_puzzles(
     n_other = sel.quiz_puzzles - len(quiz)
     types = puzzles.next_types(recent, rng, n_other + WORKSHEET_PUZZLES - 1)
     for t in types[:n_other]:
-        p = puzzles.pick(cur.puzzles, t, lv.get(t, 1), last, rng, used)
+        p = puzzles.pick(cur.puzzles, t, lv.get(t, start), last, rng, used)
         if p:
             used.add(p.id)
             quiz.append(_quiz_puzzle_item(p, f"wp.{t}"))
@@ -165,7 +168,7 @@ def _choose_puzzles(
         *types[n_other:],
         "scale",
     ]:  # the template drops from the end if space is short
-        p = puzzles.pick(cur.puzzles, t, lv.get(t, 1), last, rng, used)
+        p = puzzles.pick(cur.puzzles, t, lv.get(t, start), last, rng, used)
         if p:
             used.add(p.id)
             shown = rng.sample(p.words, len(p.words)) if p.type == "scale" else []

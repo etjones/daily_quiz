@@ -32,7 +32,14 @@ MATH_PROMPT_DX = 8.0  # prompt starts this far right of the item number
 
 NUM_GAP = 1.8  # blank space between "7." and whatever follows it
 
-BOX_W = {"int": 18.0, "int_rem": 26.0, "frac": 20.0, "symbol": 14.0, "text": 18.0}
+BOX_W = {
+    "int": 18.0,
+    "int_rem": 26.0,
+    "frac": 20.0,
+    "dec": 20.0,
+    "symbol": 14.0,
+    "text": 18.0,
+}
 LEAD_W = {"symbol": 33.0}
 LEAD_W_BY_TEXT = {
     "$=$": 7.0,

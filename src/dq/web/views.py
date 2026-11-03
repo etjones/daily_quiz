@@ -140,6 +140,26 @@ def _open_quiz(db: DB, student: sqlite3.Row, quiz_id: int) -> sqlite3.Row:
     return q
 
 
+def quiz_pdfs(
+    db: DB, student: sqlite3.Row, q: sqlite3.Row
+) -> list[tuple[str, str, bool]]:
+    """(label, path under /files/, exists) for a quiz's printable quiz and parent script."""
+    plan = db.conn.execute(
+        "SELECT for_date FROM plan WHERE id = ?", (q["plan_id"],)
+    ).fetchone()
+    on = (
+        plan["for_date"]
+        if plan
+        else (_iso_date(q["for_date"]) - timedelta(days=1)).isoformat()
+    )
+    names = [
+        ("Quiz PDF", f"quiz-{q['for_date']}.pdf"),
+        ("Script PDF", f"parent-script-{q['for_date']}.pdf"),
+    ]
+    folder = out_dir(student) / on
+    return [(label, f"{on}/{f}", (folder / f).exists()) for label, f in names]
+
+
 def _iso_date(s: str) -> date:
     try:
         return date.fromisoformat(s)
@@ -165,6 +185,7 @@ def students(request: HttpRequest) -> HttpResponse:
         student=current_student(request),
         rows=request.db.students(),
         default=default.read_text().strip() if default.exists() else None,
+        grades=[(g, curriculum.grade_label(g)) for g in curriculum.GRADES],
         title="Students",
     )
 
@@ -177,12 +198,37 @@ def add_student(request: HttpRequest) -> HttpResponse:
         raise PageError("Use letters, digits, - or _ for the name.")
     if name in {s["name"] for s in db.students()}:
         raise PageError(f"{name} already exists.")
-    db.add_student(name, date.today(), pace_cap=int(request.POST.get("pace_cap", 2)))
+    db.add_student(
+        name,
+        date.today(),
+        pace_cap=int(request.POST.get("pace_cap", 2)),
+        grade=_grade(request.POST.get("grade", "")),
+    )
     path = default_student_path(home())
     if not path.exists():
         path.write_text(name + "\n")
     resp = go("/placement", f"Added {name}. Placement finds where they already are.")
     return with_student_cookie(resp, name)
+
+
+def _grade(raw: str) -> int | None:
+    if not raw:
+        return None
+    try:
+        return curriculum.parse_grade(raw)
+    except ValueError as e:
+        raise PageError(str(e)) from e
+
+
+@require_POST
+def set_grade(request: HttpRequest) -> HttpResponse:
+    student = student_named(request.db, request.POST.get("name", ""))
+    g = _grade(request.POST.get("grade", ""))
+    request.db.set_student_field(student["id"], "grade", g)
+    return go(
+        "/students",
+        f"{student['name']} is in grade {curriculum.grade_label(g)}. Placement starts there.",
+    )
 
 
 @require_http_methods(["GET", "POST"])
@@ -216,6 +262,7 @@ def dashboard(request: HttpRequest) -> HttpResponse:
     days = db.quiz_days(sid)
     yesterday = (today - timedelta(days=1)).isoformat()
     log = {r["on_date"]: r for r in db.day_logs(sid, yesterday)}.get(yesterday)
+    open_quiz = db.latest_open_quiz(sid)
     return page(
         request,
         "dashboard.html",
@@ -224,7 +271,8 @@ def dashboard(request: HttpRequest) -> HttpResponse:
         today=today.isoformat(),
         yesterday=yesterday,
         plan=db.plan_for(sid, today.isoformat()),
-        open_quiz=db.latest_open_quiz(sid),
+        open_quiz=open_quiz,
+        quiz_files=quiz_pdfs(db, student, open_quiz) if open_quiz else [],
         last_quiz=days[-1] if days else None,
         streak=scheduler.clean_day_streak(db, sid),
         has_units=bool(db.units(sid)),
@@ -331,6 +379,7 @@ def _entry_page(
         student=student,
         title=f"Quiz for {q['for_date']}",
         quiz=q,
+        quiz_files=quiz_pdfs(request.db, student, q),
         items=_entry_items(request.db, manifest, crops),
         msg=msg or request.GET.get("msg"),
     )
@@ -438,6 +487,7 @@ def grader(request: HttpRequest, quiz_id: int) -> HttpResponse:
         student=student,
         title=f"Grade the quiz for {q['for_date']}",
         quiz=q,
+        quiz_files=quiz_pdfs(request.db, student, q),
         label=sheet["quiz_label"],
         **grader_rows(manifest, sheet),
     )
@@ -552,6 +602,7 @@ def _results_page(
         student=student,
         title=f"Quiz for {q['for_date']}",
         quiz=q,
+        quiz_files=quiz_pdfs(request.db, student, q),
         rows=rows,
         n=len(taught),
         right=sum(r["correct"] for r in taught),
@@ -565,7 +616,8 @@ def _results_page(
 
 @require_GET
 def history(request: HttpRequest) -> HttpResponse:
-    sid = require_student(request)["id"]
+    student = require_student(request)
+    sid = student["id"]
     db: DB = request.db
     plans = db.conn.execute(
         "SELECT for_date, day_no FROM plan WHERE student_id = ? ORDER BY for_date DESC",
@@ -574,9 +626,9 @@ def history(request: HttpRequest) -> HttpResponse:
     return page(
         request,
         "history.html",
-        student=current_student(request),
+        student=student,
         title="History",
-        quizzes=db.graded_quizzes(sid),
+        quizzes=[(q, quiz_pdfs(db, student, q)) for q in db.graded_quizzes(sid)],
         logs=list(reversed(db.day_logs(sid))),
         plans=plans,
     )

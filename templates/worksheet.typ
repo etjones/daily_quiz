@@ -107,7 +107,7 @@
 }
 
 // --- puzzle corner -----------------------------------------------------------
-#let puzzle-names = (analogy: "Analogy", odd: "Odd one out", ladder: "Change one letter", build: "Build a word", homophone: "Sound-alikes", scale: "Word scale", clue: "Clue")
+#let puzzle-names = (analogy: "Analogy", odd: "Odd one out", ladder: "Change one letter", build: "Build a word", homophone: "Sound-alikes", meaning: "Word meaning", scale: "Word scale", clue: "Clue")
 #let blank(w) = box(width: w, height: 5mm, stroke: (bottom: 0.7pt + ink))
 #let corner(ps) = {
   v(2.5mm)

@@ -44,7 +44,15 @@
   ..range(r * c).map(_ => circle(radius: size / 2, fill: accent, stroke: none)),
 )
 
-#let scope = (qbox: qbox, fracbar: fracbar, numline: numline, dots: dots)
+// n dots in rows of five, like a ten-frame, for counting.
+#let countdots(n, size: 2.2mm, gap: 0.9mm) = grid(
+  columns: range(calc.min(n, 5)).map(_ => size),
+  column-gutter: gap,
+  row-gutter: gap,
+  ..range(n).map(_ => circle(radius: size / 2, fill: accent, stroke: none)),
+)
+
+#let scope = (qbox: qbox, fracbar: fracbar, numline: numline, dots: dots, countdots: countdots)
 #let ev(s) = eval(s, mode: "markup", scope: scope)
 
 // A writing box with light handwriting guides: dashed midline and a solid baseline.

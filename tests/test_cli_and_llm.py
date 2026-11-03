@@ -1,5 +1,6 @@
 import builtins
 import json
+import re
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import ClassVar
@@ -46,7 +47,7 @@ def test_full_loop_by_oral_entry(monkeypatch, tmp_path, capsys):
         capsys=capsys,
     )
     assert code == 0 and "Saved." in out
-    assert "To practise tonight: cat" in out
+    missed = re.search(r"To practise tonight: (\w+)", out).group(1)
     code, out = run(
         monkeypatch,
         tmp_path,
@@ -61,7 +62,8 @@ def test_full_loop_by_oral_entry(monkeypatch, tmp_path, capsys):
     plan = json.loads(db.plan_for(db.student("Sam")["id"], D2)["data"])
     assert plan["worksheet"]["reteach"]  # tonight's sheet explains the tricky pattern
     # the missed word itself is due the next day and leads that day's review
-    assert db.units(db.student("Sam")["id"])[("sp.cvc.a", "cat")].due_on == D3
+    units = db.units(db.student("Sam")["id"])
+    assert next(u for (_, w), u in units.items() if w == missed).due_on == D3
     run(
         monkeypatch,
         tmp_path,
@@ -70,7 +72,7 @@ def test_full_loop_by_oral_entry(monkeypatch, tmp_path, capsys):
     )
     run(monkeypatch, tmp_path, ["next", "Sam", "--date", D3], inputs=[], capsys=capsys)
     plan3 = json.loads(db.plan_for(db.student("Sam")["id"], D3)["data"])
-    assert "cat" in [w["word"] for w in plan3["worksheet"]["words"]]
+    assert missed in [w["word"] for w in plan3["worksheet"]["words"]]
     code, out = run(
         monkeypatch, tmp_path, ["status", "Sam", "--date", D2], capsys=capsys
     )
@@ -262,7 +264,25 @@ def test_placement_all_n_places_at_the_start(monkeypatch, tmp_path, capsys):
         monkeypatch, tmp_path, ["placement", "Sam", "--date", D1], capsys=capsys
     )
     assert code == 0
-    assert "0/77 skills already known" in out and "0/61 skills already known" in out
+    assert len(re.findall(r"\(0/\d+ skills already known", out)) == 3
+
+
+def test_init_with_grade_and_grade_level(monkeypatch, tmp_path, capsys):
+    run(
+        monkeypatch,
+        tmp_path,
+        ["init", "Sam", "--grade", "K", "--date", D1],
+        capsys=capsys,
+    )
+    assert "grade K" in run(monkeypatch, tmp_path, ["grade-level"], capsys=capsys)[1]
+    _, out = run(
+        monkeypatch, tmp_path, ["grade-level", "Sam", "--set", "4"], capsys=capsys
+    )
+    assert "grade 4" in out
+    assert (
+        "grade 4"
+        in run(monkeypatch, tmp_path, ["status", "--date", D1], capsys=capsys)[1]
+    )
 
 
 def test_first_init_records_default_student(monkeypatch, tmp_path, capsys):

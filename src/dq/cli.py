@@ -125,7 +125,9 @@ def cmd_skills(args) -> int:
 def cmd_init(args) -> int:
     db, home = open_db(args)
     try:
-        db.add_student(args.name, parse_date(args.date), pace_cap=args.pace_cap)
+        db.add_student(
+            args.name, parse_date(args.date), pace_cap=args.pace_cap, grade=args.grade
+        )
     except Exception as e:  # noqa: BLE001
         print(f"could not add student: {e}")
         return 1
@@ -156,6 +158,17 @@ def cmd_default(args) -> int:
         print(f"Default student is now {args.name}.")
         return 0
     print(resolve_student(None, home))
+    return 0
+
+
+def cmd_grade_level(args) -> int:
+    db, _ = open_for_student(args)
+    student = db.student(args.name)
+    if args.set is not None:
+        db.set_student_field(student["id"], "grade", args.set)
+        print(f"{args.name} is now in grade {curriculum.grade_label(args.set)}.")
+        return 0
+    print(f"{args.name}: grade {curriculum.grade_label(student['grade'])}")
     return 0
 
 
@@ -414,7 +427,7 @@ def cmd_status(args) -> int:
     plan = db.plan_for(student["id"], on.isoformat())
     q = db.latest_open_quiz(student["id"])
     print(
-        f"{args.name}: story stage {student['composition_stage']}, pace cap {student['pace_cap']}"
+        f"{args.name}: grade {curriculum.grade_label(student['grade'])}, story stage {student['composition_stage']}, pace cap {student['pace_cap']}"
     )
     print(f"  plan for {on.isoformat()}: {'built' if plan else 'not built yet'}")
     print(f"  open quiz: {q['for_date'] if q else 'none'}")
@@ -456,8 +469,18 @@ def build_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("init", help="add a student")
     sp.add_argument("name")
     sp.add_argument("--pace-cap", type=int, default=2, choices=[1, 2, 3])
+    sp.add_argument(
+        "--grade",
+        type=curriculum.parse_grade,
+        help="school grade, K or 1-5: placement starts there",
+    )
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_init)
+
+    sp = sub.add_parser("grade-level", help="show or set a student's school grade")
+    sp.add_argument("name", nargs="?")
+    sp.add_argument("--set", type=curriculum.parse_grade, metavar="K|1-5")
+    sp.set_defaults(fn=cmd_grade_level)
 
     sp = sub.add_parser(
         "placement", help="find where the student already is (oral, ~10 minutes)"

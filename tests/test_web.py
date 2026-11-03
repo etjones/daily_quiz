@@ -1,5 +1,6 @@
 import json
 from datetime import date, timedelta
+from pathlib import Path
 
 import cv2
 import helpers
@@ -7,10 +8,11 @@ import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
 
-from dq import llm, render
+from dq import curriculum, llm, placement, render
 from dq.db import DB
 from dq.web.views import STUDENT_COOKIE
 
+CUR = curriculum.load(Path(__file__).resolve().parents[1] / "curriculum")
 TODAY = date.today().isoformat()
 YESTERDAY = (date.today() - timedelta(days=1)).isoformat()
 
@@ -130,6 +132,18 @@ def test_unknown_student_is_a_404_page(web):
     assert r.status_code == 404 and "no student named" in text(r)
 
 
+def test_add_student_with_grade_and_change_it(web, home):
+    post(web, "/students", {"name": "Kit", "pace_cap": "2", "grade": "0"})
+    db = DB(home / "dq.db")
+    assert db.student("Kit")["grade"] == 0
+    r = post(web, "/students/grade", {"name": "Kit", "grade": "4"})
+    assert r.status_code == 200 and "grade 4" in text(r)
+    assert DB(home / "dq.db").student("Kit")["grade"] == 4
+    assert (
+        post(web, "/students/grade", {"name": "Kit", "grade": "9"}).status_code == 400
+    )
+
+
 def test_bad_student_name_is_rejected(web):
     assert post(web, "/students", {"name": "../x"}).status_code == 400
 
@@ -143,6 +157,27 @@ def test_build_day_and_serve_pdfs(web):
     pdf = web.get(f"/files/{TODAY}/worksheet-{TODAY}.pdf")
     assert pdf.status_code == 200
     assert b"".join(pdf.streaming_content).startswith(b"%PDF")
+
+
+def test_open_quiz_links_its_quiz_and_script_pdfs(web, home):
+    built(web)
+    q, _ = open_manifest(home)
+    quiz = f"/files/{TODAY}/quiz-{q['for_date']}.pdf"
+    script = f"/files/{TODAY}/parent-script-{q['for_date']}.pdf"
+    for url in ("/", f"/quiz/{q['id']}", f"/quiz/{q['id']}/grade"):
+        page = text(get(web, url))
+        assert quiz in page and script in page, url
+    assert web.get(quiz).status_code == 200
+
+
+def test_graded_quiz_pdfs_stay_findable_from_history(web, home):
+    built(web)
+    q, m = open_manifest(home)
+    form = {f"right_{it['id']}": "on" for it in m["items"]}
+    post(web, f"/quiz/{q['id']}/grade", form)
+    script = f"/files/{TODAY}/parent-script-{q['for_date']}.pdf"
+    assert script in text(get(web, "/history"))
+    assert script in text(get(web, f"/quiz/{q['id']}"))
 
 
 def test_files_route_refuses_paths_outside_the_student_folder(web, home):
@@ -218,7 +253,8 @@ def test_placement_all_wrong_places_at_the_start(web):
         data["answers"] += "n"
         r = post(web, "/placement", data)
     assert asked > 0
-    assert "0 / 77" in text(r) and "0 / 10" in text(r) and "0 / 61" in text(r)
+    for t in placement.TRACKS:
+        assert f"0 / {len(placement.track_skills(CUR, t))}" in text(r)
 
 
 def test_placement_undo_and_partial_for_htmx(web):
@@ -241,7 +277,8 @@ def test_placement_marks_known_math(web, home):
         r = post(web, "/placement", data)
     db = DB(home / "dq.db")
     units = db.units(db.student("Sam")["id"])
-    assert len([k for k in units if k[0].startswith("m.")]) == 61
+    n_math = len(placement.track_skills(CUR, "math"))
+    assert len([k for k in units if k[0].startswith("m.")]) == n_math
     assert not any(k[0].startswith("sp.") for k in units)
 
 

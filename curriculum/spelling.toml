@@ -10,18 +10,28 @@
 # as "can you apply the pattern?" checks. Every word must match the skill's `pattern`
 # regex (enforced by `dq validate`).
 #
-# Sources / honesty note: the pattern inventory follows the TEKS foundational-skills
-# phonics list (consonant blends; digraphs ch/tch/sh/th/wh/ng/ck/kn/-dge/ph; vowel
-# digraphs oo, ea, ee, ow, ou, ay, ai, aw, au, ew, oa, ie, -igh; diphthongs oy/oi/ou/ow;
-# common patterns -ink/-onk/-ick) plus the TEKS spelling expectations (sound-spelling
-# patterns, high-frequency words from a research-based list). Grade bands and the exact
-# ordering are my own judgement of a common phonics scope and sequence, not TEA text.
-# Sight-word lists follow the Fry list order. Verify before relying on either.
+# Sources / honesty note: the sequence spans kindergarten through grade 5. K–2 follows
+# the TEKS foundational-skills phonics list (VC/CVC/CCVC words; consonant blends;
+# digraphs ch/tch/sh/th/wh/ng/ck/kn/-dge/ph; vowel digraphs oo, ea, ee, ow, ou, ay, ai,
+# aw, au, ew, oa, ie, -igh; diphthongs oy/oi/ou/ow) plus the TEKS spelling expectations
+# (sound-spelling patterns, inflections, high-frequency words from a research-based
+# list). Grades 3–5 follow the spelling and vocabulary strands as I understand them:
+# syllable division, homophones, the affixes and Greek/Latin roots the TEKS name as
+# examples, and consonant/vowel changes between related words (select/selection,
+# decide/decision, crime/criminal). Grade bands, word choices and the exact ordering are
+# my own judgement of a common scope and sequence, not TEA text, and the TEKS paragraph
+# numbers in `teks` fields are best-effort. Sight-word lists follow the Fry list order
+# (words 1–300, proper nouns left out). Verify before relying on any of it.
+#
+# Each skill's `grade` (0 = kindergarten; inherited from its strand unless set on the
+# skill) seeds placement, which trusts grades to be non-decreasing along each track. So a
+# few TEKS grade-1 skills that sit after grade-2 skills in file order (plural -s through
+# -ing, contractions, compounds) are marked grade 2.
 
 [meta]
 subject = "spelling"
-version = "0.1"
-teks_ref = "ELAR §110.3(b), foundational language skills: spelling by sound-spelling patterns; high-frequency words"
+version = "0.2"
+teks_ref = "ELAR §110.2 (K) through §110.7 (grade 5), (b)(2) foundational language skills: spelling by sound-spelling patterns, syllable types, affixes and roots; high-frequency words; (b)(3) vocabulary: affixes and Greek/Latin roots"
 teks_numbering_verified = false
 
 # ---------------------------------------------------------------------------
@@ -29,10 +39,21 @@ teks_numbering_verified = false
 # ---------------------------------------------------------------------------
 
 [[strand]]
+id = "vc"
+title = "Two-letter VC words"
+track = "phonics"
+grade = 0
+teks = "§110.2(b)(2)(C)(i)"
+rationale = "Kindergarten spelling starts with the shortest real words: one vowel, one consonant. Writing them shows the child that each sound gets a letter, in order, before a third sound is added."
+teach = "Say the word and stretch it (a-t). The child says each sound while writing its letter. Keep it small: two or three words a day is plenty at this age."
+watch_for = "Leaving out the vowel (t for at): a vowel at the start of a word is easy to miss. Say the first sound with exaggeration. Letter reversals are normal in kindergarten."
+
+[[strand]]
 id = "cvc"
 title = "Short vowels in CVC words"
 track = "phonics"
-grade = 1
+grade = 0
+teks = "§110.2(b)(2)(C)(i); §110.3(b)(2)(C)(i)"
 rationale = "Every later pattern is a variation on consonant-vowel-consonant. Short vowels first because each letter has one dependable sound and children can segment these words by ear."
 teach = "Say the word slowly, stretching it (c-a-t). Child taps one finger per sound, then writes one letter per tap."
 watch_for = "Short e and i get confused (pin/pen): the sounds are close in many accents. Reversed b/d and p/q are normal at this age; record them but do not scold."
@@ -104,7 +125,7 @@ watch_for = "Spelling the end of 'happy' as -ee or -ie (happee). The sound is ri
 id = "inflection"
 title = "Plurals and word endings"
 track = "phonics"
-grade = 1
+grade = 2
 rationale = "Adding -s, -es, -ed and -ing changes a word's meaning. The rules (doubling, dropping the e, y to i) turn up in nearly all writing."
 teach = "Always start from the base word. Ask: does it end in a short vowel plus one consonant (double it)? A silent e (drop it)? A y (change it)?"
 watch_for = "-ed is spoken as /t/, /d/ or /id/ but always written -ed. Children write 'jumpt', which is phonetically right, so treat it as a pattern error."
@@ -119,17 +140,120 @@ teach = "Show the parts with a gap (un | happy, sun | shine), then close the gap
 watch_for = "Apostrophe placement in contractions (do'nt). Doubling the letter at a prefix join: un + necessary is the rare exception, un + lock is not."
 
 [[strand]]
+id = "sight-k"
+title = "High-frequency words, first 20 (kindergarten)"
+track = "sight"
+grade = 0
+teks = "§110.2(b)(2)(C)(iii)"
+rationale = "The TEKS ask kindergartners to spell some high-frequency words. The first 20 Fry words are short and turn up in nearly every sentence a child writes."
+teach = "Look, say, cover, write, check. One or two words a day. Say which letter is the surprise (the o in of, the a in was)."
+watch_for = "Spelling the, of, was and they the way they sound (thu, uv, wuz, thay). That is normal at this age; these are learned by memory."
+
+[[strand]]
 id = "sight"
 title = "High-frequency words (Fry list, in order)"
 track = "sight"
 grade = 1
-rationale = "The first 100 Fry words make up about half of everything children read and write. Many break the usual patterns (said, was, of), so they must be learned as whole words."
+teks = "§110.3(b)(2)(C)(iv); §110.4(b)(2)(C)(v); §110.5(b)(2)(B)"
+rationale = "The first 100 Fry words make up about half of everything children read and write, and the first 300 about two-thirds. Many break the usual patterns (said, was, of, thought, eyes), so they must be learned as whole words."
 teach = "Look, say, cover, write, check. Spell it aloud once, then write it from memory. Say which part is the tricky part."
 watch_for = "Phonetic spellings of irregular words (sed for said, wuz for was). The child hears it correctly and has not yet memorised the exception."
+
+[[strand]]
+id = "syllables"
+title = "Syllable division in longer words"
+track = "phonics"
+grade = 3
+teks = "§110.5(b)(2)(A)(v); §110.5(b)(2)(B)(i)"
+rationale = "From third grade on, most new spelling words have two or more syllables. Splitting a word into syllables turns one hard word into two easy ones, and the syllable type (closed or open) tells you whether the vowel is short or long."
+teach = "Clap the syllables. Write each syllable as its own small word, then join them. Find the vowels first, then look at the consonants between them: rab|bit, ti|ger, cab|in."
+watch_for = "Dropping one of a double consonant (rabit, kiten) or doubling where there should be one (tigger). Both are syllable-type errors: ask whether the first vowel is short or long."
+
+[[strand]]
+id = "adv-vowels"
+title = "Harder vowel and silent-letter patterns"
+track = "phonics"
+grade = 3
+teks = "§110.5(b)(2)(B)(iii); §110.6(b)(2)(B)(i)"
+rationale = "A few spellings (ought, augh, ough, silent b, g and t) cannot be worked out from sound. They are common in grade 3–4 reading, so children need them as known chunks rather than guesses."
+teach = "Group words that share both sound and spelling: bought, brought, thought. For silent letters, show the related word where the letter is heard if there is one (sign/signal)."
+watch_for = "Phonetic spellings (thot, cot for caught, lam, sine). Count them as pattern errors, not careless ones."
+
+[[strand]]
+id = "affix-3"
+title = "Prefixes and suffixes (grade 3)"
+track = "phonics"
+grade = 3
+teks = "§110.5(b)(2)(B)(iv)-(v); §110.5(b)(3)(C)"
+rationale = "Third-grade TEKS name specific affixes (dis-, pre-, non-, im-/in-, -ness, -y, -ful). Each has a fixed spelling and a fixed meaning, so learning it once unlocks dozens of words."
+teach = "Write the base word, then add the part: dis + like. Say what the new word means using the part's meaning (dislike = not like). When a suffix meets a final y or e, check the rule before joining."
+watch_for = "Changing the base word when adding a prefix (dissappear). A prefix never changes the base word's letters: dis + appear has one s because appear has none."
+
+[[strand]]
+id = "homophones"
+title = "Homophones"
+track = "phonics"
+grade = 3
+teks = "§110.5(b)(2)(B)(ii); §110.6(b)(2)(B)(ii)"
+rationale = "Homophones sound identical, so spelling by ear cannot work; the meaning decides. The TEKS list homophones in grade 3 and grade 4 spelling."
+teach = "Always read the sentence. Ask which meaning fits, then write the spelling that goes with it. Tie a picture to one of the pair (a pear is a fruit; a pair is two)."
+watch_for = "its/it's, your/you're and whose/who's. Test: can you say it is, you are or who is in that spot? If yes, use the apostrophe."
+
+[[strand]]
+id = "affix-4"
+title = "Prefixes and suffixes (grade 4)"
+track = "phonics"
+grade = 4
+teks = "§110.6(b)(2)(B)(iv)-(v); §110.6(b)(3)(C)"
+rationale = "Grade 4 adds mis-, sub-, -ment, -able/-ible, -ity and -tion. Several of these change how the base word sounds (select, selection), which is exactly where spelling by ear breaks down."
+teach = "Find the base word, write it, then add the suffix. Say the base word aloud even when the new word sounds different: select, selection."
+watch_for = "-able vs -ible (they sound the same) and -shun written for -tion. Rule of thumb: -able usually follows a whole word you can see (wash-able); -ible usually follows a part that is not a word (vis-ible)."
+
+[[strand]]
+id = "roots"
+title = "Greek and Latin roots"
+track = "phonics"
+grade = 4
+teks = "§110.6(b)(3)(C); §110.7(b)(2)(B)(iv); §110.7(b)(3)(C)"
+rationale = "Many long science and school words are built from a handful of Greek and Latin roots. A child who knows that graph means write and meter means measure can spell, and often guess the meaning of, words like thermometer on sight."
+teach = "Underline the root, say what it means, and list other words that share it. Spell the root as one chunk, then add the rest."
+watch_for = "Spelling the root by sound inside a long word (thermomiter, telafone). Remind the child the root is always spelled the same way."
+
+[[strand]]
+id = "affix-5"
+title = "Prefixes and suffixes (grade 5)"
+track = "phonics"
+grade = 5
+teks = "§110.7(b)(2)(B)(v); §110.7(b)(3)(C)"
+rationale = "Grade 5 TEKS name trans-, super- and -ive (and -logy, taught with the roots). These carry much of the vocabulary in science and social studies."
+teach = "Split the word into prefix, base and suffix, write each part, then join. Say the meaning of each part (trans = across, super = above or beyond)."
+watch_for = "Keeping a silent e before -ive (createive). The e drops before a suffix that starts with a vowel."
+
+[[strand]]
+id = "changes"
+title = "Sound changes between related words"
+track = "phonics"
+grade = 5
+teks = "§110.7(b)(2)(B)(ii)-(iii)"
+rationale = "When a suffix is added, the base word's sound can shift (decide, decision; music, musician; crime, criminal) while its spelling mostly stays. Grade 5 TEKS ask children to spell these consonant and vowel changes. The related shorter word is the best clue to the hard part."
+teach = "Write the pair side by side: music / musician. Point to the letter that stays the same even though its sound changes."
+watch_for = "Spelling the new sound (musishun, decizhun, crimminal). Ask: which word is this built from?"
 
 # ---------------------------------------------------------------------------
 # SKILLS
 # ---------------------------------------------------------------------------
+# --- vc ---
+
+[[skill]]
+id = "sp.vc"
+strand = "vc"
+hl = "^[aeiou]"
+title = "VC words (at, up)"
+pattern = '^[aeiou][bcdfghjklmnpqrstvwxyz]$'
+tip = "Two sounds, two letters. Say the vowel first, then the last sound."
+note = "is and as end in a /z/ sound but are spelled with s; they are kept as transfer words."
+words = ["at","in","up","on","it","am","an","us","if","ox","ad","ax","is","as"]
+
 # --- cvc ---
 
 [[skill]]
@@ -191,6 +315,17 @@ pattern = '^[bcdfghjklmnpqrstvwxyz][aeiou][bcdfghjklmnpqrstvwxyz]$'
 tip = "Listen to the middle sound. Which vowel makes it?"
 note = "Interleaves all five vowels so the child must choose the vowel by ear instead of by the day's lesson."
 words = ["sit","hop","bed","cup","ran","big","dog","net","bus","map","pin","fox","red","mud","lap","ten","zip","hot","jam","leg","cut"]
+
+[[skill]]
+id = "sp.cvc.ccvc"
+strand = "cvc"
+hl = "^[bcdfghjklmnpqrstvwxyz]{2}"
+title = "CCVC words (flop, spit)"
+prereqs = ["sp.cvc.mixed"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]{2}[aeiou][bcdfghjklmnpqrstvwxyz]$'
+tip = "Two sounds at the start. Say them both, then the vowel, then the end."
+note = "TEKS kindergarten spelling includes CCVC words. The blend skills in grade 1 return to these by blend family."
+words = ["flop","spit","drag","slap","trot","grub","plot","stun","slid","snag","brim","smug"]
 
 # --- digraph ---
 
@@ -874,11 +1009,444 @@ write = "Please write your name."
 right = "Turn right at the corner."
 sea = "The sea is blue."
 
+# --- syllables (grade 3) ---
+
+[[skill]]
+id = "sp.syl.vccv"
+strand = "syllables"
+title = "Syllable division VCCV (rabbit, napkin)"
+prereqs = ["sp.y.le", "sp.infl.double"]
+pattern = '[aeiou][bcdfghjklmnpqrstvwxz]{2}[aeiou]'
+tip = "Two consonants between two vowels: split between them, rab | bit, nap | kin."
+note = "Doubled and different consonants are mixed on purpose. With a double, both halves keep a letter."
+words = ["rabbit","napkin","basket","kitten","muffin","picnic","button","dentist","tennis","magnet","insect","helmet","goblin","cactus","contest","sudden"]
+
+[[skill]]
+id = "sp.syl.open"
+strand = "syllables"
+title = "Open syllables (tiger, robot)"
+prereqs = ["sp.syl.vccv"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]*[aeiou][bcdfghjklmnpqrstvwxz][aeiou]'
+tip = "When the first vowel says its name, the syllable ends with that vowel: ti | ger, ro | bot."
+words = ["tiger","robot","music","open","pilot","silent","frozen","student","human","label","spider","bacon","moment","hotel","total","focus"]
+
+[[skill]]
+id = "sp.syl.closed-vcv"
+strand = "syllables"
+title = "Closed first syllable, one consonant (cabin, lemon)"
+prereqs = ["sp.syl.open"]
+pattern = '^[bcdfghjklmnpqrstvwxyz]*[aeiou][bcdfghjklmnpqrstvwxz][aeiou]'
+tip = "When the first vowel is short, the consonant stays with it: cab | in, lem | on. Write only one."
+note = "Contrast with sp.syl.open (ti | ger). Children who have just learned doubling often write cabbin; that is the error this skill targets."
+words = ["cabin","lemon","river","seven","planet","robin","wagon","comic","visit","model","habit","salad","finish","limit","metal"]
+
+[[skill]]
+id = "sp.syl.vcccv"
+strand = "syllables"
+title = "Three consonants in the middle (hundred, monster)"
+prereqs = ["sp.syl.vccv"]
+pattern = '[aeiou][bcdfghjklmnpqrstvwxz]{3}[aeiou]'
+tip = "Three consonants in the middle: one or two go with each syllable. Clap it: hun | dred, mon | ster."
+words = ["hundred","monster","pumpkin","sandwich","hamster","complete","instant","explain","address","control","athlete","kingdom","lobster","pilgrim","mushroom"]
+
+[[skill]]
+id = "sp.syl.r"
+strand = "syllables"
+title = "R-controlled in two syllables (garden, corner)"
+prereqs = ["sp.syl.vccv", "sp.r.ur"]
+pattern = '(ar|er|ir|or|ur)'
+tip = "Split the word, then spell the ar, or, er, ir or ur part in each syllable."
+words = ["garden","market","corner","morning","perfect","thirsty","turkey","harvest","partner","person","carpet","artist","curtain","forty","dirty"]
+
+# --- adv-vowels (grade 3) ---
+
+[[skill]]
+id = "sp.adv.ought"
+strand = "adv-vowels"
+title = "ought and aught (bought, caught)"
+prereqs = ["sp.vt.au", "sp.vt.igh"]
+pattern = '(ought|aught)'
+tip = "The sound in saw plus t can be spelled ought or aught. The gh is silent."
+words = ["bought","caught","brought","taught","thought","daughter","fought","naughty","ought","sought","thoughtful","afterthought"]
+
+[[skill]]
+id = "sp.adv.silent"
+strand = "adv-vowels"
+title = "Silent b, g and t (lamb, sign)"
+prereqs = ["sp.other.wr"]
+pattern = '(mb|gn|st(le|en))'
+hl = '(?<=m)b|g(?=n)|(?<=s)t(?=le|en)'
+tip = "Some letters are silent: b after m (lamb), g before n (sign), t in listen and castle."
+words = ["lamb","sign","listen","thumb","gnat","castle","climb","design","comb","whistle","crumb","gnaw","fasten","limb","glisten"]
+
+# --- affix-3 (grade 3) ---
+
+[[skill]]
+id = "sp.pre.dis"
+strand = "affix-3"
+hl = "^dis"
+title = "Prefix dis- (dislike, disagree)"
+prereqs = ["sp.morph.re"]
+pattern = '^dis'
+tip = "dis- means not, or the opposite of. Add it without changing the base word."
+words = ["dislike","disagree","disappear","dishonest","disobey","distrust","discover","disconnect","displease","disloyal","disorder","disinfect","disable","disappoint"]
+
+[[skill]]
+id = "sp.pre.pre"
+strand = "affix-3"
+hl = "^pre"
+title = "Prefix pre- (preview, preheat)"
+prereqs = ["sp.pre.dis"]
+pattern = '^pre'
+tip = "pre- means before."
+words = ["preview","preheat","prepay","preschool","pretest","precook","prewash","preset","prefix","preteen","prejudge","preorder"]
+
+[[skill]]
+id = "sp.pre.non"
+strand = "affix-3"
+hl = "^non"
+title = "Prefix non- (nonstop, nonsense)"
+prereqs = ["sp.pre.pre"]
+pattern = '^non'
+tip = "non- means not."
+words = ["nonstop","nonsense","nonfiction","nonliving","nonfat","nonstick","nontoxic","nonslip","nonprofit","nonverbal","nonmetal","nonsmoking"]
+
+[[skill]]
+id = "sp.pre.in-not"
+strand = "affix-3"
+hl = "^(im|in)"
+title = "Prefixes im- and in-, meaning not (impolite, incorrect)"
+prereqs = ["sp.pre.non"]
+pattern = '^(im|in)'
+tip = "im- and in- can mean not. Use im- before b, m or p."
+note = "TEKS also list im- meaning into (import); that sense is taught with the root port."
+words = ["impolite","incorrect","impossible","incomplete","impatient","invisible","imperfect","inactive","improper","indirect","immobile","inexpensive","impure","insecure"]
+
+[[skill]]
+id = "sp.suf.ness"
+strand = "affix-3"
+hl = "ness$"
+title = "Suffix -ness (kindness, darkness)"
+prereqs = ["sp.morph.less", "sp.infl.ies"]
+pattern = 'ness$'
+tip = "-ness turns a describing word into a thing: kind, kindness. A final y changes to i: happiness."
+words = ["kindness","darkness","sadness","goodness","softness","illness","sickness","weakness","happiness","thickness","loudness","laziness","emptiness","fitness"]
+
+[[skill]]
+id = "sp.suf.y"
+strand = "affix-3"
+hl = "y$"
+title = "Suffix -y (sleepy, cloudy)"
+prereqs = ["sp.suf.ness", "sp.infl.double", "sp.infl.drop-e"]
+pattern = '^[a-z]{3,}y$'
+tip = "-y means full of or like: cloud, cloudy. Drop a silent e (shiny); double after a short vowel (foggy)."
+words = ["sleepy","cloudy","snowy","dusty","bumpy","stormy","noisy","shiny","foggy","muddy","salty","chilly","grassy","rocky","crunchy"]
+
+[[skill]]
+id = "sp.suf.y-to-i"
+strand = "affix-3"
+hl = 'i(?=(ly|ful)$)'
+title = "y to i before -ly and -ful (happily, beautiful)"
+prereqs = ["sp.suf.y", "sp.morph.ly", "sp.morph.ful"]
+pattern = 'i(ly|ful)$'
+tip = "Consonant plus y: change the y to i before adding -ly or -ful."
+words = ["happily","easily","angrily","busily","luckily","heavily","beautiful","plentiful","pitiful","merciful","noisily","dutiful","readily","steadily"]
+
+# --- homophones (grade 3) ---
+
+[[skill]]
+id = "sp.homo.2"
+strand = "homophones"
+title = "Homophones II (ate/eight, hole/whole)"
+prereqs = ["sp.morph.homophone"]
+pattern = '.'
+needs_sentence = true
+tip = "Same sound, different spelling. Listen to the sentence to choose."
+note = "Pairs sit next to each other so both spellings are taught together. The parent script always reads the sentence."
+words = ["ate","eight","buy","by","four","for","knew","new","hole","whole","week","weak","flower","flour","pair","pear"]
+[skill.sentences]
+ate = "I ate my lunch."
+eight = "A spider has eight legs."
+buy = "We buy milk at the store."
+by = "Sit by me."
+four = "A dog has four legs."
+for = "This gift is for you."
+knew = "I knew the answer."
+new = "I have new shoes."
+hole = "The dog dug a hole."
+whole = "I ate the whole apple."
+week = "There are seven days in a week."
+weak = "I felt weak when I was sick."
+flower = "A red flower grew in the yard."
+flour = "We need flour to bake bread."
+pair = "I have a pair of socks."
+pear = "I ate a green pear."
+
+# --- grade 4 ---
+
+[[skill]]
+id = "sp.adv.ough"
+strand = "adv-vowels"
+grade = 4
+title = "ough, many sounds (rough, though)"
+prereqs = ["sp.adv.ought"]
+pattern = 'ough'
+tip = "ough can say uff (rough), off (cough) or oh (though). Learn which word goes with which sound."
+note = "No rule predicts the sound. Sort the words into sound groups: rough/tough/enough, cough/trough, though/dough/although, thorough."
+words = ["rough","though","tough","dough","enough","cough","although","doughnut","roughly","thorough","trough","throughout"]
+
+[[skill]]
+id = "sp.pre.mis"
+strand = "affix-4"
+hl = "^mis"
+title = "Prefix mis- (mistake, misspell)"
+prereqs = ["sp.pre.in-not"]
+pattern = '^mis'
+tip = "mis- means wrongly. Keep every letter: mis + spell is misspell, with two s's."
+words = ["mistake","misspell","misread","misplace","misuse","mislead","misbehave","misprint","misjudge","mismatch","misfit","mishear","misstep"]
+
+[[skill]]
+id = "sp.pre.sub"
+strand = "affix-4"
+hl = "^sub"
+title = "Prefix sub- (subway, submarine)"
+prereqs = ["sp.pre.mis"]
+pattern = '^sub'
+tip = "sub- means under or below."
+words = ["subway","submarine","subtract","subtitle","subzero","subset","subtopic","subheading","submerge","subsoil","suburb","subdivide"]
+
+[[skill]]
+id = "sp.suf.ment"
+strand = "affix-4"
+hl = "ment$"
+title = "Suffix -ment (payment, movement)"
+prereqs = ["sp.suf.y-to-i"]
+pattern = 'ment$'
+tip = "-ment turns an action into a thing: pay, payment. Keep a silent e: move, movement."
+note = "argument (argue) is the well-known exception that drops the e."
+words = ["payment","movement","treatment","enjoyment","agreement","equipment","excitement","amazement","statement","pavement","shipment","basement","argument","government"]
+
+[[skill]]
+id = "sp.suf.able"
+strand = "affix-4"
+hl = "able$"
+title = "Suffix -able (readable, washable)"
+prereqs = ["sp.suf.ment"]
+pattern = 'able$'
+tip = "-able means can be. It usually goes on a whole word: wash, washable."
+words = ["readable","washable","breakable","comfortable","enjoyable","dependable","remarkable","reasonable","lovable","believable","agreeable","adorable","valuable","avoidable"]
+
+[[skill]]
+id = "sp.suf.ible"
+strand = "affix-4"
+hl = "ible$"
+title = "Suffix -ible (visible, possible)"
+prereqs = ["sp.suf.able"]
+pattern = 'ible$'
+tip = "-ible sounds like -able. It usually goes on a part that is not a word by itself: vis, visible."
+words = ["visible","possible","terrible","horrible","flexible","sensible","edible","responsible","incredible","reversible","legible","audible","convertible"]
+
+[[skill]]
+id = "sp.suf.ity"
+strand = "affix-4"
+hl = "ity$"
+title = "Suffix -ity (activity, equality)"
+prereqs = ["sp.suf.ible"]
+pattern = 'ity$'
+tip = "-ity turns a describing word into a thing: equal, equality. Drop a final e first (active, activity)."
+words = ["activity","equality","ability","reality","electricity","curiosity","humidity","creativity","possibility","security","majority","popularity","publicity"]
+
+[[skill]]
+id = "sp.suf.tion"
+strand = "affix-4"
+hl = "tion$"
+title = "-tion: the t changes sound (select, selection)"
+prereqs = ["sp.suf.ment"]
+pattern = 'tion$'
+tip = "The base word ends in t. Keep the t and add -ion, even though it now says /sh/: select, selection."
+words = ["selection","direction","protection","collection","connection","correction","action","invention","election","completion","attraction","subtraction","prediction","exception"]
+
+[[skill]]
+id = "sp.root.graph"
+strand = "roots"
+hl = "(auto|graph)"
+title = "Roots auto and graph (autograph, paragraph)"
+prereqs = ["sp.other.ph", "sp.syl.open"]
+pattern = '(auto|graph)'
+tip = "auto means self. graph means write or draw. graph is spelled with ph."
+words = ["autograph","automatic","paragraph","automobile","graphic","biography","autopilot","calligraphy","autobiography","graphite","autocorrect","graphing"]
+
+[[skill]]
+id = "sp.root.meter"
+strand = "roots"
+hl = "(meter|tele)"
+title = "Roots meter and tele (thermometer, telescope)"
+prereqs = ["sp.root.graph"]
+pattern = '(meter|tele)'
+tip = "meter means measure. tele means far away."
+words = ["thermometer","telescope","centimeter","television","perimeter","telegram","diameter","speedometer","kilometer","telecast","millimeter","barometer","odometer"]
+
+[[skill]]
+id = "sp.root.phon"
+strand = "roots"
+hl = "phon"
+title = "Root phon, sound (telephone, microphone)"
+prereqs = ["sp.root.meter"]
+pattern = 'phon'
+tip = "phon means sound. It is spelled with ph."
+words = ["telephone","microphone","headphones","saxophone","symphony","xylophone","megaphone","earphone","homophone","phonograph","smartphone","phoneme"]
+
+[[skill]]
+id = "sp.root.port"
+strand = "roots"
+hl = "port"
+title = "Root port, carry (portable, export)"
+prereqs = ["sp.root.phon"]
+pattern = 'port'
+tip = "port means carry. export: carry out. import: carry in."
+words = ["portable","export","import","report","support","airport","passport","porter","reporter","important","seaport","carport"]
+
+[[skill]]
+id = "sp.homo.3"
+strand = "homophones"
+grade = 4
+title = "Homophones III (your/you're, whose/who's)"
+prereqs = ["sp.homo.2", "sp.morph.contraction"]
+pattern = '.'
+needs_sentence = true
+tip = "If you can say you are, it is or who is instead, use the apostrophe."
+note = "Pairs sit next to each other. The parent script always reads the sentence."
+words = ["you're","your","it's","its","who's","whose","weather","whether","threw","through","aloud","allowed","peace","piece","plain","plane"]
+[skill.sentences]
+"you're" = "You're my best friend."
+your = "Is this your hat?"
+"it's" = "It's raining outside."
+its = "The bird flapped its wings."
+"who's" = "Who's at the door?"
+whose = "Whose coat is this?"
+weather = "The weather is sunny today."
+whether = "I can't decide whether to stay or go."
+threw = "She threw the ball to me."
+through = "We walked through the woods."
+aloud = "Read the story aloud."
+allowed = "Dogs are not allowed in the store."
+peace = "The two kings made peace."
+piece = "May I have a piece of cake?"
+plain = "I like plain toast."
+plane = "The plane flew over the clouds."
+
+# --- grade 5 ---
+
+[[skill]]
+id = "sp.pre.trans"
+strand = "affix-5"
+hl = "^trans"
+title = "Prefix trans- (transport, translate)"
+prereqs = ["sp.pre.sub", "sp.root.port"]
+pattern = '^trans'
+tip = "trans- means across or change."
+words = ["transport","translate","transform","transfer","transplant","transparent","transit","transmit","transaction","transcript","transportation","transcontinental"]
+
+[[skill]]
+id = "sp.pre.super"
+strand = "affix-5"
+hl = "^super"
+title = "Prefix super- (superhero, supermarket)"
+prereqs = ["sp.pre.trans"]
+pattern = '^super'
+tip = "super- means above, or more than usual."
+words = ["superhero","supermarket","superstar","supervise","supersonic","superpower","supernatural","supervisor","superhuman","superstition","superb","supersize"]
+
+[[skill]]
+id = "sp.suf.ive"
+strand = "affix-5"
+hl = "ive$"
+title = "Suffix -ive (active, creative)"
+prereqs = ["sp.suf.tion"]
+pattern = 'ive$'
+tip = "-ive means tends to: create, creative. Drop a silent e before adding it."
+words = ["active","creative","attractive","protective","expensive","massive","explosive","positive","negative","impressive","talkative","productive","effective","festive","defensive"]
+
+[[skill]]
+id = "sp.change.sion"
+strand = "changes"
+hl = "sion$"
+title = "-sion: d and de change (decide, decision)"
+prereqs = ["sp.suf.tion"]
+pattern = 'sion$'
+tip = "When the base word ends in d or de, the new word often ends in -sion: decide, decision."
+note = "Base words: decide, divide, explode, invade, erode, conclude, collide, persuade, extend, expand, include, suspend, comprehend, provide, intrude."
+words = ["decision","division","explosion","invasion","erosion","conclusion","collision","persuasion","extension","expansion","inclusion","suspension","comprehension","provision","intrusion"]
+
+[[skill]]
+id = "sp.change.cian"
+strand = "changes"
+hl = "cian$"
+title = "-cian: the c changes sound (music, musician)"
+prereqs = ["sp.change.sion"]
+pattern = 'cian$'
+tip = "A person who does something with a word ending in c often ends in -cian: music, musician. Keep the c."
+words = ["musician","magician","electrician","physician","politician","technician","mathematician","optician","beautician","pediatrician","statistician"]
+
+[[skill]]
+id = "sp.change.vowel"
+strand = "changes"
+title = "Vowel changes (crime, criminal)"
+prereqs = ["sp.change.cian"]
+pattern = '^[a-z]+$'
+tip = "Think of the shorter word it comes from. The vowel letter stays even when its sound changes."
+note = "Base words to say if the child is stuck: crime, nature, please, wise, heal, sign, mine, nation, athlete, volcano, sane, cave, compete, define."
+words = ["criminal","natural","pleasant","wisdom","health","signal","mineral","national","athletic","volcanic","sanity","cavity","competition","definition"]
+
+[[skill]]
+id = "sp.root.geo-photo"
+strand = "roots"
+grade = 5
+hl = "(geo|photo)"
+title = "Roots geo and photo (geography, photograph)"
+prereqs = ["sp.root.port"]
+pattern = '(geo|photo)'
+tip = "geo means earth. photo means light."
+words = ["geography","photograph","geology","photocopy","geometry","photographer","geode","telephoto","geologist","photosynthesis","photogenic"]
+
+[[skill]]
+id = "sp.root.logy"
+strand = "roots"
+grade = 5
+hl = "logy$"
+title = "Suffix -logy, the study of (biology, zoology)"
+prereqs = ["sp.root.geo-photo"]
+pattern = 'logy$'
+tip = "-logy means the study of. It is spelled with a y at the end."
+words = ["biology","zoology","ecology","technology","mythology","psychology","meteorology","chronology","terminology","entomology","sociology"]
+
+[[skill]]
+id = "sp.root.struct"
+strand = "roots"
+grade = 5
+hl = "(struct|rupt)"
+title = "Roots struct and rupt (construct, erupt)"
+prereqs = ["sp.root.logy"]
+pattern = '(struct|rupt)'
+tip = "struct means build. rupt means break."
+words = ["construct","erupt","structure","interrupt","instruct","disrupt","destruction","rupture","construction","abrupt","eruption","instructor","corrupt","bankrupt"]
+
+[[skill]]
+id = "sp.root.dict"
+strand = "roots"
+grade = 5
+hl = "(dict|spect)"
+title = "Roots dict and spect (predict, inspect)"
+prereqs = ["sp.root.struct"]
+pattern = '(dict|spect)'
+tip = "dict means say. spect means look."
+words = ["predict","inspect","dictionary","spectator","dictate","respect","verdict","suspect","contradict","spectacle","dictation","inspector","prospect","spectacular","diction"]
+
 # --- sight (Fry first 100, in 10s) ---
 
 [[skill]]
 id = "sp.hf.01"
-strand = "sight"
+strand = "sight-k"
 title = "Sight words 1-10"
 pattern = '.'
 tip = "Some words you just have to remember."
@@ -886,7 +1454,7 @@ words = ["the","of","and","a","to","in","is","you","that","it"]
 
 [[skill]]
 id = "sp.hf.02"
-strand = "sight"
+strand = "sight-k"
 title = "Sight words 11-20"
 prereqs = ["sp.hf.01"]
 pattern = '.'
@@ -964,3 +1532,207 @@ prereqs = ["sp.hf.09"]
 pattern = '.'
 tip = "Some words you just have to remember."
 words = ["find","long","down","day","did","get","come","made","may","part"]
+
+# --- sight (Fry 101-300, in 10s) ---
+
+[[skill]]
+id = "sp.hf.11"
+strand = "sight"
+grade = 2
+title = "Sight words 101-110"
+prereqs = ["sp.hf.10"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["over","new","sound","take","only","little","work","know","place","years"]
+
+[[skill]]
+id = "sp.hf.12"
+strand = "sight"
+grade = 2
+title = "Sight words 111-120"
+prereqs = ["sp.hf.11"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["live","me","back","give","most","very","after","things","our","just"]
+
+[[skill]]
+id = "sp.hf.13"
+strand = "sight"
+grade = 2
+title = "Sight words 121-130"
+prereqs = ["sp.hf.12"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["name","good","sentence","man","think","say","great","where","help","through"]
+
+[[skill]]
+id = "sp.hf.14"
+strand = "sight"
+grade = 2
+title = "Sight words 131-140"
+prereqs = ["sp.hf.13"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["much","before","line","right","too","means","old","any","same","tell"]
+
+[[skill]]
+id = "sp.hf.15"
+strand = "sight"
+grade = 2
+title = "Sight words 141-150"
+prereqs = ["sp.hf.14"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["boy","follow","came","want","show","also","around","form","three","small"]
+
+[[skill]]
+id = "sp.hf.16"
+strand = "sight"
+grade = 2
+title = "Sight words 151-160"
+prereqs = ["sp.hf.15"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["set","put","end","does","another","well","large","must","big","even"]
+
+[[skill]]
+id = "sp.hf.17"
+strand = "sight"
+grade = 2
+title = "Sight words 161-170"
+prereqs = ["sp.hf.16"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["such","because","turn","here","why","ask","went","men","read","need"]
+
+[[skill]]
+id = "sp.hf.18"
+strand = "sight"
+grade = 2
+title = "Sight words 171-180"
+prereqs = ["sp.hf.17"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["land","different","home","us","move","try","kind","hand","picture","again"]
+
+[[skill]]
+id = "sp.hf.19"
+strand = "sight"
+grade = 2
+title = "Sight words 181-190"
+prereqs = ["sp.hf.18"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["change","off","play","spell","air","away","animal","house","point","page"]
+
+[[skill]]
+id = "sp.hf.20"
+strand = "sight"
+grade = 2
+title = "Sight words 191-200"
+prereqs = ["sp.hf.19"]
+pattern = '.'
+tip = "Some words you just have to remember."
+note = "Fry lists a proper noun here; it is left out."
+words = ["letter","mother","answer","found","study","still","learn","should","world"]
+
+[[skill]]
+id = "sp.hf.21"
+strand = "sight"
+grade = 3
+title = "Sight words 201-210"
+prereqs = ["sp.hf.20"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["high","every","near","add","food","between","own","below","country","plant"]
+
+[[skill]]
+id = "sp.hf.22"
+strand = "sight"
+grade = 3
+title = "Sight words 211-220"
+prereqs = ["sp.hf.21"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["last","school","father","keep","tree","never","start","city","earth","eyes"]
+
+[[skill]]
+id = "sp.hf.23"
+strand = "sight"
+grade = 3
+title = "Sight words 221-230"
+prereqs = ["sp.hf.22"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["light","thought","head","under","story","saw","left","don't","few","while"]
+
+[[skill]]
+id = "sp.hf.24"
+strand = "sight"
+grade = 3
+title = "Sight words 231-240"
+prereqs = ["sp.hf.23"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["along","might","close","something","seem","next","hard","open","example","begin"]
+
+[[skill]]
+id = "sp.hf.25"
+strand = "sight"
+grade = 3
+title = "Sight words 241-250"
+prereqs = ["sp.hf.24"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["life","always","those","both","paper","together","got","group","often","run"]
+
+[[skill]]
+id = "sp.hf.26"
+strand = "sight"
+grade = 3
+title = "Sight words 251-260"
+prereqs = ["sp.hf.25"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["important","until","children","side","feet","car","mile","night","walk","white"]
+
+[[skill]]
+id = "sp.hf.27"
+strand = "sight"
+grade = 3
+title = "Sight words 261-270"
+prereqs = ["sp.hf.26"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["sea","began","grow","took","river","four","carry","state","once","book"]
+
+[[skill]]
+id = "sp.hf.28"
+strand = "sight"
+grade = 3
+title = "Sight words 271-280"
+prereqs = ["sp.hf.27"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["hear","stop","without","second","later","miss","idea","enough","eat","face"]
+
+[[skill]]
+id = "sp.hf.29"
+strand = "sight"
+grade = 3
+title = "Sight words 281-290"
+prereqs = ["sp.hf.28"]
+pattern = '.'
+tip = "Some words you just have to remember."
+note = "Fry lists a proper noun here; it is left out."
+words = ["watch","far","real","almost","let","above","girl","sometimes","mountains"]
+
+[[skill]]
+id = "sp.hf.30"
+strand = "sight"
+grade = 3
+title = "Sight words 291-300"
+prereqs = ["sp.hf.29"]
+pattern = '.'
+tip = "Some words you just have to remember."
+words = ["cut","young","talk","soon","list","song","being","leave","family","it's"]

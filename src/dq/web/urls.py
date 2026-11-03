@@ -15,6 +15,7 @@ urlpatterns = [
     path("students", views.students_view),
     path("students/select", views.select_student),
     path("students/default", views.set_default),
+    path("students/grade", views.set_grade),
     path("mood", views.log_mood),
     path("day", views.build_day),
     path("day/<str:on>", views.day_page),

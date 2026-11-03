@@ -11,9 +11,9 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-QUIZ_TYPES = ("analogy", "odd", "ladder", "build", "homophone")
+QUIZ_TYPES = ("analogy", "odd", "ladder", "build", "homophone", "meaning")
 JUDGED_TYPES = ("analogy", "ladder", "build")  # open answers a model may accept
-MAX_LEVEL = 3
+MAX_LEVEL = 5
 
 
 @dataclass
@@ -94,6 +94,18 @@ def _homophone(d: dict) -> Puzzle:
     )
 
 
+def _meaning(d: dict) -> Puzzle:
+    return Puzzle(
+        id="mean:" + re.sub(r"[^a-z]+", "-", d["prompt"].lower()).strip("-"),
+        type="meaning",
+        prompt=f"{d['prompt']} ({', '.join(d['choices'])})",
+        answer=d["answer"],
+        level=d.get("level", 1),
+        note=d["skill"],
+        words=d["choices"],
+    )
+
+
 def _scale(d: dict) -> Puzzle:
     return Puzzle(
         id="sc:" + ":".join(w.lower() for w in d["words"]),
@@ -112,6 +124,7 @@ _MAKERS = {
     "ladder": _ladder,
     "build": _build,
     "homophone": _homophone,
+    "meaning": _meaning,
     "scale": _scale,
 }
 
@@ -155,7 +168,7 @@ def validate(
         seen.add(p.id)
         if not 1 <= p.level <= MAX_LEVEL:
             errs.append(f"{p.id}: level must be 1..{MAX_LEVEL}")
-        if p.type in ("odd", "homophone") and p.answer not in p.words:
+        if p.type in ("odd", "homophone", "meaning") and p.answer not in p.words:
             errs.append(f"{p.id}: answer {p.answer!r} is not one of the choices")
         if p.type == "ladder":
             for a in [p.answer, *p.accept]:
@@ -175,13 +188,18 @@ def validate(
     return errs
 
 
-def levels(history: list[tuple[str, bool]]) -> dict[str, int]:
-    """Per puzzle type: start at 1, up a level after three right in a row, down after two
-    wrong in a row. `history` is (type, correct), oldest first."""
+def start_level(grade: int | None) -> int:
+    """Where a student's puzzles start: grade 1 (or unknown) at level 1, grade 5 at level 5."""
+    return min(MAX_LEVEL, max(1, grade or 1))
+
+
+def levels(history: list[tuple[str, bool]], start: int = 1) -> dict[str, int]:
+    """Per puzzle type: start at `start`, up a level after three right in a row, down after
+    two wrong in a row. `history` is (type, correct), oldest first."""
     out: dict[str, int] = {}
     run: dict[str, int] = {}
     for t, ok in history:
-        lv, r = out.get(t, 1), run.get(t, 0)
+        lv, r = out.get(t, start), run.get(t, 0)
         r = max(1, r + 1) if ok else min(-1, r - 1)
         if r >= 3:
             lv, r = min(MAX_LEVEL, lv + 1), 0

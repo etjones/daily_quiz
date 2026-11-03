@@ -1,5 +1,6 @@
 # Odd one out: which word does not belong? The child writes that word.
 # answer must be one of the words. reason is shown to the grown-up, who can ask "why?".
+# level  1-5, roughly the school grade; 4-5 use grade 4-5 vocabulary, science and word parts.
 
 [[odd]]
 words = ["apple", "banana", "carrot", "grape"]
@@ -216,3 +217,87 @@ words = ["river", "lake", "ocean", "desert"]
 answer = "desert"
 reason = "the others are water"
 level = 2
+
+[[odd]]
+words = ["triangle", "square", "pentagon", "circle"]
+answer = "circle"
+reason = "the others are polygons with straight sides"
+level = 4
+
+[[odd]]
+words = ["Mercury", "Venus", "Mars", "Moon"]
+answer = "Moon"
+reason = "the others are planets; the Moon goes around Earth"
+level = 4
+
+[[odd]]
+words = ["noun", "verb", "adjective", "sentence"]
+answer = "sentence"
+reason = "the others are parts of speech"
+level = 4
+
+[[odd]]
+words = ["predict", "preview", "prepare", "pretty"]
+answer = "pretty"
+reason = "the others start with the prefix pre- (before)"
+level = 4
+
+[[odd]]
+words = ["telephone", "telescope", "television", "telling"]
+answer = "telling"
+reason = "the others use the root tele (far)"
+level = 4
+
+[[odd]]
+words = ["Texas", "Ohio", "Florida", "Chicago"]
+answer = "Chicago"
+reason = "the others are states; Chicago is a city"
+level = 4
+
+[[odd]]
+words = ["cautious", "careful", "watchful", "reckless"]
+answer = "reckless"
+reason = "the others mean taking care"
+level = 4
+
+[[odd]]
+words = ["enormous", "gigantic", "massive", "minute"]
+answer = "minute"
+reason = "the others mean very big; minute (my-NOOT) means tiny"
+level = 5
+
+[[odd]]
+words = ["furious", "irate", "livid", "serene"]
+answer = "serene"
+reason = "the others mean very angry; serene means calm"
+level = 5
+
+[[odd]]
+words = ["evaporation", "condensation", "precipitation", "erosion"]
+answer = "erosion"
+reason = "the others are steps in the water cycle"
+level = 5
+
+[[odd]]
+words = ["granite", "marble", "basalt", "oak"]
+answer = "oak"
+reason = "the others are kinds of rock"
+level = 5
+
+[[odd]]
+words = ["liquid", "solid", "gas", "water"]
+answer = "water"
+reason = "the others are states of matter; water is a substance"
+level = 5
+
+[[odd]]
+words = ["seventeen", "nineteen", "twenty-three", "twenty-one"]
+answer = "twenty-one"
+reason = "the others are prime numbers; 21 = 3 x 7"
+level = 5
+
+[[odd]]
+words = ["biology", "geology", "zoology", "biography"]
+answer = "biography"
+reason = "the others end in -logy (the study of); a biography is a life story"
+level = 5

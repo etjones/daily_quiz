@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% block main %}
 <p class="lede">The quiz script with live checkboxes. Read each item, untick anything {{ student.name }} got wrong, and save. Saving records the quiz straight away.</p>
+<p>Print it instead:{% include "_quiz_files.html" %}</p>
 <p><small>{{ label }}. Items marked “check” are on something not taught yet; missing them costs nothing.</small></p>
 
 <form method="post" action="/quiz/{{ quiz.id }}/grade">

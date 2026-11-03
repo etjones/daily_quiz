@@ -71,6 +71,13 @@ def test_levels_rise_and_fall():
     assert puzzles.levels([("odd", False)] * 5) == {"odd": 1}
 
 
+def test_levels_start_at_the_school_grade():
+    assert puzzles.start_level(None) == 1 and puzzles.start_level(0) == 1
+    assert puzzles.start_level(4) == 4
+    assert puzzles.levels([("odd", True)] * 3, start=4) == {"odd": 5}
+    assert puzzles.levels([("odd", False)] * 2, start=4) == {"odd": 3}
+
+
 def test_pick_prefers_unused_then_level():
     mk = lambda i, lv: puzzles.Puzzle(
         id=f"o{i}", type="odd", prompt="", answer="", level=lv

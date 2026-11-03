@@ -1,7 +1,9 @@
 """Placement: find where a student already is, in about ten minutes, with an adult asking the questions.
 
-Each track (phonics spelling, sight words, math) is an ordered list of skills. We binary-search for the
-first skill the child cannot do, then mark everything before it as known. Known skills are NOT trusted
+Each track (phonics spelling, sight words, math) is an ordered list of skills. We search for the
+first skill the child cannot do, then mark everything before it as known. With a school grade the
+search starts at that grade's first skill and gallops forward (1, 2, 4 ... skills) until a miss, so a
+kindergartner is never asked fractions first; without one it is a plain binary search. Known skills are NOT trusted
 blindly: they enter the review schedule at a moderate box with due dates spread over weeks, so any hole
 shows up as a quiz error and gets re-taught.
 """
@@ -65,7 +67,8 @@ def next_question(
     ask = replay_ask(answers)
     try:
         for track in tracks:
-            find_frontier(cur, track_skills(cur, track), rng, ask)
+            skills = track_skills(cur, track)
+            find_frontier(cur, skills, rng, ask, grade_start(skills, student["grade"]))
     except NeedAnswer as e:
         return e.item
     return None
@@ -75,6 +78,16 @@ def track_skills(cur: Curriculum, track: str) -> list[Skill]:
     if track == "math":
         return cur.subject("math")
     return [s for s in cur.subject("spelling") if s.track == track]
+
+
+def grade_start(skills: list[Skill], grade: int | None) -> int | None:
+    """Where to start searching for a student in a school grade: just after the last skill
+    from an earlier grade, so passing there vouches for every lower-grade skill. None when no
+    grade is set."""
+    if grade is None:
+        return None
+    below = [i for i, s in enumerate(skills) if s.grade < grade]
+    return below[-1] + 1 if below else 0
 
 
 def _probe_skill(cur: Curriculum, skill: Skill, rng: random.Random, ask: Ask) -> bool:
@@ -117,11 +130,25 @@ def _probe_skill(cur: Curriculum, skill: Skill, rng: random.Random, ask: Ask) ->
 
 
 def find_frontier(
-    cur: Curriculum, skills: list[Skill], rng: random.Random, ask: Ask
+    cur: Curriculum,
+    skills: list[Skill],
+    rng: random.Random,
+    ask: Ask,
+    start: int | None = None,
 ) -> tuple[int, int]:
-    """Return (frontier_index, probes_asked). Skills before the index are known."""
+    """Return (frontier_index, probes_asked). Skills before the index are known. From
+    `start`, probe start, start+1, start+3, start+7 ... until a miss, then binary-search
+    the gap; a miss at `start` itself searches below it."""
     lo, hi = 0, len(skills)
     asked = 0
+    if start is not None:
+        i, step = start, 1
+        while i < hi:
+            asked += 1
+            if not _probe_skill(cur, skills[i], rng, ask):
+                hi = i
+                break
+            lo, i, step = i + 1, i + step, step * 2
     while lo < hi:
         mid = (lo + hi) // 2
         asked += 1
@@ -146,7 +173,9 @@ def run_placement(
     offset = 0
     for track in tracks:
         skills = track_skills(cur, track)
-        f, asked = find_frontier(cur, skills, rng, ask)
+        f, asked = find_frontier(
+            cur, skills, rng, ask, grade_start(skills, student["grade"])
+        )
         marked = 0
         for s in skills[:f]:
             marked += scheduler.fast_track(

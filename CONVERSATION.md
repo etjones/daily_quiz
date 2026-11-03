@@ -130,3 +130,24 @@ Open issues
 **User:** Commit, merge to main, and deploy to dayonetools.
 
 **Claude:** Committed `a198d4e` on `feature/quiz-prompt-fit`, fast-forwarded `main`, pushed, and redeployed: all checks ✓, live at https://quizzes.dayonetools.com on `a198d4e`.
+
+## 2026-11-03 — Quiz PDF links, and K–5 curriculum
+
+**User:** (1) Link the quiz and parent-script PDFs next to "Grade it", so a paper quiz is easy to find. (2) Support all elementary grades (K–5) in vocabulary and math from the Texas curriculum; friends have a kindergartner and a 4th grader. Afterwards, discuss (not build) LLM-generated themed questions (baseball, Pokémon, space, fashion).
+
+**Decisions (asked up front):** vocabulary = spelling extended K–5 plus graded meaning puzzles; kindergarten keeps the written quiz with one-letter/numeral/short-word answers read aloud by the parent; each student gets an optional school grade that seeds placement and puzzle level; full K–5 in one pass.
+
+**Claude:**
+- PDF links: `quiz_pdfs` in `web/views.py` finds a quiz's files through its plan date; links appear on the dashboard, quiz entry, grading sheet, quiz results and each History row.
+- Student grade: `student.grade` column (migrated on open), `dq init --grade K|1-5`, `dq grade-level [NAME] --set`, a grade picker on the Students page, shown in `dq status`.
+- Placement starts after the last skill of an earlier grade and gallops forward (1, 2, 4 …) until a miss, then binary-searches; without a grade it is unchanged.
+- Kindergartners get no puzzles or clue items; puzzle levels run 1–5 and start at the student's grade.
+- Skills ≥2 grades below what a student has made solid are fast-tracked into review (so the existing student is not sent back to kindergarten counting).
+- Math: 18 new generators (counting dots, before/after, digit value, rounding, coins, multi-digit ×/÷, order of operations, area/perimeter/volume, decimals, mixed numbers, unlike fractions, fraction × and ÷); 43 new skills (K, grade 2–3 gaps, grades 4–5). Answers accept decimals and mixed numbers.
+- Content written by two helper agents: spelling K–5 and Fry 101–300 (`spelling.toml`, `sentences/seed.toml`), and a 138-item `meaning` puzzle bank plus level 4–5 analogies, odd-one-out, homophones and scales.
+- Spelling agent result: 147 spelling skills, 1,943 words. New `sp.vc` and `sp.cvc.ccvc` at K; syllable types, ough/augh, dis-/pre-/non-/in-, -ness/-y at grade 3; mis-/sub-, -ment/-able/-ible/-ity/-tion, roots graph/meter/phon/port at grade 4; trans-/super-/-ive, -sion/-cian, vowel changes, roots geo/photo/logy/struct/dict at grade 5; Fry 101–300 with dictation sentences. Grades were kept non-decreasing along each track, so a few TEKS grade-1 skills (inflections, contractions) are labelled grade 2 because of where they sit in the file.
+- Fixed `curriculum.load` so a skill can set `grade = 0` itself (0 was treated as unset).
+- `dq validate`: 251 skills valid. 125 tests pass, ruff clean. Rendered sample quizzes (K and grade 4–5 items, longest meaning prompts) and a full kindergarten day: everything fits on one page. Branch `feature/k5-curriculum`, uncommitted, not deployed.
+- Deploy note: on first plan after deploy, the existing student's kindergarten skills are fast-tracked into review (≥2 grades below their solid work), not taught.
+
+**Theme discussion (no code):** see the reply in chat: themed templates generated once per theme by an LLM, numbers and answers still computed by code, parent approval before use, themes skin existing skills rather than adding new ones (with a few real TEKS skills like averages/profit as an optional add).
