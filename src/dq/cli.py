@@ -29,6 +29,7 @@ from . import (
     render,
     scheduler,
     session,
+    themes,
 )
 from . import report as report_mod
 from .db import DB
@@ -169,6 +170,27 @@ def cmd_grade_level(args) -> int:
         print(f"{args.name} is now in grade {curriculum.grade_label(args.set)}.")
         return 0
     print(f"{args.name}: grade {curriculum.grade_label(student['grade'])}")
+    return 0
+
+
+def cmd_interests(args) -> int:
+    db, _ = open_for_student(args)
+    cur = load_curriculum(args)
+    student = db.student(args.name)
+    every = themes.available(cur.interests, db.added_interests())
+    if args.set is not None:
+        unknown = [s for s in args.set if s not in every]
+        if unknown:
+            print(
+                f"unknown interests: {', '.join(unknown)}; choose from {', '.join(every)}"
+            )
+            return 1
+        db.set_student_interests(student["id"], args.set)
+    chosen = db.student_interests(student["id"])
+    print(
+        f"{args.name}: {', '.join(every[s].name for s in chosen if s in every) or 'none'}"
+    )
+    print(f"  available: {', '.join(every)}")
     return 0
 
 
@@ -476,6 +498,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sp.add_argument("--date")
     sp.set_defaults(fn=cmd_init)
+
+    sp = sub.add_parser("interests", help="show or set a student's interests (up to 4)")
+    sp.add_argument("name", nargs="?")
+    sp.add_argument("--set", nargs="*", metavar="SLUG")
+    sp.set_defaults(fn=cmd_interests)
 
     sp = sub.add_parser("grade-level", help="show or set a student's school grade")
     sp.add_argument("name", nargs="?")

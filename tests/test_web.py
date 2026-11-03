@@ -421,3 +421,85 @@ def test_grader_ticked_box_wins_over_typed_text(web, home):
     post(web, f"/quiz/{q['id']}/grade", form)
     rows = DB(home / "dq.db").results_for_quiz(q["id"])
     assert all(r["correct"] for r in rows)
+
+
+# --------------------------------------------------------------------------- interests
+
+
+def test_choose_interests_up_to_four(web, home):
+    add(web)
+    r = get(web, "/students/Sam/interests")
+    assert "Baseball" in text(r) and "Disney Princesses" in text(r)
+    r = post(web, "/students/Sam/interests", {"interest": ["space", "horses"]})
+    assert "Interests: Horses, Space" in text(r) or "Interests: Space, Horses" in text(
+        r
+    )
+    db = DB(home / "dq.db")
+    assert db.student_interests(db.student("Sam")["id"]) == ["space", "horses"]
+    assert "Space, Horses" in text(get(web, "/students"))
+    five = ["space", "horses", "mario", "baking", "soccer"]
+    assert post(web, "/students/Sam/interests", {"interest": five}).status_code == 400
+    r = post(web, "/students/Sam/interests", {"interest": ["nope"]})
+    assert db.student_interests(db.student("Sam")["id"]) == []
+
+
+def test_interest_page_shows_sample_stories(web):
+    add(web)
+    r = get(web, "/interests/pokemon?student=Sam")
+    assert r.status_code == 200 and "Pokémon" in text(r) and "12" in text(r)
+    assert get(web, "/interests/not-a-thing").status_code == 404
+
+
+def test_new_interest_is_written_saved_and_deletable(web, home, monkeypatch):
+    from dq import interest_writer, themes
+
+    add(web)
+    seen = []
+
+    def fake(name, example=None, client=None):
+        seen.append(name)
+        t = {
+            k: [
+                f"Train story {k} {i} " + " ".join("{" + p + "}" for p in v) + "?"
+                for i in range(2)
+            ]
+            for k, v in themes.KINDS.items()
+        }
+        return themes.from_dict(
+            themes.slugify(name), {"name": name, "templates": t}, "generated"
+        )
+
+    monkeypatch.setattr(interest_writer, "write_interest", fake)
+    monkeypatch.setattr(interest_writer, "configured", lambda: True)
+    assert "Add interest" in text(get(web, "/students/Sam/interests"))
+    r = post(web, "/interests/new", {"student": "Sam", "name": "Steam Trains"})
+    assert r.status_code == 200 and "Added Steam Trains" in text(r)
+    db = DB(home / "dq.db")
+    assert db.student_interests(db.student("Sam")["id"]) == ["steam-trains"]
+    assert (
+        post(
+            web, "/interests/new", {"student": "Sam", "name": "Steam Trains"}
+        ).status_code
+        == 400
+    )
+    assert (
+        post(web, "/interests/new", {"student": "Sam", "name": "<b>hi</b>"}).status_code
+        == 400
+    )
+    assert seen == ["Steam Trains"]
+    assert post(web, "/interests/baseball/delete").status_code == 400
+    r = post(web, "/interests/steam-trains/delete")
+    assert "Deleted Steam Trains" in text(r)
+    assert DB(home / "dq.db").student_interests(db.student("Sam")["id"]) == []
+
+
+def test_new_interest_needs_a_key(web, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    add(web)
+    assert "needs <code>ANTHROPIC_API_KEY</code>" in text(
+        get(web, "/students/Sam/interests")
+    )
+    assert (
+        post(web, "/interests/new", {"student": "Sam", "name": "Trains"}).status_code
+        == 400
+    )

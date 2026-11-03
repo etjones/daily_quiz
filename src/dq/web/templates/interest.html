@@ -1,0 +1,16 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">{{ theme.blurb or theme.name }}. {% if theme.source == 'generated' %}Added by a grown-up; Claude wrote these stories.{% else %}Built in.{% endif %} Shown with sample numbers; the quiz fills in its own.</p>
+{% for kind, help in kinds.items() %}{% if samples[kind] %}
+<h2>{{ titles[kind] }}</h2>
+<p><small>{{ help }}</small></p>
+<ul>{% for s in samples[kind] %}<li>{{ s }}</li>{% endfor %}</ul>
+{% endif %}{% endfor %}
+{% if theme.source == 'generated' %}
+<form method="post" action="/interests/{{ theme.slug }}/delete" onsubmit="return confirm('Delete this interest for every student?')">
+  {{ csrf_input }}
+  <p><button class="ghost" type="submit">Delete this interest</button></p>
+</form>
+{% endif %}
+{% if back %}<p><a class="button" href="/students/{{ back }}/interests">Back to {{ back }}'s interests</a></p>{% endif %}
+{% endblock %}

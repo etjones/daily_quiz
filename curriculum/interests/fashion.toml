@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Fashion"
+blurb = "Fabric, buttons, sequins and the runway"
+
+[templates]
+add = [
+  "A designer sewed {a} sequins on a dress and then {b} more. How many sequins are on the dress now?",
+  "Amara bought {a} buttons on Monday and {b} on Friday. How many buttons did she buy in all?",
+  "The design studio had {a} spools of thread. A delivery brought {b} more. How many spools are there now?",
+  "At the runway show, {a} people sat in front and {b} more stood in back. How many people watched the show?",
+]
+sub = [
+  "Hana had {a} feet of ribbon and used {b} feet on a hat. How many feet of ribbon are left?",
+  "The shop had {a} scarves and sold {b} of them. How many scarves are left?",
+  "Mateo had {a} beads and sewed {b} of them onto a jacket. How many beads does he have left?",
+  "A box held {a} pins. The designer used {b} pins on a gown. How many pins are still in the box?",
+]
+compare = [
+  "Lucia's dress has {a} sequins and Ivy's dress has {b}. How many more sequins does Lucia's dress have?",
+  "The studio has {a} yards of silk and {b} yards of cotton. How many more yards of silk are there?",
+  "Jamal sold {a} hats and Chloe sold {b} hats. How many more hats did Jamal sell?",
+]
+mul = [
+  "A designer makes {a} jackets with {b} buttons on each jacket. How many buttons does she need?",
+  "The runway show has {a} rows of chairs with {b} chairs in each row. How many chairs are there?",
+  "Priya has {a} boxes of beads with {b} beads in each box. How many beads does she have?",
+]
+div = [
+  "Zara sorts {total} buttons equally into {a} jars. How many buttons go in each jar?",
+  "The studio splits {total} yards of fabric evenly among {a} designers. How many yards does each designer get?",
+  "{total} sequins are sewn equally onto {a} skirts. How many sequins are on each skirt?",
+]
+div_rem = [
+  "Zara sorts {total} buttons equally into {a} jars. How many buttons go in each jar, and how many are left over?",
+  "Malik sews {total} sequins equally onto {a} jackets. How many go on each jacket, and how many are left over?",
+]
+frac_of = [
+  "The show has {total} outfits, and {frac} of them are red. How many outfits are red?",
+  "Ines has {total} spools of thread, and {frac} of them are silk. How many spools are silk?",
+]
+frac_add = [
+  "Zara uses {a} yards of denim for jeans and {b} yards for a jacket. How many yards of denim does she use in all?",
+  "Theo buys {a} meters of ribbon and then {b} meters more. How many meters of ribbon does he have?",
+]
+frac_sub = [
+  "Priya has {a} yards of velvet and cuts {b} yards for a skirt. How many yards of velvet are left?",
+  "The runway show lasts {a} hours, and {b} hours have gone by. How many hours are left?",
+]
+dec_add = [
+  "Ines spends {a} dollars on lace and {b} dollars on buttons. How many dollars does she spend in all?",
+  "Malik cuts {a} meters of silk for a gown and {b} meters for a scarf. How many meters does he cut in all?",
+]
+dec_sub = [
+  "Zara has {a} dollars and spends {b} dollars on fabric. How many dollars does she have left?",
+  "A roll holds {a} meters of satin. Andre uses {b} meters for a dress. How many meters are left?",
+]
+dec_mul = [
+  "Leila buys {a} yards of fabric that cost {b} dollars per yard. How many dollars does she spend?",
+  "Andre sews {a} shirts, and each uses {b} meters of cotton. How many meters of cotton does he use?",
+]
+dec_div = [
+  "Theo cuts {total} meters of ribbon into {a} equal bows. How many meters of ribbon are in each bow?",
+  "The studio splits a fabric bill of {total} dollars equally among {a} designers. How many dollars does each pay?",
+]
+area = [
+  "Leila cuts a piece of fabric {l} inches long and {w} inches wide. What is its area in square inches?",
+  "The runway is {l} meters long and {w} meters wide. What is the area of the runway in square meters?",
+]
+perimeter = [
+  "Priya sews trim around a scarf {l} inches long and {w} inches wide. How many inches of trim does she need?",
+  "Malik puts lights around the edge of a stage {l} feet long and {w} feet wide. How many feet of lights does he need?",
+]
+volume = [
+  "Zara's shoe box is {l} inches long, {w} inches wide and {h} inches tall. What is its volume in cubic inches?",
+  "The studio ships dresses in a crate {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+]

@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Dinosaurs"
+blurb = "Fossils, eggs, T. rex and Triceratops"
+
+[templates]
+add = [
+  "A T. rex stomped {a} steps to the river and {b} steps back. How many steps did it stomp in all?",
+  "Dr. Aisha dug up {a} dinosaur bones in June and {b} more in July. How many bones did she dig up in all?",
+  "A herd of {a} Triceratops met {b} more at the lake. How many Triceratops are there now?",
+  "The museum had {a} dinosaur eggs on display and added {b} more. How many eggs are on display now?",
+]
+sub = [
+  "A Brachiosaurus had {a} leaves to eat and munched {b} of them. How many leaves are left?",
+  "There were {a} fossils hidden in the dig pit. Ethan's class found {b} of them. How many fossils are still hidden?",
+  "The gift shop had {a} toy dinosaurs and sold {b} of them. How many toy dinosaurs are left?",
+  "There were {a} Stegosaurus at the lake. Then {b} of them walked away. How many are still at the lake?",
+]
+compare = [
+  "Lena found {a} fossils and Carlos found {b}. How many more fossils did Lena find?",
+  "The museum has {a} dinosaur teeth and {b} dinosaur claws. How many more teeth than claws are there?",
+  "A Brachiosaurus ate {a} leaves and a Stegosaurus ate {b}. How many more leaves did the Brachiosaurus eat?",
+]
+mul = [
+  "There are {a} dinosaur nests with {b} eggs in each nest. How many eggs are there?",
+  "The museum has {a} display cases with {b} fossils in each case. How many fossils are on display?",
+  "A Triceratops eats {b} ferns a day. How many ferns does it eat in {a} days?",
+]
+div = [
+  "Dr. Kim sorts {total} bones equally into {a} boxes. How many bones go in each box?",
+  "{total} baby dinosaurs hatched in {a} nests, the same number in each. How many hatched in each nest?",
+  "A keeper shares {total} leaves equally among {a} hungry dinosaurs. How many leaves does each one get?",
+]
+div_rem = [
+  "Dr. Kim sorts {total} bones equally into {a} boxes. How many bones go in each box, and how many are left over?",
+  "A keeper shares {total} leaves equally among {a} dinosaurs. How many does each one get, and how many are left over?",
+]
+frac_of = [
+  "The museum has {total} fossils, and {frac} of them are dinosaur teeth. How many fossils are teeth?",
+  "A herd has {total} dinosaurs, and {frac} of them are Triceratops. How many are Triceratops?",
+]
+frac_add = [
+  "Dr. Kim digs for {a} hours in the morning and {b} hours after lunch. How many hours does she dig in all?",
+  "A Brachiosaurus walks {a} miles to a lake and {b} miles more to the trees. How many miles does it walk in all?",
+]
+frac_sub = [
+  "Jamal hikes {a} miles to the fossil bed and has gone {b} miles so far. How many miles are left?",
+  "The dig team has {a} hours of daylight and spends {b} hours digging. How many hours of daylight are left?",
+]
+dec_add = [
+  "A baby Stegosaurus weighs {a} kilograms and gains {b} kilograms. How many kilograms does it weigh now?",
+  "Rosa digs a trench {a} meters long, then {b} meters more. How many meters long is the trench in all?",
+]
+dec_sub = [
+  "Mateo has {a} kilograms of plaster and uses {b} kilograms to cast a footprint. How many kilograms are left?",
+  "A dinosaur trackway is {a} meters long. Rain washes away {b} meters of it. How many meters are left?",
+]
+dec_mul = [
+  "A Velociraptor runs {a} laps around a lake, and each lap is {b} kilometers. How many kilometers does it run?",
+  "The museum has {a} crates of fossils, each weighing {b} kilograms. How many kilograms do they weigh in all?",
+]
+dec_div = [
+  "A keeper shares {total} kilograms of ferns equally among {a} dinosaurs. How many kilograms does each one get?",
+  "Rosa cuts {total} meters of rope into {a} equal pieces to mark the dig site. How many meters is each piece?",
+]
+area = [
+  "The dig site is {l} meters long and {w} meters wide. What is its area in square meters?",
+  "The museum's T. rex hall is {l} feet long and {w} feet wide. What is its area in square feet?",
+]
+perimeter = [
+  "Dr. Kim ropes off a dig site {l} meters long and {w} meters wide. How many meters of rope does she need?",
+  "A Triceratops pen at the park is {l} yards long and {w} yards wide. How many yards of fence go all the way around?",
+]
+volume = [
+  "A fossil crate is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "The team digs a pit {l} meters long, {w} meters wide and {h} meters deep. What is its volume in cubic meters?",
+]

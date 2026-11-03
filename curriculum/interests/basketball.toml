@@ -1,0 +1,81 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul {a} {b}; div/div_rem/dec_div
+# {total} {a}; frac_of {total} {frac}; area/perimeter {l} {w}; volume {l} {w} {h}. The numbers and the
+# answer come from the math generator; a template only supplies the story, so it must make
+# sense for any whole numbers from 2 into the thousands. No digits, and only letters, spaces
+# and . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Basketball"
+blurb = "Hoops, dribbles, free throws and the big game"
+
+[templates]
+add = [
+  "Zara made {a} free throws last month and {b} this month. How many free throws did she make in all?",
+  "The Comets scored {a} points this season before the break and {b} points after it. How many points did they score?",
+  "A gym sold {a} tickets on Friday and {b} more on Saturday. How many tickets were sold altogether?",
+  "Mateo dribbled the ball {a} times. Then he dribbled {b} more times. How many times did he dribble in all?",
+]
+sub = [
+  "The team had {a} basketballs at the start of the year and {b} went flat. How many basketballs are left?",
+  "There were {a} fans in the arena. After the game, {b} of them left. How many fans are still there?",
+  "The snack stand had {a} bags of popcorn and sold {b} of them. How many bags are left?",
+  "Kenji has {a} basketball cards. He gives {b} of them to his sister. How many cards does he have left?",
+]
+compare = [
+  "The Rockets have scored {a} points this season and the Stars have scored {b}. How many more points do the Rockets have?",
+  "Priya made {a} shots at camp and Owen made {b}. How many more shots did Priya make?",
+  "One arena has {a} seats and another has {b} seats. How many more seats does the first arena have?",
+]
+mul = [
+  "A coach has {a} racks with {b} basketballs on each rack. How many basketballs is that?",
+  "There are {a} teams in the league and each team gives out {b} T-shirts. How many T-shirts are given out?",
+  "The arena has {a} rows of seats with {b} seats in each row. How many seats are there?",
+]
+div = [
+  "The coach puts {total} basketballs equally on {a} racks. How many basketballs go on each rack?",
+  "There are {total} kids at hoops camp, split evenly into {a} teams. How many kids are on each team?",
+  "{total} fans fill {a} sections of the arena equally. How many fans are in each section?",
+]
+div_rem = [
+  "Coach Lee puts {total} basketballs equally on {a} racks. How many balls go on each rack, and how many are left over?",
+  "{total} kids at hoops camp split into {a} equal teams. How many kids are on each team, and how many are left over?",
+]
+frac_of = [
+  "Zara took {total} shots, and {frac} of them were free throws. How many free throws did she take?",
+  "The arena sold {total} tickets, and {frac} of them were for kids. How many kids' tickets were sold?",
+]
+frac_add = [
+  "Mateo practiced dribbling for {a} hours on Saturday and {b} hours on Sunday. How many hours did he practice?",
+  "The team drank {a} gallons of water in the first half and {b} gallons in the second. How many gallons did they drink?",
+]
+frac_sub = [
+  "The Comets ordered {a} pizzas after the big game and ate {b} pizzas. How many pizzas are left?",
+  "Priya had {a} hours of free time and spent {b} hours shooting hoops. How many hours of free time are left?",
+]
+dec_add = [
+  "Owen ran {a} miles on Monday and {b} miles on Tuesday to get ready for the season. How many miles did he run?",
+  "The Stars ran down the clock for {a} seconds, then {b} seconds more. How many seconds ran off the clock?",
+]
+dec_sub = [
+  "The team cooler held {a} liters of water and the players drank {b} liters. How many liters are left?",
+  "The game clock showed {a} seconds, and then {b} seconds ticked away. How many seconds are left on the clock?",
+]
+dec_mul = [
+  "Each of {a} players runs {b} miles at practice. How many miles do they run altogether?",
+  "The coach fills {a} water jugs with {b} liters in each. How many liters of water is that?",
+]
+dec_div = [
+  "The team shares {total} liters of sports drink equally among {a} bottles. How many liters go in each bottle?",
+  "Mei runs {total} miles over {a} days, the same distance each day. How many miles does she run each day?",
+]
+area = [
+  "A basketball court is {l} meters long and {w} meters wide. What is its area in square meters?",
+  "A practice mat is {l} feet long and {w} feet wide. How many square feet does it cover?",
+]
+perimeter = [
+  "Leo dribbles all the way around a court that is {l} meters long and {w} meters wide. How many meters does he dribble?",
+  "A gym floor is {l} feet long and {w} feet wide. How many feet of tape go all the way around its edge?",
+]
+volume = [
+  "A box of basketballs is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "A gym locker is {l} inches long, {w} inches wide and {h} inches tall. How many cubic inches of space are inside?",
+]

@@ -15,6 +15,7 @@ dependencies = [
     "django[argon2]>=5.2.18",
     "whitenoise>=6.12.0",
     "gunicorn>=26.2.0",
+    "anthropic>=2.4.0",
 ]
 
 [project.scripts]

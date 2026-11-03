@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from .themes import MAX_INTERESTS
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS student (
     id INTEGER PRIMARY KEY,
@@ -102,6 +104,23 @@ CREATE TABLE IF NOT EXISTS judgment_cache (
     PRIMARY KEY (puzzle_id, answer)
 );
 
+-- Interests a grown-up added by name; a model wrote the templates (see themes.py).
+CREATE TABLE IF NOT EXISTS interest (
+    slug TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    data TEXT NOT NULL,            -- JSON: {name, blurb, templates: {kind: [text]}}
+    model TEXT NOT NULL,
+    created TEXT NOT NULL
+);
+
+-- A student's chosen interests (built-in or added), at most four.
+CREATE TABLE IF NOT EXISTS student_interest (
+    student_id INTEGER NOT NULL REFERENCES student(id),
+    slug TEXT NOT NULL,
+    position INTEGER NOT NULL,
+    PRIMARY KEY (student_id, slug)
+);
+
 CREATE TABLE IF NOT EXISTS sentence_cache (
     word TEXT PRIMARY KEY,
     sentence TEXT NOT NULL,
@@ -180,6 +199,44 @@ class DB:
 
     def students(self) -> list[sqlite3.Row]:
         return self.conn.execute("SELECT * FROM student ORDER BY name").fetchall()
+
+    # -- interests ----------------------------------------------------------
+
+    def added_interests(self) -> list[sqlite3.Row]:
+        return self.conn.execute("SELECT * FROM interest ORDER BY name").fetchall()
+
+    def save_interest(
+        self, slug: str, name: str, data: dict, model: str, on: str
+    ) -> None:
+        with self.tx() as c:
+            c.execute(
+                "INSERT INTO interest(slug, name, data, model, created) VALUES (?,?,?,?,?)",
+                (slug, name, json.dumps(data), model, on),
+            )
+
+    def delete_interest(self, slug: str) -> None:
+        with self.tx() as c:
+            c.execute("DELETE FROM student_interest WHERE slug = ?", (slug,))
+            c.execute("DELETE FROM interest WHERE slug = ?", (slug,))
+
+    def student_interests(self, student_id: int) -> list[str]:
+        rows = self.conn.execute(
+            "SELECT slug FROM student_interest WHERE student_id = ? ORDER BY position",
+            (student_id,),
+        ).fetchall()
+        return [r["slug"] for r in rows]
+
+    def set_student_interests(self, student_id: int, slugs: list[str]) -> None:
+        if len(slugs) > MAX_INTERESTS or len(set(slugs)) != len(slugs):
+            raise ValueError(f"choose up to {MAX_INTERESTS} different interests")
+        with self.tx() as c:
+            c.execute(
+                "DELETE FROM student_interest WHERE student_id = ?", (student_id,)
+            )
+            c.executemany(
+                "INSERT INTO student_interest(student_id, slug, position) VALUES (?,?,?)",
+                [(student_id, s, i) for i, s in enumerate(slugs)],
+            )
 
     def set_student_field(self, student_id: int, field: str, value) -> None:
         assert field in {"composition_stage", "pace_cap", "probe_days", "grade"}

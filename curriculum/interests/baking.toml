@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Baking"
+blurb = "Cookies, cupcakes, pies and the bakery"
+
+[templates]
+add = [
+  "Grandma baked {a} cookies in the morning and {b} more after lunch. How many cookies did she bake in all?",
+  "The bakery sold {a} muffins on Saturday and {b} on Sunday. How many muffins did it sell altogether?",
+  "Jun put {a} sprinkles on a cake and then {b} more. How many sprinkles are on the cake?",
+  "The baker had {a} eggs. A farmer brought {b} more. How many eggs does the baker have now?",
+]
+sub = [
+  "Olivia baked {a} cupcakes and gave {b} of them to her neighbors. How many cupcakes are left?",
+  "The bakery had {a} loaves of bread and sold {b} of them. How many loaves are left?",
+  "Arjun had {a} chocolate chips and put {b} of them in the dough. How many chips are left?",
+  "A jar held {a} cookies. The family ate {b} of them. How many cookies are still in the jar?",
+]
+compare = [
+  "Emma made {a} cookies and Kwame made {b}. How many more cookies did Emma make?",
+  "The bakery sold {a} donuts and {b} bagels. How many more donuts than bagels did it sell?",
+  "One cake has {a} sprinkles and another has {b}. How many more sprinkles are on the first cake?",
+]
+mul = [
+  "A baker fills {a} trays with {b} cookies on each tray. How many cookies is that?",
+  "Sara bakes {a} pies with {b} blueberries in each pie. How many blueberries does she use?",
+  "The bakery packs {a} boxes with {b} donuts in each box. How many donuts are packed?",
+]
+div = [
+  "Luis shares {total} cookies equally among {a} friends. How many cookies does each friend get?",
+  "The baker puts {total} cupcakes equally into {a} boxes. How many cupcakes go in each box?",
+  "{total} muffins are split evenly onto {a} trays. How many muffins go on each tray?",
+]
+div_rem = [
+  "Luis shares {total} cookies equally among {a} friends. How many does each friend get, and how many are left over?",
+  "The baker puts {total} cupcakes equally into {a} boxes. How many go in each box, and how many are left over?",
+]
+frac_of = [
+  "Mia bakes {total} cookies, and {frac} of them have sprinkles. How many cookies have sprinkles?",
+  "The bakery sells {total} muffins, and {frac} of them are blueberry. How many muffins are blueberry?",
+]
+frac_add = [
+  "Ava uses {a} cups of flour for bread and {b} cups for cookies. How many cups of flour does she use in all?",
+  "Jun has {a} pies and bakes {b} pies more. How many pies does he have in all?",
+]
+frac_sub = [
+  "Omar has {a} cups of sugar and uses {b} cups in a cake. How many cups of sugar are left?",
+  "There are {a} pizzas at the bake sale, and the kids eat {b} pizzas. How much pizza is left?",
+]
+dec_add = [
+  "Nadia buys {a} kilograms of flour and {b} kilograms of sugar. How many kilograms does she buy in all?",
+  "Ethan pours {a} liters of milk into a bowl and then {b} liters more. How many liters of milk are in the bowl?",
+]
+dec_sub = [
+  "The bakery has {a} kilograms of butter and uses {b} kilograms for croissants. How many kilograms are left?",
+  "Grace has {a} pounds of chocolate and melts {b} pounds for frosting. How many pounds are left?",
+]
+dec_mul = [
+  "Ravi bakes {a} loaves of bread, each weighing {b} pounds. How many pounds of bread does he bake?",
+  "Ella makes {a} cakes with {b} liters of cream in each. How many liters of cream does she use?",
+]
+dec_div = [
+  "Sam splits {total} kilograms of dough equally into {a} loaves. How many kilograms of dough are in each loaf?",
+  "Lucia pours {total} liters of batter equally into {a} pans. How many liters go in each pan?",
+]
+area = [
+  "A cake pan is {l} inches long and {w} inches wide. What is the area of the bottom of the pan in square inches?",
+  "The bakery's counter is {l} feet long and {w} feet wide. What is its area in square feet?",
+]
+perimeter = [
+  "Mia pipes frosting around the edge of a sheet cake {l} inches long and {w} inches wide. How many inches is that?",
+  "Leo ties ribbon around a cake box lid {l} inches long and {w} inches wide. How many inches of ribbon does he need?",
+]
+volume = [
+  "A brownie pan is {l} inches long, {w} inches wide and {h} inches deep. What is its volume in cubic inches?",
+  "The bakery's flour bin is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+]

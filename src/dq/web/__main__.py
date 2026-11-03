@@ -19,6 +19,7 @@ def main() -> None:
     call_command("migrate", interactive=False, verbosity=0)
     port = os.environ.get("PORT", "8000")
     args = ["gunicorn", "dq.web.wsgi", "--bind", f"127.0.0.1:{port}", "--workers", "2"]
+    args += ["--timeout", "150"]  # adding an interest waits on a model for up to ~100 s
     args += ["--forwarded-allow-ips", "127.0.0.1", "--access-logfile", "-"]
     os.execv(sys.executable, [sys.executable, "-m", *args])
 

@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Minecraft"
+blurb = "Blocks, diamonds, villagers and emeralds"
+
+[templates]
+add = [
+  "Alex mined {a} blocks of stone in the morning and {b} more after lunch. How many blocks did Alex mine in all?",
+  "Priya has {a} emeralds. A villager gives her {b} more for some wheat. How many emeralds does Priya have now?",
+  "Steve placed {a} torches in his cave and then {b} more. How many torches did he place altogether?",
+  "Kenji planted {a} carrots on his farm on Monday and {b} on Tuesday. How many carrots did he plant in all?",
+]
+sub = [
+  "Zoe had {a} blocks of wood and used {b} of them to build a house. How many blocks of wood are left?",
+  "Marcus had {a} arrows and shot {b} of them at a target. How many arrows does he have left?",
+  "A chest held {a} diamonds. Lina took {b} of them to make tools. How many diamonds are still in the chest?",
+  "There were {a} sheep in the field. Then {b} of them wandered off. How many sheep are still in the field?",
+]
+compare = [
+  "Sofia found {a} diamonds and Diego found {b}. How many more diamonds did Sofia find?",
+  "Omar traded for {a} emeralds and Grace traded for {b}. How many more emeralds did Omar get?",
+  "One wall is {a} blocks long and another wall is {b} blocks long. How many more blocks long is the first wall?",
+]
+mul = [
+  "Ella has {a} chests with {b} diamonds in each chest. How many diamonds does she have?",
+  "A farm has {a} rows with {b} wheat plants in each row. How many wheat plants are on the farm?",
+  "Raj builds {a} towers, and each tower is {b} blocks tall. How many blocks does he use?",
+]
+div = [
+  "Noah shares {total} emeralds equally among {a} villagers. How many emeralds does each villager get?",
+  "Aiko puts {total} blocks of glass equally into {a} chests. How many blocks go in each chest?",
+  "{total} torches are split evenly along {a} tunnels. How many torches go in each tunnel?",
+]
+div_rem = [
+  "Noah shares {total} emeralds equally among {a} villagers. How many emeralds does each villager get, and how many are left over?",
+  "Aiko packs {total} blocks of glass equally into {a} chests. How many blocks go in each chest, and how many are left over?",
+]
+frac_of = [
+  "Alex has {total} blocks, and {frac} of them are oak wood. How many blocks are oak wood?",
+  "A village has {total} villagers, and {frac} of them are farmers. How many villagers are farmers?",
+]
+frac_add = [
+  "Steve walks {a} miles to a cave and then {b} miles more to a lava lake. How many miles does he walk in all?",
+  "Priya spends {a} hours building a castle and {b} hours more digging its moat. How many hours does she spend in all?",
+]
+frac_sub = [
+  "Kenji has {a} miles to sail to an island and has sailed {b} miles so far. How many miles are left?",
+  "Zoe has {a} hours of daylight and spends {b} hours mining. How many hours of daylight are left?",
+]
+dec_add = [
+  "Marcus rides a minecart {a} kilometers to the mine and {b} kilometers more to the village. How many kilometers does he ride in all?",
+  "Lina pours {a} liters of water into her farm pond and then {b} liters more. How many liters does she pour in all?",
+]
+dec_sub = [
+  "Diego's tunnel is {a} meters long. A creeper blows up {b} meters of it. How many meters of tunnel are left?",
+  "Sofia has {a} hours to finish her build and spends {b} hours on the walls. How many hours does she have left?",
+]
+dec_mul = [
+  "Omar lays {a} rails, and each rail is {b} meters long. How many meters of track does he lay in all?",
+  "Grace fills {a} cauldrons with {b} liters of water each. How many liters of water does she use?",
+]
+dec_div = [
+  "Raj and his friends dig {total} kilometers of tunnel, split equally among {a} miners. How many kilometers does each miner dig?",
+  "Ella pours {total} liters of water equally into {a} cauldrons. How many liters go in each cauldron?",
+]
+area = [
+  "Alex builds a wheat farm {l} meters long and {w} meters wide. What is its area in square meters?",
+  "Priya lays a glass floor {l} meters long and {w} meters wide. How many square meters is the floor?",
+]
+perimeter = [
+  "Steve fences a sheep pen {l} meters long and {w} meters wide. How many meters of fence does he need?",
+  "Kenji puts torches along the edge of a courtyard {l} meters long and {w} meters wide. How many meters is it all the way around?",
+]
+volume = [
+  "Zoe digs a pool {l} meters long, {w} meters wide and {h} meters deep. What is its volume in cubic meters?",
+  "Marcus builds a stone storage room {l} meters long, {w} meters wide and {h} meters tall. What is its volume in cubic meters?",
+]

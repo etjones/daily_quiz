@@ -1,0 +1,81 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul {a} {b}; div/div_rem/dec_div
+# {total} {a}; frac_of {total} {frac}; area/perimeter {l} {w}; volume {l} {w} {h}. The numbers and the
+# answer come from the math generator; a template only supplies the story, so it must make
+# sense for any whole numbers from 2 into the thousands. No digits, and only letters, spaces
+# and . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Horses"
+blurb = "Ponies, carrots, barns and trotting trails"
+
+[templates]
+add = [
+  "The horses ate {a} carrots on Monday and {b} on Tuesday. How many carrots did they eat in all?",
+  "Isabel brushed her pony {a} times last month and {b} times this month. How many times did she brush it?",
+  "A farm had {a} bales of hay. Then {b} more bales came on a truck. How many bales are there now?",
+  "Omar rode {a} laps around the ring. Then he rode {b} more. How many laps did he ride?",
+]
+sub = [
+  "The barn had {a} apples and the horses ate {b} of them. How many apples are left?",
+  "There were {a} bales of hay in the loft. The farmer used {b} of them. How many bales are left?",
+  "There were {a} people at the horse show. Then {b} of them went home. How many people stayed?",
+  "Chloe had {a} horse treats. She fed {b} of them to the ponies. How many treats are left?",
+]
+compare = [
+  "One ranch has {a} horseshoes and another has {b}. How many more horseshoes does the first ranch have?",
+  "Lily's pony ate {a} carrots this year and Arjun's pony ate {b}. How many more carrots did Lily's pony eat?",
+  "The big barn holds {a} bales of hay and the small barn holds {b}. How many more bales does the big barn hold?",
+]
+mul = [
+  "There are {a} buckets with {b} apples in each bucket. How many apples is that?",
+  "The farmer stacks {a} piles of hay with {b} bales in each pile. How many bales are there?",
+  "There are {a} bags with {b} carrots in each bag. How many carrots is that?",
+]
+div = [
+  "The farmer shares {total} carrots equally among {a} buckets. How many carrots go in each bucket?",
+  "There are {total} bales of hay split evenly into {a} barns. How many bales are in each barn?",
+  "{total} apples are shared equally into {a} feed bags. How many apples are in each bag?",
+]
+div_rem = [
+  "The farmer shares {total} carrots equally among {a} horses. How many does each horse get, and how many are left over?",
+  "Isabel puts {total} apples equally into {a} buckets. How many apples go in each bucket, and how many are left over?",
+]
+frac_of = [
+  "The ranch has {total} horses, and {frac} of them are ponies. How many ponies are there?",
+  "Omar has {total} horseshoes, and {frac} of them are brand new. How many new horseshoes does he have?",
+]
+frac_add = [
+  "Chloe rode {a} miles on the trail in the morning and {b} miles in the afternoon. How many miles did she ride?",
+  "The horses ate {a} bales of hay on Monday and {b} bales on Tuesday. How many bales did they eat?",
+]
+frac_sub = [
+  "The barn had {a} bales of hay, and the horses ate {b} bales. How many bales are left?",
+  "A trough held {a} gallons of water, and the ponies drank {b} gallons. How many gallons are left?",
+]
+dec_add = [
+  "Lily's pony ate {a} kilograms of oats on Monday and {b} kilograms on Tuesday. How many kilograms did it eat?",
+  "Arjun rode {a} kilometers to the creek and {b} kilometers back. How many kilometers did he ride?",
+]
+dec_sub = [
+  "The feed bin had {a} kilograms of oats, and the horses ate {b} kilograms. How many kilograms are left?",
+  "The trail is {a} miles long, and Isabel has ridden {b} miles. How many miles does she have left to ride?",
+]
+dec_mul = [
+  "Each of {a} horses eats {b} kilograms of hay a day. How many kilograms of hay is that in all?",
+  "Omar rides {b} miles each day for {a} days. How many miles does he ride in all?",
+]
+dec_div = [
+  "The farmer splits {total} kilograms of oats equally among {a} horses. How many kilograms does each horse get?",
+  "Chloe pours {total} liters of water equally into {a} buckets. How many liters go in each bucket?",
+]
+area = [
+  "A horse stall is {l} feet long and {w} feet wide. What is the area of the stall in square feet?",
+  "A riding arena is {l} meters long and {w} meters wide. How many square meters is the arena?",
+]
+perimeter = [
+  "A paddock is {l} meters long and {w} meters wide. How many meters of fence go all the way around it?",
+  "Omar trots all the way around a field {l} yards long and {w} yards wide. How many yards does he trot?",
+]
+volume = [
+  "A hay bale is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "A water trough is {l} feet long, {w} feet wide and {h} feet deep. How many cubic feet of water can it hold?",
+]

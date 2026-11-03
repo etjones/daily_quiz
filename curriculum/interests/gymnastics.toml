@@ -1,0 +1,81 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul {a} {b}; div/div_rem/dec_div
+# {total} {a}; frac_of {total} {frac}; area/perimeter {l} {w}; volume {l} {w} {h}. The numbers and the
+# answer come from the math generator; a template only supplies the story, so it must make
+# sense for any whole numbers from 2 into the thousands. No digits, and only letters, spaces
+# and . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Gymnastics"
+blurb = "Cartwheels, flips, beams and shiny medals"
+
+[templates]
+add = [
+  "Sofia did {a} cartwheels on Monday and {b} on Tuesday. How many cartwheels did she do in all?",
+  "Kai jumped on the trampoline {a} times. Then he jumped {b} more times. How many jumps is that?",
+  "The gym had {a} visitors in the morning and {b} more in the afternoon. How many visitors came?",
+  "Mei has {a} sparkly hair clips. Her mom gives her {b} more. How many hair clips does Mei have now?",
+]
+sub = [
+  "The gym had {a} chalk blocks and the gymnasts used up {b} of them. How many chalk blocks are left?",
+  "There were {a} people watching the meet. Then {b} of them went home. How many people stayed?",
+  "Aisha had {a} stickers for her practice log. She used {b} of them. How many stickers are left?",
+  "A shop had {a} leotards and sold {b} of them. How many leotards are left?",
+]
+compare = [
+  "Ella did {a} handstands this month and Marcus did {b}. How many more handstands did Ella do?",
+  "One gym has {a} members and another has {b} members. How many more members does the first gym have?",
+  "Yuki did {a} flips this year and Ben did {b} flips. How many more flips did Yuki do?",
+]
+mul = [
+  "There are {a} boxes with {b} medals in each box. How many medals is that?",
+  "The coach sets out {a} rows of mats with {b} mats in each row. How many mats are there?",
+  "Zoe does {a} practices and {b} cartwheels at each practice. How many cartwheels does she do?",
+]
+div = [
+  "The coach puts {total} medals equally into {a} boxes. How many medals go in each box?",
+  "There are {total} kids at gym camp, split evenly into {a} groups. How many kids are in each group?",
+  "{total} hair ribbons are shared equally among {a} teams. How many ribbons does each team get?",
+]
+div_rem = [
+  "Coach Kim puts {total} medals equally into {a} boxes. How many medals go in each box, and how many are left over?",
+  "{total} gymnasts split into {a} equal groups for warm-ups. How many are in each group, and how many are left over?",
+]
+frac_of = [
+  "Sofia did {total} flips, and {frac} of them were on the beam. How many flips were on the beam?",
+  "The meet has {total} gymnasts, and {frac} of them are on the vault team. How many are on the vault team?",
+]
+frac_add = [
+  "Kai practiced on the rings for {a} hours on Monday and {b} hours on Wednesday. How many hours did he practice?",
+  "Mei ran {a} laps around the gym and then {b} laps more. How many laps did she run?",
+]
+frac_sub = [
+  "The team had {a} pizzas at the end-of-season party and ate {b} pizzas. How many pizzas are left?",
+  "A meet lasts {a} hours, and {b} hours have gone by. How many hours of the meet are left?",
+]
+dec_add = [
+  "Ella scored {a} points on the vault and {b} points on the bars. How many points did she score in all?",
+  "Yuki's beam routine lasted {a} seconds and her floor routine lasted {b} seconds. How many seconds is that in all?",
+]
+dec_sub = [
+  "The gym had {a} kilograms of chalk and the team used {b} kilograms. How many kilograms of chalk are left?",
+  "A floor routine lasts {a} seconds, and Zoe has done {b} seconds of it. How many seconds are left?",
+]
+dec_mul = [
+  "Ben does {a} vaults that each score {b} points. How many points does he score in all?",
+  "Each of {a} gymnasts uses {b} kilograms of chalk in a month. How many kilograms is that in all?",
+]
+dec_div = [
+  "The coach splits {total} kilograms of chalk equally into {a} buckets. How many kilograms go in each bucket?",
+  "Zoe practices {total} hours over {a} days, the same each day. How many hours does she practice each day?",
+]
+area = [
+  "A floor exercise mat is {l} meters long and {w} meters wide. What is its area in square meters?",
+  "A landing mat is {l} feet long and {w} feet wide. How many square feet does it cover?",
+]
+perimeter = [
+  "Sofia cartwheels all the way around a mat {l} meters long and {w} meters wide. How many meters does she go?",
+  "The gym is {l} yards long and {w} yards wide. How many yards is it all the way around?",
+]
+volume = [
+  "A foam pit is {l} feet long, {w} feet wide and {h} feet deep. What is its volume in cubic feet?",
+  "A box of grips is {l} inches long, {w} inches wide and {h} inches tall. How many cubic inches does it hold?",
+]

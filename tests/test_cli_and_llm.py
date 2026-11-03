@@ -316,3 +316,15 @@ def test_mood_rejects_unknown_mood(monkeypatch, tmp_path, capsys):
     run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
     code, out = run(monkeypatch, tmp_path, ["mood", "grumpy"], capsys=capsys)
     assert code == 1 and "mood must be one of" in out
+
+
+def test_interests_command(monkeypatch, tmp_path, capsys):
+    run(monkeypatch, tmp_path, ["init", "Sam", "--date", D1], capsys=capsys)
+    code, out = run(
+        monkeypatch, tmp_path, ["interests", "--set", "space", "mario"], capsys=capsys
+    )
+    assert code == 0 and "Sam: Space, Mario" in out
+    code, out = run(
+        monkeypatch, tmp_path, ["interests", "--set", "nope"], capsys=capsys
+    )
+    assert code == 1 and "unknown interests: nope" in out

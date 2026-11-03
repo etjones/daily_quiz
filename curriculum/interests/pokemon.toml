@@ -1,0 +1,81 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul {a} {b}; div/div_rem/dec_div
+# {total} {a}; frac_of {total} {frac}; area/perimeter {l} {w}; volume {l} {w} {h}. The numbers and the
+# answer come from the math generator; a template only supplies the story, so it must make
+# sense for any whole numbers from 2 into the thousands. No digits, and only letters, spaces
+# and . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Pokémon"
+blurb = "Pikachu, Poké Balls, berries and Gym battles"
+
+[templates]
+add = [
+  "Pikachu picked {a} berries in the morning and {b} more in the afternoon. How many berries did Pikachu pick?",
+  "Ash has {a} Poké Balls. Professor Oak gives him {b} more. How many Poké Balls does Ash have now?",
+  "Misty saw {a} Water Pokémon at the lake and {b} at the beach. How many Water Pokémon did she see?",
+  "Nia has {a} Pokémon cards. She gets {b} more at the store. How many cards does she have now?",
+]
+sub = [
+  "Brock had {a} berries and fed {b} of them to Onix. How many berries are left?",
+  "A trainer had {a} Poké Balls and used {b} of them. How many Poké Balls are left?",
+  "The Poké Mart had {a} Potions and sold {b} of them. How many Potions are left?",
+  "Eli has {a} Pokémon cards. He trades away {b} of them. How many cards does he have left?",
+]
+compare = [
+  "Ash has {a} Pokémon cards and Misty has {b}. How many more cards does Ash have?",
+  "Bulbasaur found {a} berries and Squirtle found {b}. How many more berries did Bulbasaur find?",
+  "One Pokémon Center has {a} visitors today and another has {b}. How many more visitors does the first one have?",
+]
+mul = [
+  "Ash has {a} bags with {b} Poké Balls in each bag. How many Poké Balls is that?",
+  "There are {a} berry bushes with {b} berries on each bush. How many berries are there?",
+  "Rosa buys {a} packs of Pokémon cards with {b} cards in each pack. How many cards does she get?",
+]
+div = [
+  "Pikachu shares {total} berries equally among {a} friends. How many berries does each friend get?",
+  "The Poké Mart puts {total} Poké Balls equally on {a} shelves. How many Poké Balls go on each shelf?",
+  "{total} Pokémon cards are split evenly into {a} binders. How many cards go in each binder?",
+]
+div_rem = [
+  "Pikachu shares {total} berries equally among {a} friends. How many does each friend get, and how many are left over?",
+  "Rosa puts {total} Pokémon cards equally into {a} binders. How many go in each binder, and how many are left over?",
+]
+frac_of = [
+  "Ash caught {total} Pokémon, and {frac} of them are Fire types. How many Fire types did he catch?",
+  "Misty has {total} Poké Balls, and {frac} of them are Great Balls. How many Great Balls does she have?",
+]
+frac_add = [
+  "Ash walked {a} miles to Pewter City and {b} miles more to Mt. Moon. How many miles did he walk in all?",
+  "Snorlax ate {a} pies for breakfast and {b} pies for lunch. How many pies did Snorlax eat?",
+]
+frac_sub = [
+  "Brock baked {a} berry pies, and Snorlax ate {b} pies. How many pies are left?",
+  "Nia's trip to the Pokémon League takes {a} hours, and she has traveled {b} hours. How many hours are left?",
+]
+dec_add = [
+  "Eevee ran {a} kilometers in the morning and {b} kilometers after lunch. How many kilometers did Eevee run?",
+  "Squirtle's pool had {a} liters of water, then Misty added {b} liters more. How many liters are in the pool now?",
+]
+dec_sub = [
+  "Misty had {a} liters of water for her Water Pokémon, and Psyduck splashed out {b} liters. How many liters are left?",
+  "Brock had {a} kilograms of Pokémon food, and Onix ate {b} kilograms. How many kilograms are left?",
+]
+dec_mul = [
+  "Snorlax eats {a} bowls of food, each holding {b} kilograms. How many kilograms does Snorlax eat?",
+  "Ash walks {b} kilometers on each of {a} routes. How many kilometers does he walk in all?",
+]
+dec_div = [
+  "Nurse Joy pours {total} liters of berry juice equally into {a} bottles. How many liters go in each bottle?",
+  "Eli splits {total} kilograms of Pokémon food equally among {a} Pokémon. How many kilograms does each get?",
+]
+area = [
+  "A Gym battle field is {l} meters long and {w} meters wide. What is its area in square meters?",
+  "Eli's Pokémon card mat is {l} inches long and {w} inches wide. How many square inches is the mat?",
+]
+perimeter = [
+  "Pikachu runs all the way around a field {l} meters long and {w} meters wide. How many meters does Pikachu run?",
+  "A Pokémon Center lobby is {l} yards long and {w} yards wide. How many yards is it all the way around?",
+]
+volume = [
+  "A box of Poké Balls is {l} inches long, {w} inches wide and {h} inches tall. What is its volume in cubic inches?",
+  "Squirtle's pool is {l} feet long, {w} feet wide and {h} feet deep. How many cubic feet of water does it hold?",
+]

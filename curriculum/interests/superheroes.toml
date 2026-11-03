@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Superheroes"
+blurb = "Capes, gadgets and friendly heroes saving the day"
+
+[templates]
+add = [
+  "Captain Comet rescued {a} kittens from trees in spring and {b} more in summer. How many kittens did he rescue in all?",
+  "Super Maya picked up {a} pieces of litter in the park and then {b} more. How many pieces did she pick up?",
+  "Zip Zhang flew {a} miles on Monday and {b} miles on Tuesday. How many miles did he fly in all?",
+  "The hero club had {a} capes. Then they got {b} more. How many capes does the club have now?",
+]
+sub = [
+  "Thunder Tess had {a} energy bars and shared {b} with her team. How many energy bars does she have left?",
+  "There were {a} balloons stuck in a tree. Rocket Ravi set {b} of them free. How many balloons are still stuck?",
+  "Captain Kai had {a} gadgets in his belt and lent {b} of them to friends. How many gadgets are left?",
+  "Spider-Man had {a} feet of web and used {b} feet to catch a falling kite. How many feet of web are left?",
+]
+compare = [
+  "Flash Fatima ran {a} laps and Speedy Sam ran {b} laps. How many more laps did Fatima run?",
+  "Iron Isla lifted {a} pounds and Mighty Max lifted {b} pounds. How many more pounds did Isla lift?",
+  "Super Leo saved {a} cats and Star Amara saved {b}. How many more cats did Leo save?",
+]
+mul = [
+  "The Hero Academy has {a} classes with {b} young heroes in each class. How many young heroes are there?",
+  "Zap Zoe has {a} boxes with {b} masks in each box. How many masks does she have?",
+  "Each of {a} superheroes carries {b} star badges. How many star badges do they carry in all?",
+]
+div = [
+  "Super Nia shares {total} juice boxes equally among {a} hero teams. How many juice boxes does each team get?",
+  "The hero club splits {total} capes evenly into {a} closets. How many capes go in each closet?",
+  "{total} people ride {a} flying buses, the same number on each bus. How many people ride on each bus?",
+]
+div_rem = [
+  "Super Nia shares {total} juice boxes equally among {a} hero teams. How many does each team get, and how many are left over?",
+  "Captain Leo sorts {total} gadgets equally into {a} utility belts. How many go in each belt, and how many are left over?",
+]
+frac_of = [
+  "The hero club has {total} members, and {frac} of them can fly. How many members can fly?",
+  "Rescue Rosa saves {total} cats from trees, and {frac} of them are orange. How many orange cats does she save?",
+]
+frac_add = [
+  "Flash Kai runs {a} miles to the bank and {b} miles more to the park. How many miles does he run in all?",
+  "Captain Leo patrols the city for {a} hours and then {b} hours more. How many hours does he patrol in all?",
+]
+frac_sub = [
+  "Mighty Mei has {a} yards of cape fabric and uses {b} yards for a new cape. How many yards are left?",
+  "The heroes order {a} pizzas and eat {b} pizzas after a rescue. How much pizza is left?",
+]
+dec_add = [
+  "Storm Ava flies {a} kilometers to the bridge and {b} kilometers more to the tower. How many kilometers does she fly in all?",
+  "Iron Theo's robot lifts {a} tons, then {b} tons more. How many tons does it lift in all?",
+]
+dec_sub = [
+  "Jet Jamal's jetpack holds {a} liters of fuel and uses {b} liters on a rescue. How many liters of fuel are left?",
+  "A rope is {a} meters long. Web Wren cuts off {b} meters to tie a net. How many meters of rope are left?",
+]
+dec_mul = [
+  "Rescue Rosa flies {a} laps around the city, and each lap is {b} kilometers. How many kilometers does she fly?",
+  "Captain Leo fills {a} water tanks with {b} liters each to put out a fire. How many liters does he use?",
+]
+dec_div = [
+  "Super Nia shares {total} kilograms of food equally among {a} shelters. How many kilograms does each shelter get?",
+  "Mighty Mei cuts {total} meters of rope into {a} equal pieces. How many meters long is each piece?",
+]
+area = [
+  "The hero base has a training mat {l} feet long and {w} feet wide. What is its area in square feet?",
+  "Iron Theo builds a landing pad {l} meters long and {w} meters wide. How many square meters is the pad?",
+]
+perimeter = [
+  "Flash Kai runs around a rooftop {l} meters long and {w} meters wide. How many meters is one lap around it?",
+  "Storm Ava fences the hero garden, {l} feet long and {w} feet wide. How many feet of fence does she need?",
+]
+volume = [
+  "The hero club's gadget crate is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "Jet Jamal's secret vault is {l} meters long, {w} meters wide and {h} meters tall. What is its volume in cubic meters?",
+]

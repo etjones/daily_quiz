@@ -31,11 +31,13 @@ from .. import (
     build,
     curriculum,
     grade,
+    interest_writer,
     judge,
     llm,
     placement,
     scheduler,
     session,
+    themes,
 )
 from .. import (
     render as pdf,
@@ -178,6 +180,7 @@ def health(request: HttpRequest) -> HttpResponse:
 
 @require_GET
 def students(request: HttpRequest) -> HttpResponse:
+    every = all_interests(request.db)
     default = default_student_path(home())
     return page(
         request,
@@ -186,6 +189,14 @@ def students(request: HttpRequest) -> HttpResponse:
         rows=request.db.students(),
         default=default.read_text().strip() if default.exists() else None,
         grades=[(g, curriculum.grade_label(g)) for g in curriculum.GRADES],
+        liked={
+            s["name"]: [
+                every[i].name
+                for i in request.db.student_interests(s["id"])
+                if i in every
+            ]
+            for s in request.db.students()
+        },
         title="Students",
     )
 
@@ -229,6 +240,98 @@ def set_grade(request: HttpRequest) -> HttpResponse:
         "/students",
         f"{student['name']} is in grade {curriculum.grade_label(g)}. Placement starts there.",
     )
+
+
+# --------------------------------------------------------------------------- interests
+
+
+def all_interests(db: DB) -> dict[str, themes.Theme]:
+    return themes.available(cur().interests, db.added_interests())
+
+
+def _interests_page(request: HttpRequest, student: sqlite3.Row) -> HttpResponse:
+    return page(
+        request,
+        "interests.html",
+        student=student,
+        title=f"Interests: {student['name']}",
+        every=all_interests(request.db),
+        chosen=request.db.student_interests(student["id"]),
+        most=themes.MAX_INTERESTS,
+        name_max=themes.NAME_MAX,
+        can_add=interest_writer.configured(),
+    )
+
+
+@require_http_methods(["GET", "POST"])
+def interests_view(request: HttpRequest, name: str) -> HttpResponse:
+    db: DB = request.db
+    student = student_named(db, name)
+    if request.method == "GET":
+        return _interests_page(request, student)
+    every = all_interests(db)
+    picked = [s for s in request.POST.getlist("interest") if s in every]
+    if len(picked) > themes.MAX_INTERESTS:
+        raise PageError(f"Choose at most {themes.MAX_INTERESTS} interests.")
+    db.set_student_interests(student["id"], picked)
+    names = ", ".join(every[s].name for s in picked) or "none"
+    return go(f"/students/{name}/interests", f"Saved. Interests: {names}.")
+
+
+@require_POST
+def add_interest(request: HttpRequest) -> HttpResponse:
+    db: DB = request.db
+    student = student_named(db, request.POST.get("student", ""))
+    try:
+        name = themes.clean_name(request.POST.get("name", ""))
+        if themes.slugify(name) in all_interests(db):
+            raise themes.ThemeError(f"There is already an interest called {name}.")
+        theme = interest_writer.write_interest(name, cur().interests.get("baseball"))
+    except themes.ThemeError as e:
+        raise PageError(str(e)) from e
+    db.save_interest(
+        theme.slug,
+        theme.name,
+        themes.to_dict(theme),
+        interest_writer.model_name(),
+        date.today().isoformat(),
+    )
+    chosen = db.student_interests(student["id"])
+    msg = f"Added {theme.name}."
+    if len(chosen) < themes.MAX_INTERESTS:
+        db.set_student_interests(student["id"], [*chosen, theme.slug])
+        msg += f" {student['name']} now has it."
+    return go(f"/interests/{theme.slug}?student={student['name']}", msg)
+
+
+@require_GET
+def interest_page(request: HttpRequest, slug: str) -> HttpResponse:
+    theme = all_interests(request.db).get(slug)
+    if theme is None:
+        raise PageError("No such interest.", 404)
+    return page(
+        request,
+        "interest.html",
+        student=current_student(request),
+        title=theme.name,
+        theme=theme,
+        kinds=themes.KIND_HELP,
+        titles=themes.KIND_TITLES,
+        samples={
+            k: [t.fill(themes.SAMPLES[k]) for t in theme.of_kind(k)]
+            for k in themes.KINDS
+        },
+        back=request.GET.get("student"),
+    )
+
+
+@require_POST
+def delete_interest(request: HttpRequest, slug: str) -> HttpResponse:
+    theme = all_interests(request.db).get(slug)
+    if theme is None or theme.source != "generated":
+        raise PageError("Only interests that were added can be deleted.", 400)
+    request.db.delete_interest(slug)
+    return go("/students", f"Deleted {theme.name}.")
 
 
 @require_http_methods(["GET", "POST"])

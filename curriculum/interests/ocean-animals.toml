@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Ocean Animals"
+blurb = "Dolphins, sea turtles, octopuses and coral reefs"
+
+[templates]
+add = [
+  "A diver saw {a} clownfish by the reef and {b} more by the rocks. How many clownfish did she see in all?",
+  "A pod of {a} dolphins was joined by {b} more. How many dolphins are in the pod now?",
+  "Kai found {a} starfish in the morning and {b} in the afternoon. How many starfish did Kai find altogether?",
+  "The aquarium had {a} jellyfish and got {b} more. How many jellyfish does it have now?",
+]
+sub = [
+  "A school of {a} sardines swam by. Then {b} of them swam away. How many sardines are left?",
+  "A sea turtle nest had {a} eggs. So far, {b} of them have hatched. How many eggs have not hatched yet?",
+  "Ana had {a} fish treats for the sea lions and tossed {b} of them. How many treats are left?",
+  "There were {a} crabs on the beach. Then {b} crabs scuttled into the sea. How many crabs are still on the beach?",
+]
+compare = [
+  "Liam counted {a} seahorses and Ruby counted {b}. How many more seahorses did Liam count?",
+  "One tank has {a} fish and another tank has {b} fish. How many more fish are in the first tank?",
+  "A blue whale swam {a} miles and a humpback whale swam {b} miles. How many more miles did the blue whale swim?",
+]
+mul = [
+  "The aquarium has {a} tanks with {b} fish in each tank. How many fish are there?",
+  "There are {a} coral reefs, and {b} sea turtles visit each reef. How many sea turtle visits is that?",
+  "Each of {a} divers takes {b} photos of octopuses. How many photos do they take in all?",
+]
+div = [
+  "A keeper shares {total} fish equally among {a} penguins. How many fish does each penguin get?",
+  "{total} dolphins swim in {a} pods of the same size. How many dolphins are in each pod?",
+  "Zainab sorts {total} seashells equally into {a} buckets. How many shells go in each bucket?",
+]
+div_rem = [
+  "A keeper shares {total} fish equally among {a} penguins. How many does each penguin get, and how many are left over?",
+  "Zainab sorts {total} seashells equally into {a} buckets. How many go in each bucket, and how many are left over?",
+]
+frac_of = [
+  "A reef has {total} fish, and {frac} of them are clownfish. How many fish are clownfish?",
+  "The aquarium has {total} sea turtles, and {frac} of them are babies. How many baby turtles are there?",
+]
+frac_add = [
+  "A sea turtle swims {a} miles in the morning and {b} miles in the afternoon. How many miles does it swim in all?",
+  "Ana spends {a} hours diving and {b} hours more tagging sharks. How many hours does she work in all?",
+]
+frac_sub = [
+  "A humpback whale has {a} miles to swim to its feeding ground and has gone {b} miles. How many miles are left?",
+  "Ben's whale watching trip lasts {a} hours, and {b} hours have gone by. How many hours are left?",
+]
+dec_add = [
+  "A baby seal weighs {a} kilograms and gains {b} kilograms. How many kilograms does it weigh now?",
+  "A dolphin dives {a} meters down, then {b} meters deeper. How many meters down is it now?",
+]
+dec_sub = [
+  "An octopus tank holds {a} liters of water, and Leo drains {b} liters to clean it. How many liters are left?",
+  "A shark is {a} meters below the surface and swims up {b} meters. How many meters deep is it now?",
+]
+dec_mul = [
+  "A keeper feeds {a} sea lions {b} kilograms of fish each. How many kilograms of fish does she use?",
+  "A sea turtle swims for {a} days, {b} kilometers each day. How many kilometers does it swim?",
+]
+dec_div = [
+  "A keeper shares {total} kilograms of squid equally among {a} seals. How many kilograms does each seal get?",
+  "A pod of orcas swims {total} kilometers in {a} hours, the same distance each hour. How many kilometers is that each hour?",
+]
+area = [
+  "The aquarium's touch pool is {l} feet long and {w} feet wide. What is its area in square feet?",
+  "A patch of coral reef is {l} meters long and {w} meters wide. What is its area in square meters?",
+]
+perimeter = [
+  "The dolphin pool is {l} meters long and {w} meters wide. How many meters is it all the way around?",
+  "Divers put a rope around a kelp bed {l} yards long and {w} yards wide. How many yards of rope do they need?",
+]
+volume = [
+  "A fish tank is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "A hermit crab's tank is {l} inches long, {w} inches wide and {h} inches tall. What is its volume in cubic inches?",
+]

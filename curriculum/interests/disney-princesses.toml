@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Disney Princesses"
+blurb = "Elsa, Moana, Belle, Rapunzel, Tiana and friends"
+
+[templates]
+add = [
+  "Rapunzel painted {a} flowers on her tower wall and then {b} more. How many flowers did she paint in all?",
+  "Moana found {a} seashells on the beach in the morning and {b} more at sunset. How many seashells did she find?",
+  "Tiana made {a} beignets for lunch and {b} for dinner. How many beignets did she make in all?",
+  "Belle has {a} books. The Beast gives her {b} more. How many books does Belle have now?",
+]
+sub = [
+  "Elsa made {a} snowflakes. Then {b} of them melted in the sun. How many snowflakes are left?",
+  "Tiana baked {a} beignets and sold {b} of them. How many beignets are left?",
+  "Rapunzel had {a} lanterns. She let {b} of them float into the sky. How many lanterns are left?",
+  "Ariel collected {a} shiny forks and gave {b} of them to Scuttle. How many forks does she have left?",
+]
+compare = [
+  "Belle read {a} pages and Jasmine read {b} pages. How many more pages did Belle read?",
+  "Elsa built {a} snowmen and Anna built {b}. How many more snowmen did Elsa build?",
+  "The castle garden has {a} red roses and {b} white roses. How many more red roses are there?",
+]
+mul = [
+  "Cinderella sews {a} dresses with {b} buttons on each dress. How many buttons does she use?",
+  "Mulan hangs {a} rows of lanterns with {b} lanterns in each row. How many lanterns are there?",
+  "Jasmine has {a} baskets with {b} oranges in each basket. How many oranges does she have?",
+]
+div = [
+  "Tiana shares {total} beignets equally on {a} plates. How many beignets go on each plate?",
+  "Moana splits {total} coconuts evenly among {a} canoes. How many coconuts go in each canoe?",
+  "Belle puts {total} books equally onto {a} shelves. How many books go on each shelf?",
+]
+div_rem = [
+  "Tiana shares {total} beignets equally on {a} plates. How many beignets go on each plate, and how many are left over?",
+  "Rapunzel puts {total} lanterns equally into {a} boats. How many lanterns go in each boat, and how many are left over?",
+]
+frac_of = [
+  "Belle has {total} books, and {frac} of them are fairy tales. How many books are fairy tales?",
+  "Ariel collects {total} shells, and {frac} of them are pink. How many shells are pink?",
+]
+frac_add = [
+  "Tiana uses {a} cups of flour for beignets and {b} cups more for a cake. How many cups of flour does she use in all?",
+  "Moana paddles {a} miles to a reef and then {b} miles more to an island. How many miles does she paddle in all?",
+]
+frac_sub = [
+  "Cinderella has {a} yards of blue ribbon and uses {b} yards on her gown. How many yards of ribbon are left?",
+  "Snow White bakes {a} pies, and the dwarfs eat {b} pies. How many pies are left?",
+]
+dec_add = [
+  "Rapunzel's hair grows {a} meters one year and {b} meters the next. How many meters does it grow in all?",
+  "Merida rides {a} kilometers through the forest and {b} kilometers more to the castle. How many kilometers does she ride in all?",
+]
+dec_sub = [
+  "Elsa has {a} kilograms of snow and uses {b} kilograms to build Olaf. How many kilograms of snow are left?",
+  "Mulan has {a} hours to reach the camp and has ridden for {b} hours. How many hours are left?",
+]
+dec_mul = [
+  "Aurora sews {a} dresses, and each uses {b} meters of fabric. How many meters of fabric does she use in all?",
+  "Jasmine fills {a} vases with {b} liters of water each. How many liters of water does she use?",
+]
+dec_div = [
+  "Tiana shares {total} kilograms of gumbo equally into {a} pots. How many kilograms go in each pot?",
+  "Ariel cuts {total} meters of ribbon into {a} equal pieces. How many meters long is each piece?",
+]
+area = [
+  "Belle's library has a rug {l} feet long and {w} feet wide. What is the area of the rug in square feet?",
+  "Rapunzel paints a wall in her tower {l} feet long and {w} feet high. How many square feet does she paint?",
+]
+perimeter = [
+  "Cinderella sews lace around a tablecloth {l} feet long and {w} feet wide. How many feet of lace does she need?",
+  "Moana's garden on Motunui is {l} meters long and {w} meters wide. How many meters is it all the way around?",
+]
+volume = [
+  "Ariel's treasure chest is {l} inches long, {w} inches wide and {h} inches tall. What is its volume in cubic inches?",
+  "Elsa builds an ice block {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+]

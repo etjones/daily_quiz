@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 
-from . import generators, layout, puzzles, render, scheduler
+from . import generators, layout, puzzles, render, scheduler, themes
 from .curriculum import Curriculum
 from .db import DB
 
@@ -184,6 +184,15 @@ def _choose_puzzles(
     return quiz, corner
 
 
+def student_themes(db: DB, cur: Curriculum, student) -> list[themes.Theme]:
+    """The interests a student's problems are themed with. None for a kindergartner, who
+    does not read the quiz yet."""
+    if student["grade"] == 0:
+        return []
+    every = themes.available(cur.interests, db.added_interests())
+    return [every[s] for s in db.student_interests(student["id"]) if s in every]
+
+
 def _build_content(
     db: DB,
     cur: Curriculum,
@@ -196,6 +205,11 @@ def _build_content(
         scheduler.stable_seed(student["name"], on.isoformat(), "content")
     )
     used_keys: set[str] = set()
+    # a separate stream, so a student's problems are the same with or without interests
+    theme_rng = random.Random(
+        scheduler.stable_seed(student["name"], on.isoformat(), "theme")
+    )
+    liked = student_themes(db, cur, student)
 
     # ---- spelling ----------------------------------------------------------
     words = []
@@ -225,6 +239,7 @@ def _build_content(
             sk.generator, sk.params, rng, slot["n"], exclude=used_keys
         ):
             used_keys.add(p.key)
+            p = themes.apply(p, liked, theme_rng)
             problems.append({**p.to_dict(), "skill_id": sk.id, "role": slot["role"]})
     math_tips = []
     for slot in sel.math:
@@ -317,6 +332,7 @@ def _build_content(
         )
         for p in ps:
             used_keys.add(p.key)
+            p = themes.apply(p, liked, theme_rng)
             quiz_items.append(
                 {
                     "group": "math",

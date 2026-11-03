@@ -56,6 +56,24 @@ Students page. The grade only seeds things; results drive the rest:
   child who started before they existed) are assumed known: they go into review spread over six weeks
   instead of being taught.
 
+## Interests
+Each student can have up to four interests (Students page → Interests, or `dq interests Ben --set space mario`).
+Some word problems on the worksheet and quiz are then told as a story about one of them: about three in four
+problems that are already stories, and one in four plain facts such as 7 × 8. Only the wording changes; the
+numbers and the answer come from the math generator as before. Stories cover adding, taking away, comparing, equal
+groups, sharing (with and without leftovers), a fraction of a group, adding and subtracting fractions and mixed
+numbers, the four decimal operations, area, perimeter and volume, so about half or more of the math skills in
+grades 1–5 can be themed (place value, rounding, comparing and order of operations stay plain). Kindergartners
+get none, since their quiz is read aloud.
+
+Sixteen interests are built in (`curriculum/interests/*.toml`, checked by `just validate`): Baseball, Basketball,
+Football, Soccer, Gymnastics, Horses, Pokémon, Mario, Minecraft, Disney Princesses, Superheroes, Fashion,
+Space, Dinosaurs, Ocean Animals and Baking. **New interest** on the same page asks Claude (`ANTHROPIC_API_KEY`,
+model `DQ_INTEREST_MODEL`, default `claude-opus-5-5`) to write templates for a name you type, once; the result
+is stored in `dq.db` and its stories are listed on the interest's page, where it can be deleted. The name is
+limited to 32 letters, spaces, ' & and -, it reaches the model only as a topic label, and every template must
+pass the same character allowlist (no digits or markup) before it is kept.
+
 ## The daily loop
 Morning, once at the start: `dq init Ben --grade 1` then `dq placement Ben` (10 minutes, you ask, he answers; finds where he already is).
 

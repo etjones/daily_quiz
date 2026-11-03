@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Students can pick up to four interests; some word problems and facts are then told as stories about them, with the same numbers and answers, across sixteen kinds of story (whole-number operations, remainders, fractions, decimals, area, perimeter and volume). Sixteen interests are built in (`curriculum/interests/`), and a grown-up can add one by name, which Claude (`ANTHROPIC_API_KEY`, `DQ_INTEREST_MODEL`) writes once; `dq interests` shows or sets them.
+- Gunicorn's worker timeout is 150 s so adding an interest can wait on the model.
+
+## 2026-11-03
+
 **Breaking**
 - The curriculum now starts at kindergarten, so placement on an existing student reports more skills per track, and a student who has not been placed starts at kindergarten skills.
 - The web app is now Django instead of FastAPI, and every page except `/health` needs a login; production needs `DJANGO_SECRET_KEY` and `DQ_ALLOWED_HOSTS`, and a user created with `just adduser`.

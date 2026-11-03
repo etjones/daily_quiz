@@ -1,0 +1,81 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul {a} {b}; div/div_rem/dec_div
+# {total} {a}; frac_of {total} {frac}; area/perimeter {l} {w}; volume {l} {w} {h}. The numbers and the
+# answer come from the math generator; a template only supplies the story, so it must make
+# sense for any whole numbers from 2 into the thousands. No digits, and only letters, spaces
+# and . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Baseball"
+blurb = "Hits, runs, innings and the ballpark"
+
+[templates]
+add = [
+  "The Tigers scored {a} runs this season before the break and {b} runs after it. How many runs did they score in all?",
+  "Maya hit {a} balls at batting practice on Monday and {b} on Tuesday. How many balls did she hit altogether?",
+  "A stadium sold {a} hot dogs in the first inning and {b} more in the second. How many hot dogs were sold?",
+  "Leo has {a} baseball cards. His grandpa gives him {b} more. How many cards does Leo have now?",
+]
+sub = [
+  "The team brought {a} baseballs to practice and lost {b} over the fence. How many baseballs are left?",
+  "There were {a} fans in the stands. In the rain, {b} of them went home. How many fans stayed?",
+  "The snack stand had {a} bags of peanuts and sold {b} of them. How many bags are left?",
+  "Ava has {a} baseball cards. She trades away {b} of them. How many cards does she have left?",
+]
+compare = [
+  "The Bears have {a} wins and the Hawks have {b} wins. How many more wins do the Bears have?",
+  "Sam threw {a} pitches in the game and Jada threw {b}. How many more pitches did Sam throw?",
+  "One ballpark has {a} seats behind home plate and another has {b}. How many more seats does the first one have?",
+]
+mul = [
+  "A coach has {a} buckets with {b} baseballs in each bucket. How many baseballs is that?",
+  "There are {a} teams in the league and each team has {b} players. How many players are in the league?",
+  "The ballpark has {a} rows of seats with {b} seats in each row. How many seats are there?",
+]
+div = [
+  "The coach shares {total} baseballs equally among {a} buckets. How many baseballs go in each bucket?",
+  "There are {total} players at camp, split evenly into {a} teams. How many players are on each team?",
+  "{total} fans fill {a} sections of the stands equally. How many fans are in each section?",
+]
+div_rem = [
+  "The coach puts {total} baseballs into {a} buckets, the same number in each. How many go in each bucket, and how many are left over?",
+  "Ella sorts {total} baseball cards equally into {a} binders. How many cards go in each binder, and how many are left over?",
+]
+frac_of = [
+  "The Tigers played {total} games, and {frac} of them were at home. How many home games did they play?",
+  "A stadium has {total} seats, and {frac} of them are in the bleachers. How many seats are in the bleachers?",
+]
+frac_add = [
+  "Diego jogged {a} miles before practice and {b} miles after it. How many miles did he jog in all?",
+  "The game went {a} hours, then extra innings added {b} hours more. How many hours did the game last?",
+]
+frac_sub = [
+  "The team ordered {a} pizzas after the game and ate {b} pizzas. How many pizzas are left?",
+  "A jug held {a} gallons of lemonade at the ballpark, and fans drank {b} gallons. How many gallons are left?",
+]
+dec_add = [
+  "Ruby's bat weighs {a} pounds and her glove weighs {b} pounds. How many pounds do they weigh together?",
+  "Marcus ran {a} miles at practice on Monday and {b} miles on Tuesday. How many miles did he run in all?",
+]
+dec_sub = [
+  "The groundskeeper had {a} kilograms of chalk for the foul lines and used {b} kilograms. How many kilograms are left?",
+  "A cooler in the dugout held {a} liters of water. The players drank {b} liters. How many liters are left?",
+]
+dec_mul = [
+  "The coach buys {a} bags of sunflower seeds, each holding {b} kilograms. How many kilograms of seeds is that?",
+  "Nina jogs {b} miles around the ballpark each day for {a} days. How many miles does she jog in all?",
+]
+dec_div = [
+  "The coach pours {total} liters of sports drink equally into {a} coolers. How many liters go in each cooler?",
+  "Jada splits {total} kilograms of sunflower seeds equally among {a} teammates. How many kilograms does each one get?",
+]
+area = [
+  "A batting cage floor is {l} feet long and {w} feet wide. How many square feet is the floor?",
+  "The dugout is a rectangle {l} meters long and {w} meters wide. What is its area in square meters?",
+]
+perimeter = [
+  "A batting cage is {l} feet long and {w} feet wide. How many feet of net go all the way around it?",
+  "The bullpen is a rectangle {l} yards long and {w} yards wide. How far is it all the way around, in yards?",
+]
+volume = [
+  "A box of baseballs is {l} inches long, {w} inches wide and {h} inches tall. What is its volume in cubic inches?",
+  "An equipment crate is {l} feet long, {w} feet wide and {h} feet tall. How many cubic feet does it hold?",
+]

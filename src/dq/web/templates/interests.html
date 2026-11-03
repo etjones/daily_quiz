@@ -1,0 +1,49 @@
+{% extends "_base.html" %}
+{% block main %}
+<p class="lede">Pick up to {{ most }} things {{ student.name }} cares about. Some word problems on the worksheet and quiz are then told as stories about them; the math and the answers stay the same.{% if student.grade == 0 %} Kindergarten quizzes are read aloud, so interests start in grade 1.{% endif %}</p>
+
+<form method="post" action="/students/{{ student.name }}/interests" id="interests">
+  {{ csrf_input }}
+  <ul class="interest-list">
+  {% for slug, t in every.items() %}
+    <li>
+      <label><input type="checkbox" name="interest" value="{{ slug }}" {% if slug in chosen %}checked{% endif %}> <strong>{{ t.name }}</strong></label>
+      {% if t.blurb %}<small>{{ t.blurb }}</small>{% endif %}
+      <small><a href="/interests/{{ slug }}?student={{ student.name }}">stories</a>{% if t.source == 'generated' %} · added{% endif %}</small>
+    </li>
+  {% endfor %}
+  </ul>
+  <p><button type="submit">Save interests</button> <small id="count"></small></p>
+</form>
+
+<h2>New interest</h2>
+{% if can_add %}
+<form method="post" action="/interests/new" onsubmit="this.querySelector('button').disabled = true; this.querySelector('button').textContent = 'Writing stories… (up to a minute)';">
+  {{ csrf_input }}
+  <input type="hidden" name="student" value="{{ student.name }}">
+  <p>
+    <label class="field" for="name">Name (letters, spaces, ' & and -, up to {{ name_max }})</label>
+    <input type="text" id="name" name="name" required maxlength="{{ name_max }}" pattern="[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ '&\-]*" placeholder="Trains">
+  </p>
+  <p><button type="submit">Add interest</button></p>
+</form>
+<p><small>Claude writes about seventeen story templates for the new interest once; you can read them on its page and delete it there.</small></p>
+{% else %}
+<p>Adding a new interest needs <code>ANTHROPIC_API_KEY</code> in the server's <code>.env</code>.</p>
+{% endif %}
+
+<script>
+(() => {
+  const most = {{ most }};
+  const boxes = [...document.querySelectorAll('#interests input[name=interest]')];
+  const count = document.getElementById('count');
+  const sync = () => {
+    const n = boxes.filter(b => b.checked).length;
+    boxes.forEach(b => { b.disabled = !b.checked && n >= most; });
+    count.textContent = `${n} of ${most} chosen`;
+  };
+  boxes.forEach(b => b.addEventListener('change', sync));
+  sync();
+})();
+</script>
+{% endblock %}

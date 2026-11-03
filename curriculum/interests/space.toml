@@ -1,0 +1,82 @@
+# Interest: word-problem templates that re-tell a math problem as a story.
+# Blanks: add/sub/compare/mul/frac_add/frac_sub/dec_add/dec_sub/dec_mul use {a} and {b};
+# div/div_rem/dec_div use {total} and {a}; frac_of uses {total} and {frac}; area/perimeter
+# use {l} and {w}; volume uses {l}, {w} and {h}. The numbers and the answer come from the
+# math generator; a template only supplies the story, so it must make sense for any
+# whole numbers from 2 into the thousands. No digits, and only letters, spaces and
+# . , ? ! ' : ; ( ) & - (Typst markup characters are refused). End with a question.
+name = "Space"
+blurb = "Rockets, astronauts, planets and stars"
+
+[templates]
+add = [
+  "An astronaut counted {a} stars from her window and then {b} more. How many stars did she count in all?",
+  "Captain Ben flew his rocket {a} miles on the first day and {b} miles on the second. How many miles did he fly?",
+  "The space station had {a} food packs. A supply rocket brought {b} more. How many food packs are there now?",
+  "Mei spotted {a} craters on the Moon and Kofi spotted {b} more. How many craters did they spot in all?",
+]
+sub = [
+  "A Mars rover had {a} rock samples and dropped off {b} at the base. How many samples does it still have?",
+  "The space station had {a} food packs. The crew ate {b} of them. How many food packs are left?",
+  "Nadia had {a} glow-in-the-dark star stickers and stuck {b} on her ceiling. How many stickers are left?",
+  "A comet had {a} chunks of ice. Near the Sun, {b} of them melted away. How many chunks are left?",
+]
+compare = [
+  "Ryan saw {a} shooting stars and Fatima saw {b}. How many more shooting stars did Ryan see?",
+  "One rocket carries {a} gallons of fuel and another carries {b} gallons. How many more gallons does the first one carry?",
+  "The rover drove {a} feet on Monday and {b} feet on Tuesday. How many more feet did it drive on Monday?",
+]
+mul = [
+  "A spaceship has {a} rows of windows with {b} windows in each row. How many windows does it have?",
+  "The crew packs {a} boxes with {b} space snacks in each box. How many space snacks is that?",
+  "Each of {a} rockets carries {b} satellites. How many satellites do the rockets carry?",
+]
+div = [
+  "Mission control shares {total} rock samples equally among {a} labs. How many samples does each lab get?",
+  "The crew splits {total} food packs evenly into {a} cupboards. How many food packs go in each cupboard?",
+  "{total} astronauts fly to the Moon in {a} rockets, the same number in each. How many ride in each rocket?",
+]
+div_rem = [
+  "Mission control shares {total} rock samples equally among {a} labs. How many does each lab get, and how many are left over?",
+  "The crew packs {total} food packs equally into {a} cupboards. How many go in each, and how many are left over?",
+]
+frac_of = [
+  "An astronaut sees {total} stars, and {frac} of them are red giants. How many stars are red giants?",
+  "The space station has {total} windows, and {frac} of them face Earth. How many windows face Earth?",
+]
+frac_add = [
+  "Commander Ruth spends {a} hours on a spacewalk and {b} hours more fixing a solar panel. How many hours is she outside?",
+  "The rover drives {a} miles across Mars and then {b} miles more. How many miles does it drive in all?",
+]
+frac_sub = [
+  "Astronaut Kofi has {a} hours of oxygen and uses {b} hours on a spacewalk. How many hours of oxygen are left?",
+  "The Mars rover must drive {a} miles to a crater and has gone {b} miles. How many miles are left?",
+]
+dec_add = [
+  "A probe travels {a} light years and then {b} light years more. How many light years does it travel in all?",
+  "Astronaut Mae collects {a} kilograms of Moon rock and then {b} kilograms more. How many kilograms does she collect?",
+]
+dec_sub = [
+  "The rocket has {a} tons of fuel and burns {b} tons at liftoff. How many tons of fuel are left?",
+  "The crew has {a} liters of water and drinks {b} liters. How many liters of water are left?",
+]
+dec_mul = [
+  "Astronaut Diego runs {a} laps on the station treadmill, each {b} kilometers long. How many kilometers does he run?",
+  "The rover fills {a} bags with {b} kilograms of Mars dust each. How many kilograms of dust does it collect?",
+]
+dec_div = [
+  "The crew shares {total} liters of water equally over {a} days. How many liters do they drink each day?",
+  "Dr. Amara splits {total} kilograms of Moon rock equally into {a} boxes. How many kilograms go in each box?",
+]
+area = [
+  "A solar panel on the space station is {l} meters long and {w} meters wide. What is its area in square meters?",
+  "The Moon base has a garden {l} feet long and {w} feet wide. What is its area in square feet?",
+]
+perimeter = [
+  "The rocket's landing pad is {l} meters long and {w} meters wide. How many meters is it all the way around?",
+  "Astronaut Kofi walks around the edge of a Moon base {l} yards long and {w} yards wide. How many yards does he walk?",
+]
+volume = [
+  "A cargo box on the rocket is {l} feet long, {w} feet wide and {h} feet tall. What is its volume in cubic feet?",
+  "The space station's lab is {l} meters long, {w} meters wide and {h} meters tall. What is its volume in cubic meters?",
+]

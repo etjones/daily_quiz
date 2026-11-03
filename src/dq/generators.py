@@ -321,6 +321,7 @@ def gen_add(
         lead="$=$",
         speech=f"{say(x)} plus {say(y)}",
         key=f"add:{x}:{y}",
+        meta={"op": "add", "a": x, "b": y},
     )
 
 
@@ -345,6 +346,7 @@ def gen_sub(rng, a, b, regroup="any", multiple_of=1) -> Problem:
         lead="$=$",
         speech=f"{say(x)} minus {say(y)}",
         key=f"sub:{x}:{y}",
+        meta={"op": "sub", "a": x, "b": y},
     )
 
 
@@ -424,6 +426,7 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
         b = rng.randint(2, max - a)
         text = f"{name} has {a} {thing}. {pron} gets {b} more. How many {thing} does {name} have now?"
         ans = a + b
+        op = "add"
     elif k in ("sub", "separate"):
         a = rng.randint(max // 2, max)
         b = rng.randint(2, a - 1)
@@ -431,6 +434,7 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
             f"{name} has {a} {thing}. {pron} gives away {b}. How many {thing} are left?"
         )
         ans = a - b
+        op = "sub"
     else:
         a = rng.randint(max // 2, max)
         b = rng.randint(2, a - 1)
@@ -438,6 +442,7 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
             f"{name} has {a} {thing}. {other} has {b}. How many more does {name} have?"
         )
         ans = a - b
+        op = "compare"
     return Problem(
         prompt=text,
         answer=str(ans),
@@ -446,6 +451,7 @@ def gen_word_addsub(rng, kind="mix", max=20) -> Problem:
         speech=text,
         key=f"wd:{text}",
         prose=True,
+        meta={"op": op, "a": a, "b": b},
     )
 
 
@@ -459,9 +465,11 @@ def gen_share(rng, divisors, quotient, mode="share") -> Problem:
         total = d * q
         text = f"{total} {item} are shared equally among {d} {plural}. How many {item} does each {singular} get?"
         ans = q
+        meta = {"op": "div", "total": total, "a": d}
     else:
         text = f"There are {d} {plural}. Each {singular} has {q} {item}. How many {item} in all?"
         ans = d * q
+        meta = {"op": "mul", "a": d, "b": q}
     return Problem(
         prompt=text,
         answer=str(ans),
@@ -470,6 +478,7 @@ def gen_share(rng, divisors, quotient, mode="share") -> Problem:
         speech=text,
         key=f"share:{text}",
         prose=True,
+        meta=meta,
     )
 
 
@@ -514,6 +523,7 @@ def gen_mul(rng, tables, other, commute=True) -> Problem:
         lead="$=$",
         speech=f"{say(a)} times {say(b)}",
         key=f"mul:{a}:{b}",
+        meta={"op": "mul", "a": a, "b": b},
     )
 
 
@@ -531,6 +541,7 @@ def gen_div(rng, divisors, quotient, remainder=False) -> Problem:
             lead="$=$",
             speech=f"{say(n)} divided by {say(d)}. Say the answer with a remainder.",
             key=f"divr:{n}:{d}",
+            meta={"op": "div_rem", "total": n, "a": d},
         )
     n = d * q
     return Problem(
@@ -540,6 +551,7 @@ def gen_div(rng, divisors, quotient, remainder=False) -> Problem:
         lead="$=$",
         speech=f"{say(n)} divided by {say(d)}",
         key=f"div:{n}:{d}",
+        meta={"op": "div", "total": n, "a": d},
     )
 
 
@@ -689,6 +701,7 @@ def gen_frac_of_set(rng, dens, total_max=24) -> Problem:
         lead="$=$",
         speech=f"What is {say_frac(1, d)} of {say(total)}?",
         key=f"fs:{d}:{total}",
+        meta={"op": "frac_of", "total": total, "frac": say_frac(1, d)},
     )
 
 
@@ -717,6 +730,7 @@ def gen_frac_add_like(rng, dens, op="add") -> Problem:
             lead="$=$",
             speech=f"{say_frac(n1, d)} plus {say_frac(n2, d)}",
             key=f"fa:{n1}+{n2}/{d}",
+            meta={"op": "frac_add", "a": f"{n1}/{d}", "b": f"{n2}/{d}"},
         )
     return Problem(
         prompt=f"${n1}/{d} - {n2}/{d}$",
@@ -725,6 +739,7 @@ def gen_frac_add_like(rng, dens, op="add") -> Problem:
         lead="$=$",
         speech=f"{say_frac(n1, d)} minus {say_frac(n2, d)}",
         key=f"fa:{n1}-{n2}/{d}",
+        meta={"op": "frac_sub", "a": f"{n1}/{d}", "b": f"{n2}/{d}"},
     )
 
 
@@ -878,6 +893,7 @@ def gen_mul_multi(rng, a, b) -> Problem:
         lead="$=$",
         speech=f"{say(x)} times {say(y)}",
         key=f"mm:{x}:{y}",
+        meta={"op": "mul", "a": x, "b": y},
     )
 
 
@@ -894,6 +910,7 @@ def gen_div_multi(rng, divisor, quotient, remainder=False) -> Problem:
         speech=f"{say(n)} divided by {say(d)}"
         + (". Say the answer with a remainder." if remainder else ""),
         key=f"dm:{n}:{d}",
+        meta={"op": "div_rem" if remainder else "div", "total": n, "a": d},
     )
 
 
@@ -975,6 +992,7 @@ def gen_rect_measure(rng, side, mode="area") -> Problem:
         speech=text,
         key=f"rect:{text}",
         prose=True,
+        meta={"op": m, "l": l, "w": w} if m in ("area", "perimeter") else {},
     )
 
 
@@ -991,6 +1009,7 @@ def gen_volume(rng, side) -> Problem:
         speech=text,
         key=f"vol:{l}:{w}:{h}:{u}",
         prose=True,
+        meta={"op": "volume", "l": l, "w": w, "h": h},
     )
 
 
@@ -1095,6 +1114,7 @@ def gen_dec_addsub(rng, places, whole, op="add") -> Problem:
         lead="$=$",
         speech=f"{say_dec(str(x))} {word} {say_dec(str(y))}. Line up the decimal points.",
         key=f"da:{x}{sym}{y}",
+        meta={"op": f"dec_{o}", "a": str(x), "b": str(y)},
     )
 
 
@@ -1114,6 +1134,7 @@ def gen_dec_mul(rng, places, whole, by="whole") -> Problem:
         lead="$=$",
         speech=f"{say_dec(str(x))} times {say_dec(str(y))}",
         key=f"dmu:{x}:{y}",
+        meta={"op": "dec_mul", "a": int(y), "b": str(x)} if by == "whole" else {},
     )
 
 
@@ -1133,6 +1154,7 @@ def gen_dec_div(rng, divisor, quotient, places=1) -> Problem:
         lead="$=$",
         speech=f"{say_dec(str(n))} divided by {say(d)}",
         key=f"ddv:{n}:{d}",
+        meta={"op": "dec_div", "total": str(n), "a": d},
     )
 
 
@@ -1174,6 +1196,7 @@ def gen_frac_mixed_addsub(rng, dens, whole=(1, 5), op="add") -> Problem:
         lead="$=$",
         speech=f"{spoken(a)} {word} {spoken(b)}. A mixed number or a fraction is fine.",
         key=f"fm:{a}{sym}{b}/{d}",
+        meta={"op": f"frac_{o}", "a": mixed(a), "b": mixed(b)},
     )
 
 
@@ -1198,6 +1221,7 @@ def gen_frac_add_unlike(rng, dens, op="add") -> Problem:
         lead="$=$",
         speech=f"{say_frac(a.numerator, a.denominator)} {word} {say_frac(b.numerator, b.denominator)}",
         key=f"fu:{a}{sym}{b}",
+        meta={"op": f"frac_{o}", "a": _frac_str(a), "b": _frac_str(b)},
     )
 
 

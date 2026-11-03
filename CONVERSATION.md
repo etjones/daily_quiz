@@ -157,3 +157,26 @@ Open issues
 **User:** Commit and merge; then push and deploy.
 
 **Claude:** Committed `a851e98`, fast-forwarded `main`, pushed. Backed up the server DB to `data/dq.db.bak-2026-11-03-predeploy` (141 results). `deploy-site quizzes daily_quiz`: all checks ✓, live at https://quizzes.dayonetools.com on `a851e98`.
+
+## 2026-11-03 — Interests (themed word problems)
+
+**User:** Add up to 4 interests per student on the student page; create ~16 kid interests (gender balanced) from a suggested list; add a "New interest" option that asks an LLM (Claude Opus 5.5 by default, ANTHROPIC_API_KEY) to write templates, guarding against prompt injection (limit the name to ~32 characters). Mid-turn: do templates cover the whole grade range, and should they?
+
+**Claude:**
+- Interests chosen: Baseball, Basketball, Football, Soccer, Gymnastics, Horses, Pokémon, Mario, Minecraft, Disney Princesses, Superheroes, Fashion, Space, Dinosaurs, Ocean Animals, Baking. Dropped "Sports" (too broad; the four sports cover it).
+- `themes.py`: templates per operation (add, sub, compare, mul, div) with blanks; generators now tag problems with `meta` (op and numbers); `themes.apply` re-tells a problem as a story (3/4 of story problems, 1/4 of bare facts, never with a 0 or 1), answer and key unchanged. Separate RNG so plain problems are unchanged.
+- Safety: template allowlist (letters incl. accents, spaces, . , ? ! ' ’ : ; ( ) & -), no digits or Typst markup, exact blanks, ≤150 chars, ends in "?". Names: letters/spaces/'&-, ≤32 chars, refused (not cleaned) otherwise.
+- `interest_writer.py`: Opus 5.5 via the anthropic SDK, JSON-schema output, topic in `<topic>` tags as data only, model can mark a topic unsuitable, invalid templates dropped, too few → error; refusal fallback enabled (`fallbacks: "default"`).
+- DB tables `interest` (added interests) and `student_interest` (≤4). Web: Interests column on Students, `/students/<name>/interests` (checkboxes capped at 4, New interest form), `/interests/<slug>` (sample stories; delete for added ones). CLI `dq interests`.
+- 155 tests pass (model always mocked), `dq validate` clean; longest templates render on one quiz row with six-digit numbers. Branch `feature/interests`, uncommitted.
+- Grade range: numbers scale with grade automatically, but only add/sub/compare/mul/div are themable, so coverage drops in grades 4–5 (themable math skills: K 2/9, G1 9/14, G2 10/16, G3 20/33, G4 6/18, G5 2/14).
+
+## 2026-11-03 — Story kinds for grades 4–5
+
+**User:** Yes, add story kinds for the upper grades.
+
+**Claude:**
+- Eleven new kinds: `div_rem`, `frac_of`, `frac_add`, `frac_sub`, `dec_add`, `dec_sub`, `dec_mul`, `dec_div`, `area`, `perimeter`, `volume`. Generators tag those problems with their numbers (decimals and fractions as text, "one third" for fractions of a group); whole numbers still need to be ≥ 2 to be themed.
+- All 16 interests gained 2 templates per new kind (39 each), written by two helper agents; the Claude writer's prompt is now built from the kind list, so new interests get every kind. Interest pages show kinds under plain titles.
+- Themable math skills per grade: K 2/9, G1 9/14, G2 10/16, G3 23/33, G4 13/18, G5 7/14 (was G4 6/18, G5 2/14). Still plain: place value, rounding, comparing, order of operations, fraction × whole, unit-fraction division.
+- 165 tests pass, `dq validate` clean; the longest new stories (mixed numbers, remainders, thousandths) render on one quiz row. Uncommitted on `feature/interests`.

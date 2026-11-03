@@ -12,7 +12,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import generators, puzzles
+from . import generators, puzzles, themes
 
 CORE_DEFAULT = 10
 GRADES = range(6)  # kindergarten (0) through grade 5
@@ -89,6 +89,9 @@ class Curriculum:
     )  # lowercase word -> dictation sentence
     puzzles: list[puzzles.Puzzle] = field(default_factory=list)
     clues: dict[str, str] = field(default_factory=dict)  # lowercase word -> clue
+    interests: dict[str, themes.Theme] = field(
+        default_factory=dict
+    )  # built-in, by slug
 
     def __post_init__(self):
         self.by_id = {s.id: s for s in self.skills}
@@ -162,7 +165,8 @@ def load(directory: str | Path) -> Curriculum:
         for w, sent in sk.sentences.items():
             sentences.setdefault(w.lower(), sent)
     bank, clues = puzzles.load(directory / "puzzles")
-    return Curriculum(skills, strands, meta, sentences, bank, clues)
+    interests = themes.load_builtin(directory / "interests")
+    return Curriculum(skills, strands, meta, sentences, bank, clues, interests)
 
 
 def validate(cur: Curriculum, smoke_seeds: int = 40) -> list[str]:
@@ -193,6 +197,8 @@ def validate(cur: Curriculum, smoke_seeds: int = 40) -> list[str]:
             errs.extend(_validate_math(s, smoke_seeds))
     words = {w.lower() for s in cur.subject("spelling") for w in s.words}
     errs.extend(puzzles.validate(cur.puzzles, cur.clues, words))
+    for theme in cur.interests.values():
+        errs.extend(themes.validate_theme(theme))
     return errs
 
 
