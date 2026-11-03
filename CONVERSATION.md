@@ -180,3 +180,9 @@ Open issues
 - All 16 interests gained 2 templates per new kind (39 each), written by two helper agents; the Claude writer's prompt is now built from the kind list, so new interests get every kind. Interest pages show kinds under plain titles.
 - Themable math skills per grade: K 2/9, G1 9/14, G2 10/16, G3 23/33, G4 13/18, G5 7/14 (was G4 6/18, G5 2/14). Still plain: place value, rounding, comparing, order of operations, fraction × whole, unit-fraction division.
 - 165 tests pass, `dq validate` clean; the longest new stories (mixed numbers, remainders, thousandths) render on one quiz row. Uncommitted on `feature/interests`.
+
+## 2026-11-03 — Ship interests
+
+**User:** Commit, merge, deploy.
+
+**Claude:** Committed `8077d15` on `feature/interests`, fast-forwarded `main` (165 tests pass), pushed. Server DB backed up to `data/dq.db.bak-2026-11-03-interests` (141 results). `deploy-site quizzes daily_quiz`: all ✓, live on `8077d15`. The `interest` and `student_interest` tables exist, and the running service has a resolved `ANTHROPIC_API_KEY`, so "New interest" is enabled in production (not yet exercised against the real API).
