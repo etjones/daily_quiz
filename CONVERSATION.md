@@ -151,3 +151,9 @@ Open issues
 - Deploy note: on first plan after deploy, the existing student's kindergarten skills are fast-tracked into review (≥2 grades below their solid work), not taught.
 
 **Theme discussion (no code):** see the reply in chat: themed templates generated once per theme by an LLM, numbers and answers still computed by code, parent approval before use, themes skin existing skills rather than adding new ones (with a few real TEKS skills like averages/profit as an optional add).
+
+## 2026-11-03 — Ship the K–5 curriculum
+
+**User:** Commit and merge; then push and deploy.
+
+**Claude:** Committed `a851e98`, fast-forwarded `main`, pushed. Backed up the server DB to `data/dq.db.bak-2026-11-03-predeploy` (141 results). `deploy-site quizzes daily_quiz`: all checks ✓, live at https://quizzes.dayonetools.com on `a851e98`.
